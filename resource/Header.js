@@ -18,12 +18,12 @@ export default function Header({ navigation, title }) {
 
 const styles = StyleSheet.create({
   header: {
-    flexDirection: "row"
+    flexDirection: "row",
   },
   headerText: {
     fontWeight: "bold",
     fontSize: 20,
     color: "#fff",
-    letterSpacing: 1
-  }
+    letterSpacing: 1,
+  },
 });

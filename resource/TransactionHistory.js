@@ -1,21 +1,24 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import AppText from "./AppText";
 
-export default function TransactionHistory({ date, amount, type, creditDebit }) {
+export default function TransactionHistory({ date, amount, type }) {
   return (
     <View style={styles.transactionCard}>
-      <View style={{ padding: 10 }}>
-        <Text>
+      <View style={{ paddingLeft: 8, paddingTop: 8 }}>
+        <AppText>
           Date: <Text style={{ fontWeight: "700" }}>{date}</Text>
-        </Text>
-        <Ionicons color={creditDebit == "credit" ? "green" : "red"} name={creditDebit == "credit" ? "md-arrow-dropdown-circle" : "md-arrow-dropup-circle"} size={20}></Ionicons>
+        </AppText>
+        <Ionicons style={{ marginTop: 4 }} color="#266ddc" name="md-arrow-dropdown-circle" size={20}></Ionicons>
       </View>
-      <View style={{ padding: 10 }}>
-        <Text>
-          Amount: <Text style={{ fontWeight: "700" }}>{amount}</Text>
-        </Text>
-        <Text>Type: {type}</Text>
+      <View style={{ paddingRight: 8, paddingTop: 8 }}>
+        <AppText>
+          Amount: <Text style={{ fontWeight: "700", color: `${type == "Credit" ? "green" : "red"}` }}>{amount}</Text>
+        </AppText>
+        <AppText styles={{ marginTop: 4 }}>
+          Type: <Text style={{ fontWeight: "700", color: `${type == "Credit" ? "green" : "red"}` }}>{type}</Text>
+        </AppText>
       </View>
     </View>
   );
@@ -23,13 +26,13 @@ export default function TransactionHistory({ date, amount, type, creditDebit }) 
 
 const styles = StyleSheet.create({
   transactionCard: {
-    marginTop: 10,
-    marginBottom: 10,
+    backgroundColor: "#FFFFFF",
+    marginTop: 8,
+    marginBottom: 8,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    height: 55,
-    borderRadius: 7,
-    elevation: 4
-  }
+    borderRadius: 4,
+    elevation: 4,
+  },
 });

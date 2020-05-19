@@ -11,21 +11,21 @@ const screens = {
     navigationOptions: ({ navigation }) => {
       return {
         headerTitle: () => <Header navigation={navigation} title="VetroPay" />,
-        headerStyle: { backgroundColor: "#266ddc" }
+        headerStyle: { backgroundColor: "#266ddc" },
       };
-    }
+    },
   },
   AddRecord: {
     screen: AddRecord,
     navigationOptions: ({ navigation }) => {
       return {
-        title: "Add Transaction",
+        title: "Vetropay",
         headerStyle: { backgroundColor: "#266ddc" },
         headerTitleStyle: { color: "#fff", fontWeight: "700" },
-        headerTintColor: "#fff"
+        headerTintColor: "#fff",
       };
-    }
-  }
+    },
+  },
 };
 
 const MainStack = createStackNavigator(screens);
