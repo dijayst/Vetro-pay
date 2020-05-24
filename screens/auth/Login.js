@@ -1,14 +1,81 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import PropTypes from "prop-types";
 import { View, Text, StyleSheet, Image, TextInput, Picker, ImageBackground } from "react-native";
 import Constants from "expo-constants";
 import AppText from "../../resource/AppText";
 import { AppButton } from "../../resource/AppButton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Toast, Spinner } from "native-base";
+import { login } from "../../containers/authentication/action";
 
 const Logo = require("../../assets/vlogo.png");
 const BackgroundImage = require("../../assets/backnet.jpg");
 
 export default function Login({ navigation }) {
+  const [displaySpinner, setDisplaySpinner] = useState(false);
+  const [loginData, setLoginData] = useState({
+    payload: {
+      country: "NIGERIA",
+      phoneNumber: "",
+      password: "",
+    },
+  });
+
+  const dispatch = useDispatch();
+
+  const onValueChange = (fieldName, value) => {
+    if (fieldName == "phoneNumber") {
+      setLoginData((prevState) => ({
+        ...prevState,
+        payload: {
+          ...prevState.payload,
+          phoneNumber: value,
+        },
+      }));
+    } else if (fieldName == "password") {
+      setLoginData((prevState) => ({
+        ...prevState,
+        payload: {
+          ...prevState.payload,
+          password: value,
+        },
+      }));
+    }
+  };
+
+  const getMobileNumberCountryCode = (country, mobileNumber) => {
+    if (country == "NIGERIA") {
+      return "+234" + mobileNumber.substring(1);
+    } else if (country == "KENYA") {
+      return "+254" + mobileNumber.substring(1);
+    }
+  };
+
+  const loginUserFunction = () => {
+    if (!(loginData.payload.phoneNumber.length >= 7 && 12 > loginData.payload.phoneNumber.length) || loginData.payload.password.length < 8) {
+      if (!(loginData.payload.phoneNumber.length >= 7 && 12 > loginData.payload.phoneNumber.length)) {
+        Toast.show({
+          text: "Invalid Phone number",
+          duration: 3000,
+          type: "danger",
+        });
+      } else if (loginData.payload.password.length < 8) {
+        Toast.show({
+          text: "Incorrect password",
+          duration: 3000,
+          type: "danger",
+        });
+      }
+    } else {
+      setDisplaySpinner(true);
+      dispatch(login(getMobileNumberCountryCode(loginData.payload.country, loginData.payload.phoneNumber), loginData.payload.password));
+    }
+  };
+
+  useEffect(() => {
+    setDisplaySpinner(false);
+  });
   return (
     <ImageBackground source={BackgroundImage} style={{ flex: 1 }} imageStyle={{ resizeMode: "cover" }}>
       <View style={styles.container}>
@@ -40,13 +107,39 @@ export default function Login({ navigation }) {
                     borderBottomColor: "#266DDC",
                   }}
                 >
-                  <Picker style={{ height: 40 }}>
-                    <Picker.Item label="🇳🇬  Nigeria" value="Nigeria" />
-                    <Picker.Item label="🇰🇪  Kenya" value="Kenya" />
+                  <Picker
+                    style={{ height: 40 }}
+                    onValueChange={(itemValue, itemIndex) => {
+                      setLoginData((prevState) => ({
+                        ...prevState,
+                        payload: {
+                          ...prevState.payload,
+                          country: itemValue,
+                        },
+                      }));
+                    }}
+                    selectedValue={loginData.payload.country}
+                  >
+                    <Picker.Item label="🇳🇬  Nigeria" value="NIGERIA" />
+                    <Picker.Item label="🇰🇪  Kenya" value="KENYA" />
                   </Picker>
                 </View>
-                <TextInput style={{ ...styles.textInput, marginTop: 20 }} placeholder="Phone Number" placeholderTextColor="#000000" />
-                <TextInput style={{ ...styles.textInput, marginTop: 20 }} placeholder="Password" placeholderTextColor="#000000" />
+                <TextInput
+                  style={{ ...styles.textInput, marginTop: 20 }}
+                  placeholder="Phone Number"
+                  placeholderTextColor="#000000"
+                  textContentType="telephoneNumber"
+                  keyboardType="visible-password"
+                  onChangeText={(text) => onValueChange("phoneNumber", text)}
+                />
+                <TextInput
+                  style={{ ...styles.textInput, marginTop: 20 }}
+                  placeholder="Password"
+                  placeholderTextColor="#000000"
+                  textContentType="password"
+                  secureTextEntry
+                  onChangeText={(text) => onValueChange("password", text)}
+                />
                 <AppText bold="true" styles={{ marginTop: 16, color: "#266DDC", fontSize: 16, textAlign: "right" }}>
                   Forgot Password?
                 </AppText>
@@ -65,12 +158,17 @@ export default function Login({ navigation }) {
                     elevation: 4,
                     justifyContent: "center",
                     alignItems: "center",
+                    display: `${!displaySpinner ? "flex" : "none"}`,
                   }}
+                  onPress={() => loginUserFunction()}
                 >
                   <AppText bold="true" styles={{ color: "#FFFFFF", fontSize: 18 }}>
                     Log In
                   </AppText>
                 </AppButton>
+                <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
+                  <Spinner color="blue" />
+                </View>
 
                 <AppText styles={{ marginTop: 40, fontSize: 16, textAlign: "center" }}>
                   <Text style={{ fontWeight: "500" }}>
@@ -88,6 +186,10 @@ export default function Login({ navigation }) {
     </ImageBackground>
   );
 }
+
+Login.propTypes = {
+  login: PropTypes.func,
+};
 
 const styles = StyleSheet.create({
   container: {
