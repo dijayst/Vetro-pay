@@ -13,16 +13,16 @@ export function AppButton(props) {
 
 export function PrimaryButton(props) {
   return (
-    <TouchableNativeFeedback onPress={props.onPress}>
-      <View style={styles.button}>{props.children}</View>
+    <TouchableNativeFeedback disabled={props.disabled} onPress={props.onPress}>
+      <View style={{ ...styles.button, backgroundColor: `${props.disabled ? "rgba(38, 109, 220, 0.4)" : "#266ddc"}` }}>{props.children}</View>
     </TouchableNativeFeedback>
   );
 }
 
 export function DangerButton(props) {
   return (
-    <TouchableNativeFeedback onPress={props.onPress}>
-      <View style={{ ...styles.button, backgroundColor: "red" }}>{props.children}</View>
+    <TouchableNativeFeedback disabled={props.disabled} onPress={props.onPress}>
+      <View style={{ ...styles.button, backgroundColor: `${props.disabled ? "rgba(255, 0, 0, 0.4)" : "red"}` }}>{props.children}</View>
     </TouchableNativeFeedback>
   );
 }
