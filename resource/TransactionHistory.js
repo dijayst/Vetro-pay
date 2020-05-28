@@ -14,10 +14,26 @@ export default function TransactionHistory({ date, amount, type }) {
       </View>
       <View style={{ paddingRight: 8, paddingTop: 8 }}>
         <AppText>
-          Amount: <Text style={{ fontWeight: "700", color: `${type == "Credit" ? "green" : "red"}` }}>{amount}</Text>
+          Amount:{" "}
+          <Text
+            style={{
+              fontWeight: "700",
+              color: `${type == "CREATED" ? "grey" : `${type == "CREDIT" ? "green" : "red"}`}`,
+            }}
+          >
+            {amount}
+          </Text>
         </AppText>
         <AppText styles={{ marginTop: 4 }}>
-          Type: <Text style={{ fontWeight: "700", color: `${type == "Credit" ? "green" : "red"}` }}>{type}</Text>
+          Type:{" "}
+          <Text
+            style={{
+              fontWeight: "700",
+              color: `${type == "CREATED" ? "grey" : `${type == "CREDIT" ? "green" : "red"}`}`,
+            }}
+          >
+            {type}
+          </Text>
         </AppText>
       </View>
     </View>
