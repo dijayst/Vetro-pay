@@ -1,9 +1,11 @@
-import { GET_USER_PERIODS, GET_USER_TRANSACTION, POST_TRANSACTION } from "../rootAction/types";
+import { GET_USER_PERIODS, GET_USER_TRANSACTION, POST_TRANSACTION, SEND_MONEY_PRE_VERIFY, POST_SEND_MONEY } from "../rootAction/types";
 
 const initialState = {
   userperiod: [],
   usertransactions: [],
   posttransaction: [],
+  sendmoneypreverify: [],
+  sendmoney: [],
 };
 
 export default function (state = initialState, action) {
@@ -22,6 +24,16 @@ export default function (state = initialState, action) {
       return {
         ...state,
         posttransaction: [...state.posttransaction, action.payload],
+      };
+    case SEND_MONEY_PRE_VERIFY:
+      return {
+        ...state,
+        sendmoneypreverify: [...state.sendmoneypreverify, action.payload],
+      };
+    case POST_SEND_MONEY:
+      return {
+        ...state,
+        sendmoney: [...state.sendmoney, action.payload],
       };
     default:
       return state;

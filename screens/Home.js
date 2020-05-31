@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 
-import { Dimensions, StyleSheet, Text, View, Picker, FlatList, InteractionManager } from "react-native";
+import { Dimensions, StyleSheet, Text, View, Picker, FlatList } from "react-native";
 import { Modal, TouchableOpacity } from "react-native";
 
 import TransactionHistory from "../resource/TransactionHistory";
@@ -13,7 +13,7 @@ import { MaterialIcons, Ionicons, AntDesign } from "@expo/vector-icons";
 
 import { getSysPeriod, getUserTransaction } from "../containers/transactions/action";
 import { Spinner } from "native-base";
-import { convertUTCDateToLocalDate } from "../resource/MetaFunctions";
+//import { convertUTCDateToLocalDate } from "../resource/MetaFunctions";
 
 function Separator() {
   return <View style={styles.separator} />;
@@ -156,8 +156,7 @@ export default function Home({ navigation }) {
             <View style={styles.uniqueTransactionDetails}>
               <AppText styles={styles.transactionDetailsText}>Date of Entry:</AppText>
               <AppText bold="true">
-                {convertUTCDateToLocalDate(new Date(modalData.datetime_of_entry)).toDateString()}{" "}
-                {convertUTCDateToLocalDate(new Date(modalData.datetime_of_entry)).toLocaleTimeString()}
+                {new Date(modalData.datetime_of_entry).toDateString()} {new Date(modalData.datetime_of_entry).toLocaleTimeString()}
               </AppText>
             </View>
           </View>

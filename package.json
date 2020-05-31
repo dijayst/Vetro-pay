@@ -30,7 +30,8 @@
     "react-navigation-stack": "^2.2.3",
     "react-redux": "^7.2.0",
     "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "react-native-svg": "9.13.3"
   },
   "devDependencies": {
     "babel-preset-expo": "~8.0.0",

@@ -6,9 +6,9 @@ import { createDrawerNavigator, DrawerItems } from "react-navigation-drawer";
 import { createAppContainer } from "react-navigation";
 import MainStack from "./mainStack";
 import VisualizerStack from "./financeVisualizerStack";
+import TransferFundStack from "./transferFundStack";
+import SettingsStack from "./settingsStack";
 import BillPayment from "../screens/BillPayment";
-import Support from "../screens/Support";
-import Settings from "../screens/Settings";
 import { Feather } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import Constants from "expo-constants";
@@ -32,26 +32,20 @@ const RootDrawerNavigation = createDrawerNavigator(
     BillPayment: {
       screen: BillPayment,
       navigationOptions: {
-        title: "Pay Bills",
-        drawerIcon: <Feather name="send" size={15} />,
+        title: "Market Place",
+        drawerIcon: <Feather name="globe" size={15} />,
       },
     },
     Transfer: {
-      screen: BillPayment,
+      screen: TransferFundStack,
       navigationOptions: {
         drawerIcon: <Feather name="send" size={15} />,
       },
     },
     Settings: {
-      screen: Settings,
+      screen: SettingsStack,
       navigationOptions: {
         drawerIcon: <Feather name="settings" size={15} />,
-      },
-    },
-    Support: {
-      screen: Support,
-      navigationOptions: {
-        drawerIcon: <Feather name="info" size={15} />,
       },
     },
     Logout: {

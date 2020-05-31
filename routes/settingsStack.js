@@ -1,20 +1,20 @@
 import React from "react";
 import { createStackNavigator } from "react-navigation-stack";
-import FinanceVisualizer from "../screens/FinanceVisualizer";
 import Header from "../resource/Header";
+import Settings from "../screens/settings/Settings";
 
 const screens = {
-  FinanceVisualizer: {
-    screen: FinanceVisualizer,
+  Settings: {
+    screen: Settings,
     navigationOptions: ({ navigation }) => {
       return {
-        headerTitle: () => <Header navigation={navigation} title="Visualizer" />,
+        headerTitle: () => <Header navigation={navigation} title="Settings" />,
         headerStyle: { backgroundColor: "#266ddc" },
       };
     },
   },
 };
 
-const VisualizerStack = createStackNavigator(screens);
+const SettingsStack = createStackNavigator(screens);
 
-export default VisualizerStack;
+export default SettingsStack;
