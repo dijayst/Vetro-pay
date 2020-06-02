@@ -21,7 +21,9 @@ function Separator() {
 
 export default function Home({ navigation }) {
   const [systemPeriod, setSystemPeriod] = useState([]);
+  const [userSelectSystemPeriod, setUserSelectSystemPeriod] = useState("");
   const [accountBalance, setAccountBalance] = useState("0.00");
+  const [accountBalanceIntroStatement, setAccountBalanceIntroStatement] = useState("Account Balance"); //Account Balance or Closing Balance
   const [accountCR, setAccountCR] = useState("0.00");
   const [accountDR, setAccountDR] = useState("0.00");
   const [transactionsLoaded, setTransactionsLoaded] = useState(false);
@@ -68,6 +70,15 @@ export default function Home({ navigation }) {
         if (userTransactions[userTransactions.length - 1]["status"] == "success") {
           //Update Account Balance
           setAccountBalance(userTransactions[userTransactions.length - 1]["data"].wallet_info.current_balance);
+          setAccountBalanceIntroStatement("Account Balance");
+
+          //If User-period is Closed or Not-running
+          if (userTransactions[userTransactions.length - 1]["data"]["sysperiod"].period_running == false) {
+            setAccountBalanceIntroStatement("Closing Balance");
+
+            //Update Account Balance to Specific Month Closing Balance
+            setAccountBalance(userTransactions[userTransactions.length - 1]["data"]["sysperiod"].wallet_closing_balance);
+          }
 
           //Update Credit Transactions
           setAccountCR(userTransactions[userTransactions.length - 1]["data"].wallet_info.deposits_n_receives);
@@ -86,6 +97,14 @@ export default function Home({ navigation }) {
 
     /** END GET USER TRANSACTION */
   });
+
+  const userSystemPeriodUpdate = (value) => {
+    setTransactionsLoaded(false);
+    setAccountBalance("0.00");
+    setAccountCR("0.00");
+    setAccountDR("0.00");
+    dispatch(getUserTransaction(value));
+  };
 
   const layoutEvent = (event) => {
     SetNonTransactionHeight(event.nativeEvent.layout.height);
@@ -198,7 +217,15 @@ export default function Home({ navigation }) {
 
       <View style={styles.balanceUpBackGround}>
         <View style={{ flexDirection: "row" }}>
-          <Picker mode="dropdown" style={{ height: 30, width: 130, backgroundColor: "#FFFFFF", marginTop: 8, borderRadius: 2, elevation: 5 }}>
+          <Picker
+            mode="dropdown"
+            style={{ height: 30, width: 130, backgroundColor: "#FFFFFF", marginTop: 8, borderRadius: 2, elevation: 5 }}
+            onValueChange={(itemValue, itemIndex) => {
+              setUserSelectSystemPeriod(itemValue);
+              userSystemPeriodUpdate(itemValue);
+            }}
+            selectedValue={userSelectSystemPeriod}
+          >
             {systemPeriod.length > 0
               ? systemPeriod.map((data, index) => {
                   return <Picker.Item key={index} label={`${data.readable_date}`.toUpperCase()} value={data.raw_date} />;
@@ -212,7 +239,7 @@ export default function Home({ navigation }) {
 
         <View onLayout={layoutEvent} style={styles.vpCard}>
           <AppText bold="true" styles={{ paddingLeft: 10, paddingTop: 10, fontSize: 17, color: "#266ddc", textTransform: "uppercase" }}>
-            Account Balance
+            {accountBalanceIntroStatement}
           </AppText>
           {/**Account Balance */}
           <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 10 }}>
@@ -262,6 +289,21 @@ export default function Home({ navigation }) {
         <AppText bold="true" styles={styles.headerText}>
           Transaction History
         </AppText>
+
+        <View
+          style={{
+            marginTop: 16,
+            height: 40,
+            borderWidth: 0.5,
+            borderColor: "rgba(50, 54, 63, 0.4)",
+            borderRadius: 2,
+            justifyContent: "center",
+            alignItems: "center",
+            display: `${transactionsLoaded ? `${transactionData.length == 0 ? "flex" : "none"}` : "none"}`,
+          }}
+        >
+          <AppText styles={{ color: "rgba(50, 54, 63, 0.4)" }}>{transactionsLoaded ? `${transactionData.length == 0 ? "No available transaction this month." : ""}` : ""}</AppText>
+        </View>
 
         <View style={{ height: Dimensions.get("window").height - nonTransactionHeight - 30 - 40 - 180 }}>
           {/** 30 == "Picker Height" && 40 == "Record Off-app button" && 180 == "miscellaneous margin + padding, text etc."  */}

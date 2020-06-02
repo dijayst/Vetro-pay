@@ -4,6 +4,7 @@ import messages from "./messages";
 import authentication from "../authentication/reducer";
 import regvalidate from "../regvalidate/reducer";
 import transactions from "../transactions/reducer";
+import banks from "../banks/reducer";
 
 export default combineReducers({
   errors,
@@ -11,4 +12,5 @@ export default combineReducers({
   authentication,
   regvalidate,
   transactions,
+  banks,
 });

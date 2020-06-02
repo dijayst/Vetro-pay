@@ -19,3 +19,8 @@ export const POST_TRANSACTION = "POST_TRANSACTION";
 
 export const SEND_MONEY_PRE_VERIFY = "SEND_MONEY_PRE_VERIFY";
 export const POST_SEND_MONEY = "POST_SEND_MONEY";
+
+export const GET_BANK = "GET_BANK";
+export const RESOLVE_BANK = "RESOLVE_BANK";
+export const UPDATE_BANK = "UPDATE_BANK";
+export const WITHDRAW_TO_BANK = "WITHDRAW_TO_BANK";
