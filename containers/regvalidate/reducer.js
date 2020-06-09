@@ -1,9 +1,11 @@
-import { POST_PREREG_DETAILS, REG_AUTH_CHECKER, REGISTER_USER } from "../rootAction/types";
+import { POST_PREREG_DETAILS, REG_AUTH_CHECKER, REGISTER_USER, POST_EMAIL, EMAIL_VERIFY } from "../rootAction/types";
 
 const initialState = {
   prereg: [],
   regauth: [],
   register: [],
+  postemail: [],
+  emailverify: [],
 };
 
 export default function (state = initialState, action) {
@@ -22,6 +24,16 @@ export default function (state = initialState, action) {
       return {
         ...state,
         register: [...state.register, action.payload],
+      };
+    case POST_EMAIL:
+      return {
+        ...state,
+        postemail: [...state.postemail, action.payload],
+      };
+    case EMAIL_VERIFY:
+      return {
+        ...state,
+        emailverify: [...state.emailverify, action.payload],
       };
     default:
       return state;

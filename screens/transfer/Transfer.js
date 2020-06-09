@@ -51,7 +51,7 @@ export default function Transfer({ navigation }) {
         {/** End Withdraw to bank */}
         <Separator />
         {/** Scan QR */}
-        <TouchableNativeFeedback>
+        <TouchableNativeFeedback onPress={() => navigation.navigate("ScanPay")}>
           <View style={styles.listItem}>
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
               <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>

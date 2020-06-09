@@ -173,6 +173,7 @@ export default function Register({ navigation }) {
       registerData.payload.securityAnswer == "" ||
       registerData.payload.securityAnswer.replace(/\s\s+/g, " ") == " " ||
       registerData.payload.transactionPin.length < 6 ||
+      registerData.payload.transactionPin.length > 6 ||
       Number(registerData.payload.transactionPin) == NaN ||
       registerData.payload.transactionPin !== registerData.payload.confirmTransactionPin
     ) {
@@ -188,7 +189,7 @@ export default function Register({ navigation }) {
           duration: 3000,
           type: "danger",
         });
-      } else if (registerData.payload.transactionPin.length < 6 || Number(registerData.payload.transactionPin) == NaN) {
+      } else if (registerData.payload.transactionPin.length < 6 || Number(registerData.payload.transactionPin) == NaN || registerData.payload.transactionPin.length > 6) {
         Toast.show({
           text: "Transaction Pin must be 6 digit (numbers only)",
           duration: 3000,

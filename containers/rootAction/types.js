@@ -24,3 +24,9 @@ export const GET_BANK = "GET_BANK";
 export const RESOLVE_BANK = "RESOLVE_BANK";
 export const UPDATE_BANK = "UPDATE_BANK";
 export const WITHDRAW_TO_BANK = "WITHDRAW_TO_BANK";
+
+export const POST_EMAIL = "POST_EMAIL";
+export const EMAIL_VERIFY = "EMAIL_VERIFY";
+
+export const CHANGE_PASSWORD = "CHANGE_PASSWORD";
+export const CHANGE_PIN = "CHANGE_PIN";
