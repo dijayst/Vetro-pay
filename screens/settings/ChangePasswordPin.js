@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, StyleSheet, TouchableNativeFeedback } from "react-native";
 import AppText from "../../resource/AppText";
-import { ScanQRComponent } from "../../resource/Svg";
+import { UserPasswordSvgComponent, UserPinSvgComponent } from "../../resource/Svg";
 
 function Separator() {
   return <View style={styles.separator} />;
@@ -16,7 +16,7 @@ export default function ChangePasswordPin({ navigation }) {
           <View style={styles.listItem}>
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
               <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
-                <ScanQRComponent />
+                <UserPasswordSvgComponent />
                 <AppText bold="true" styles={{ paddingLeft: 10, fontSize: 15 }}>
                   Change Password
                 </AppText>
@@ -32,7 +32,7 @@ export default function ChangePasswordPin({ navigation }) {
           <View style={styles.listItem}>
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
               <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
-                <ScanQRComponent />
+                <UserPinSvgComponent />
                 <AppText bold="true" styles={{ paddingLeft: 10, fontSize: 15 }}>
                   Change Transaction Pin
                 </AppText>

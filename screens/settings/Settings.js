@@ -1,10 +1,19 @@
 import React, { useRef } from "react";
-import { Text, View, StyleSheet, TouchableNativeFeedback } from "react-native";
+import { Text, View, StyleSheet, TouchableNativeFeedback, Share, Alert } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import AppText from "../../resource/AppText";
-import { SendMoneySvgComponent, ScanQRComponent } from "../../resource/Svg";
-import RBSheet from "react-native-raw-bottom-sheet";
-import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import { AccountProfileSvgComponent, HelpSvgComponent, InviteFriendSvgComponent } from "../../resource/Svg";
+
+const onShare = async () => {
+  try {
+    const result = await Share.share({
+      message:
+        "Hi there, \n\nHave you tried *VetroPay*; a bill payment plattform and a personal financial accountant all in one. I think you'd love it. \n\nDownload here: https://ancl.at/vetropay",
+    });
+  } catch (error) {
+    Alert.alert("Error", "Error sending invite");
+  }
+};
 
 function Separator() {
   return <View style={styles.separator} />;
@@ -20,7 +29,7 @@ export default function Settings({ navigation }) {
           <View style={styles.listItem}>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
-                <SendMoneySvgComponent />
+                <AccountProfileSvgComponent />
                 <View style={{ flexDirection: "column" }}>
                   <AppText bold="true" styles={{ paddingLeft: 10, fontSize: 15 }}>
                     Account
@@ -43,7 +52,7 @@ export default function Settings({ navigation }) {
           <View style={styles.listItem}>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
-                <SendMoneySvgComponent />
+                <HelpSvgComponent />
                 <View style={{ flexDirection: "column" }}>
                   <AppText bold="true" styles={{ paddingLeft: 10, fontSize: 15 }}>
                     Help
@@ -63,11 +72,11 @@ export default function Settings({ navigation }) {
         <Separator />
 
         {/** Invite a friend */}
-        <TouchableNativeFeedback onPress={() => refRBSheet.current.open()}>
+        <TouchableNativeFeedback onPress={() => onShare()}>
           <View style={styles.listItem}>
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
               <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
-                <ScanQRComponent />
+                <InviteFriendSvgComponent />
                 <AppText bold="true" styles={{ paddingLeft: 10, fontSize: 15 }}>
                   Invite a friend
                 </AppText>
@@ -88,46 +97,6 @@ export default function Settings({ navigation }) {
           Ancla Technologies
         </AppText>
       </View>
-
-      <RBSheet
-        ref={refRBSheet}
-        closeOnDragDown={true}
-        closeOnPressMask={false}
-        customStyles={{
-          wrapper: {
-            backgroundColor: "transparent",
-          },
-          draggableIcon: {
-            backgroundColor: "#266ddc",
-          },
-        }}
-      >
-        <View>
-          <AppText styles={{ textAlign: "center", fontSize: 16 }}>Love Vetropay? Share with a friend</AppText>
-
-          <View style={{ justifyContent: "space-evenly", marginTop: 10, flexDirection: "row" }}>
-            {/**whatsapp facebook twitter linkedin, reddit */}
-            <View style={{ backgroundColor: "#4FCE5D", width: 50, height: 50, justifyContent: "center", alignItems: "center", borderRadius: 10, elevation: 4 }}>
-              <FontAwesome name="whatsapp" color="#ffffff" size={40} />
-            </View>
-            <View style={{ backgroundColor: "#3b5998", width: 50, height: 50, justifyContent: "center", alignItems: "center", borderRadius: 10, elevation: 4 }}>
-              <FontAwesome name="facebook" color="#ffffff" size={40} />
-            </View>
-
-            <View style={{ backgroundColor: "#00aced", width: 50, height: 50, justifyContent: "center", alignItems: "center", borderRadius: 10, elevation: 4 }}>
-              <FontAwesome name="twitter" color="#ffffff" size={40} />
-            </View>
-
-            <View style={{ backgroundColor: "#007bb6", width: 50, height: 50, justifyContent: "center", alignItems: "center", borderRadius: 10, elevation: 4 }}>
-              <FontAwesome name="linkedin" color="#ffffff" size={40} />
-            </View>
-
-            <View style={{ backgroundColor: "#517fa4", width: 50, height: 50, justifyContent: "center", alignItems: "center", borderRadius: 10, elevation: 4 }}>
-              <MaterialIcons name="content-copy" color="#ffffff" size={30} />
-            </View>
-          </View>
-        </View>
-      </RBSheet>
     </View>
   );
 }

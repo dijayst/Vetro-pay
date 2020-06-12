@@ -20,6 +20,10 @@ function Separator() {
 }
 
 export default function Home({ navigation }) {
+  const userAuthentication = useSelector((state) => state.authentication.user);
+  const currency = `${userAuthentication.country == "NIGERIA" ? "NGN" : "KES"}`;
+  const currencySymbol = `${userAuthentication.country == "NIGERIA" ? "₦" : "K"}`;
+  const [userDepositBank, setUserDepositBank] = useState({ bankName: "", accountNumber: "", accountName: "" });
   const [systemPeriod, setSystemPeriod] = useState([]);
   const [userSelectSystemPeriod, setUserSelectSystemPeriod] = useState("");
   const [accountBalance, setAccountBalance] = useState("0.00");
@@ -28,6 +32,7 @@ export default function Home({ navigation }) {
   const [accountDR, setAccountDR] = useState("0.00");
   const [transactionsLoaded, setTransactionsLoaded] = useState(false);
   const [transactionData, setTransactionData] = useState([]);
+  const [modalFundOpen, setModalFundOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState({ transaction_insight: "Loading..." });
   const [summaryActive, setSummaryActive] = useState(false);
@@ -80,6 +85,13 @@ export default function Home({ navigation }) {
             setAccountBalance(userTransactions[userTransactions.length - 1]["data"]["sysperiod"].wallet_closing_balance);
           }
 
+          // Update Nigerian Customers Deposit Bank
+          setUserDepositBank({
+            bankName: userTransactions[userTransactions.length - 1]["data"]["deposit_bank"].bank_name,
+            accountNumber: userTransactions[userTransactions.length - 1]["data"]["deposit_bank"].account_number,
+            accountName: userTransactions[userTransactions.length - 1]["data"]["deposit_bank"].account_name,
+          });
+
           //Update Credit Transactions
           setAccountCR(userTransactions[userTransactions.length - 1]["data"].wallet_info.deposits_n_receives);
 
@@ -113,9 +125,63 @@ export default function Home({ navigation }) {
 
   return (
     <View style={styles.container}>
+      {/** Add Funds Bank Modal */}
+      <Modal transparent visible={modalFundOpen} animationType="slide">
+        <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.6)" }}>
+          <View style={{ ...styles.modalFundContent, borderColor: "#266ddc", borderWidth: 2 }}>
+            {/** Modal Header */}
+            <View style={{ marginTop: 16, flexDirection: "row", justifyContent: "flex-end" }}>
+              <MaterialIcons
+                color="grey"
+                name="close"
+                size={24}
+                onPress={() => {
+                  setModalFundOpen(false);
+                }}
+                style={{ paddingRight: 10 }}
+              />
+            </View>
+            {/** End Modal Header */}
+
+            <View style={{ marginTop: 16 }}>
+              <AppText bold="true" styles={{ textAlign: "center", fontSize: 18 }}>
+                How to fund your Vetropay Account
+              </AppText>
+
+              <AppText styles={{ marginTop: 10 }}>
+                <Text style={{ fontWeight: "700" }}>1. Mobile/Internet Banking</Text>
+              </AppText>
+              <AppText styles={{ paddingHorizontal: 10, marginTop: 5 }}>(a). Log in to your Bank's mobile application/internet banking service.</AppText>
+              <AppText styles={{ paddingHorizontal: 10, marginTop: 5 }}>(b). Make a fund transfer to the Bank Account details below:</AppText>
+              <AppText bold="true" styles={{ textAlign: "center" }}>
+                Bank Name: <Text style={{ color: "#266ddc" }}>{userDepositBank.bankName}</Text>
+              </AppText>
+              <AppText bold="true" styles={{ textAlign: "center" }}>
+                Account Number: <Text style={{ color: "#266ddc" }}>{userDepositBank.accountNumber}</Text>
+              </AppText>
+              <AppText bold="true" styles={{ textAlign: "center" }}>
+                Account Name: <Text style={{ color: "#266ddc" }}>{userDepositBank.accountName}</Text>
+              </AppText>
+
+              <AppText bold="true" styles={{ textAlign: "center" }}>
+                Your Ref: <Text style={{ color: "#266ddc" }}>0{userAuthentication.phone_number.substring(4)}</Text>
+              </AppText>
+
+              <AppText styles={{ paddingHorizontal: 10, marginTop: 5 }}>
+                (c). Ensure you add "{`0${userAuthentication.phone_number.substring(4)}`}" as your reference/narration.
+              </AppText>
+
+              <AppText styles={{ paddingHorizontal: 10, marginTop: 5 }}>(d). Your VetroPay account will be credited within 0 - 5 minutes. Cheers!</AppText>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/** End Add Funds Bank Modal */}
+
       {/** Transaction Modal  */}
       <Modal visible={modalOpen} animationType="slide">
-        <View style={styles.modalContent}>
+        <View style={styles.modaalContent}>
           <MaterialIcons name="close" size={24} onPress={() => setModalOpen(false)} style={styles.modalClose} />
           <View style={styles.transactionDetails}>
             <View style={styles.uniqueTransactionDetails}>
@@ -161,7 +227,9 @@ export default function Home({ navigation }) {
             </View>
             <View style={styles.uniqueTransactionDetails}>
               <AppText styles={styles.transactionDetailsText}>Amount:</AppText>
-              <AppText bold="true">NGN {modalData.amount}</AppText>
+              <AppText bold="true">
+                {currency} {modalData.amount}
+              </AppText>
             </View>
             <View style={styles.uniqueTransactionDetails}>
               <AppText styles={styles.transactionDetailsText}>Category:</AppText>
@@ -244,9 +312,11 @@ export default function Home({ navigation }) {
           {/**Account Balance */}
           <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 10 }}>
             <AppText bold="true" styles={{ textAlign: "center", fontSize: 25, marginRight: 10 }}>
-              NGN {accountBalance}
+              {currency} {accountBalance}
             </AppText>
-            <MaterialIcons name="add-circle" color="#219653" size={35} />
+            <TouchableOpacity onPress={() => setModalFundOpen(true)}>
+              <MaterialIcons name="add-circle" color="#219653" size={35} />
+            </TouchableOpacity>
           </View>
           {/** End Account Balance */}
           <View style={{ paddingLeft: 10 }}>
@@ -266,10 +336,10 @@ export default function Home({ navigation }) {
 
               <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
                 <AppText bold="true" styles={{ fontSize: 17, color: "green", marginBottom: 8, textTransform: "uppercase" }}>
-                  CR - ₦ {accountCR}
+                  CR - {currencySymbol} {accountCR}
                 </AppText>
                 <AppText bold="true" styles={{ fontSize: 17, color: "red", marginBottom: 8, textTransform: "uppercase" }}>
-                  DR - ₦ {accountDR}
+                  DR - {currencySymbol} {accountDR}
                 </AppText>
               </View>
             </View>
@@ -407,5 +477,16 @@ const styles = StyleSheet.create({
     marginTop: 20,
     flexDirection: "row",
     justifyContent: "space-evenly",
+  },
+
+  modalFundContent: {
+    flex: 1,
+    marginTop: 80,
+    borderRadius: 5,
+    marginBottom: 100,
+    marginLeft: 20,
+    marginRight: 20,
+    paddingHorizontal: 10,
+    backgroundColor: "#F0F0F8",
   },
 });

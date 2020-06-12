@@ -1,6 +1,6 @@
 import axios from "axios";
 import { tokenConfig } from "../authentication/action";
-import { GET_USER_PERIODS, GET_USER_TRANSACTION, POST_TRANSACTION, SEND_MONEY_PRE_VERIFY, POST_SEND_MONEY } from "../rootAction/types";
+import { GET_USER_PERIODS, GET_USER_TRANSACTION, POST_TRANSACTION, SEND_MONEY_PRE_VERIFY, POST_SEND_MONEY, FINANCE_VISUALIZER } from "../rootAction/types";
 import { returnErrors } from "../messages/messages";
 import { BASE_URL } from "../rootAction/env";
 
@@ -107,6 +107,21 @@ export const postSendMoney = (international, country, phoneNumberUID, amount, pa
     .then((res) => {
       dispatch({
         type: POST_SEND_MONEY,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+    });
+};
+
+// GET FINANCE VISUALIZER DATA
+export const getVisualizerData = (userPeriod) => (dispatch, getState) => {
+  axios
+    .post(`${BASE_URL}/api/user/financevisualizer`, { user_period: userPeriod }, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: FINANCE_VISUALIZER,
         payload: res.data,
       });
     })

@@ -1,8 +1,8 @@
 import React from "react";
 import { Text, View, StyleSheet, TouchableNativeFeedback } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
 import AppText from "../../resource/AppText";
-import { SendMoneySvgComponent, ScanQRComponent } from "../../resource/Svg";
+import { HelpSvgComponent, PrivacyPoilicySvgComponent } from "../../resource/Svg";
+import { Linking } from "expo";
 
 function Separator() {
   return <View style={styles.separator} />;
@@ -13,11 +13,11 @@ export default function Help() {
     <View style={styles.container}>
       <View style={styles.listContainer}>
         {/** FAQ */}
-        <TouchableNativeFeedback>
+        <TouchableNativeFeedback onPress={() => Linking.openURL("https://vetropay.com/mobile/faq")}>
           <View style={styles.listItem}>
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
               <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
-                <ScanQRComponent />
+                <HelpSvgComponent />
                 <AppText bold="true" styles={{ paddingLeft: 10, fontSize: 15 }}>
                   Frequently Asked Questions
                 </AppText>
@@ -29,11 +29,11 @@ export default function Help() {
 
         <Separator />
         {/** Privacy Policy */}
-        <TouchableNativeFeedback>
+        <TouchableNativeFeedback onPress={() => Linking.openURL("https://vetropay.com/mobile/privacy-policy")}>
           <View style={styles.listItem}>
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
               <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
-                <ScanQRComponent />
+                <PrivacyPoilicySvgComponent />
                 <AppText bold="true" styles={{ paddingLeft: 10, fontSize: 15 }}>
                   Privacy Policy
                 </AppText>

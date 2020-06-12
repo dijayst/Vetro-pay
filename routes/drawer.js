@@ -8,7 +8,7 @@ import MainStack from "./mainStack";
 import VisualizerStack from "./financeVisualizerStack";
 import TransferFundStack from "./transferFundStack";
 import SettingsStack from "./settingsStack";
-import BillPayment from "../screens/BillPayment";
+import MarketPlaceStack from "./marketPlaceStack";
 import { Feather } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import Constants from "expo-constants";
@@ -29,8 +29,8 @@ const RootDrawerNavigation = createDrawerNavigator(
         drawerIcon: <SimpleLineIcons name="graph" size={15} />,
       },
     },
-    BillPayment: {
-      screen: BillPayment,
+    MarketPlace: {
+      screen: MarketPlaceStack,
       navigationOptions: {
         title: "Market Place",
         drawerIcon: <Feather name="globe" size={15} />,

@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Text, View, StyleSheet, TouchableNativeFeedback } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import AppText from "../../resource/AppText";
-import { SendMoneySvgComponent, ScanQRComponent } from "../../resource/Svg";
+import { AccountProfileSvgComponent, EmailSvgComponent, KycSvgComponent, QrCodeSvgComponent, UserPinSvgComponent } from "../../resource/Svg";
 
 function Separator() {
   return <View style={styles.separator} />;
@@ -20,7 +20,7 @@ export default function Account({ navigation }) {
           <View style={styles.listItem}>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
-                <SendMoneySvgComponent />
+                <AccountProfileSvgComponent />
                 <View style={{ flexDirection: "column" }}>
                   <AppText bold="true" styles={{ paddingLeft: 10, fontSize: 15 }}>
                     Full name
@@ -50,7 +50,7 @@ export default function Account({ navigation }) {
           <View style={styles.listItem}>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
-                <SendMoneySvgComponent />
+                <EmailSvgComponent />
                 <View style={{ flexDirection: "column" }}>
                   <AppText bold="true" styles={{ paddingLeft: 10, fontSize: 15 }}>
                     Email
@@ -76,7 +76,7 @@ export default function Account({ navigation }) {
           <View style={styles.listItem}>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
-                <SendMoneySvgComponent />
+                <KycSvgComponent />
                 <View style={{ flexDirection: "column" }}>
                   <AppText bold="true" styles={{ paddingLeft: 10, fontSize: 15 }}>
                     KYC status
@@ -109,7 +109,7 @@ export default function Account({ navigation }) {
           <View style={styles.listItem}>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
-                <SendMoneySvgComponent />
+                <QrCodeSvgComponent />
                 <View style={{ flexDirection: "column" }}>
                   <AppText bold="true" styles={{ paddingLeft: 10, fontSize: 15 }}>
                     QR code
@@ -133,7 +133,7 @@ export default function Account({ navigation }) {
           <View style={styles.listItem}>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
-                <SendMoneySvgComponent />
+                <UserPinSvgComponent />
                 <View style={{ flexDirection: "column" }}>
                   <AppText bold="true" styles={{ paddingLeft: 10, fontSize: 15 }}>
                     Change Password/Pin

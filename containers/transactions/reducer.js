@@ -1,4 +1,4 @@
-import { GET_USER_PERIODS, GET_USER_TRANSACTION, POST_TRANSACTION, SEND_MONEY_PRE_VERIFY, POST_SEND_MONEY } from "../rootAction/types";
+import { GET_USER_PERIODS, GET_USER_TRANSACTION, POST_TRANSACTION, SEND_MONEY_PRE_VERIFY, POST_SEND_MONEY, FINANCE_VISUALIZER } from "../rootAction/types";
 
 const initialState = {
   userperiod: [],
@@ -6,6 +6,7 @@ const initialState = {
   posttransaction: [],
   sendmoneypreverify: [],
   sendmoney: [],
+  visualizer: [],
 };
 
 export default function (state = initialState, action) {
@@ -34,6 +35,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         sendmoney: [...state.sendmoney, action.payload],
+      };
+    case FINANCE_VISUALIZER:
+      return {
+        ...state,
+        visualizer: [...state.visualizer, action.payload],
       };
     default:
       return state;
