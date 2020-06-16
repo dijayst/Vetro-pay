@@ -404,7 +404,7 @@ export default function Register({ navigation }) {
                       <Spinner color="blue" />
                     </View>
 
-                    <AppText styles={{ marginTop: 30, marginBottom: 10, fontSize: 16, textAlign: "center" }}>
+                    <AppText styles={{ marginTop: 30, marginBottom: 30, fontSize: 16, textAlign: "center" }}>
                       <Text style={{ fontWeight: "500" }}>
                         Already a user?{" "}
                         <Text onPress={() => navigation.navigate("Login")} style={{ color: "#266DDC", fontWeight: "bold" }}>

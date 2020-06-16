@@ -7,3 +7,7 @@ export const convertUTCDateToLocalDate = (date) => {
 
   return newDate;
 };
+
+export const numberWithCommas = (x) => {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};

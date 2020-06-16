@@ -9,10 +9,12 @@ import VisualizerStack from "./financeVisualizerStack";
 import TransferFundStack from "./transferFundStack";
 import SettingsStack from "./settingsStack";
 import MarketPlaceStack from "./marketPlaceStack";
+import CreditStack from "./creditStack";
 import { Feather } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import Constants from "expo-constants";
 import { logout } from "../containers/authentication/action";
+import { CreditSvgComponent } from "../resource/Svg";
 
 const RootDrawerNavigation = createDrawerNavigator(
   {
@@ -34,6 +36,13 @@ const RootDrawerNavigation = createDrawerNavigator(
       navigationOptions: {
         title: "Market Place",
         drawerIcon: <Feather name="globe" size={15} />,
+      },
+    },
+    Credits: {
+      screen: CreditStack,
+      navigationOptions: {
+        title: "Vetro Credit",
+        drawerIcon: <CreditSvgComponent />,
       },
     },
     Transfer: {

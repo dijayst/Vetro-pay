@@ -6,6 +6,7 @@ import authchange from "../authchange/reducer";
 import regvalidate from "../regvalidate/reducer";
 import transactions from "../transactions/reducer";
 import banks from "../banks/reducer";
+import credit from "../credit/reducer";
 
 export default combineReducers({
   errors,
@@ -15,4 +16,5 @@ export default combineReducers({
   regvalidate,
   transactions,
   banks,
+  credit,
 });

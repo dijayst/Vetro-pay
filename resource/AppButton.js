@@ -1,10 +1,15 @@
 import React from "react";
 import { StyleSheet, View, Text, TouchableNativeFeedback } from "react-native";
+import { parse } from "react-native-svg";
 
 export function AppButton(props) {
+  let opacityValue = 1;
+  if (props.disabled) {
+    opacityValue = 0.6;
+  }
   return (
-    <TouchableNativeFeedback onPress={props.onPress}>
-      <View style={{ ...props.styles }}>
+    <TouchableNativeFeedback disabled={props.disabled} onPress={props.onPress}>
+      <View style={{ ...props.styles, opacity: opacityValue }}>
         <Text style={{ ...props.textStyling }}>{props.children}</Text>
       </View>
     </TouchableNativeFeedback>

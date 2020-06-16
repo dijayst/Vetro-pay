@@ -215,3 +215,32 @@ export function UserPasswordSvgComponent() {
 
   return <UserPasswordSvg />;
 }
+
+export function CreditSvgComponent() {
+  const credit = `
+  <svg width="15" height="17" viewBox="0 0 15 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g clip-path="url(#clip0)">
+    <path d="M2.41851 9.20042L1 9.53334L7.49976 16.9L14 9.53334L12.581 9.20042L7.49976 14.9592L2.41851 9.20042Z" fill="black"/>
+    <path d="M11 7H10V9H11V7Z" fill="black"/>
+    <path d="M8.87891 4.49032L9.52169 5.25636L13.5165 1.90428L12.8738 1.13824L8.87891 4.49032Z" fill="black"/>
+    <path d="M5 5H4V8.4H5V5Z" fill="black"/>
+    <path d="M10 8.39999H12.8667C13.4926 8.39999 14 8.90741 14 9.53333V9.53333H10V8.39999Z" fill="black"/>
+    <path d="M5 8.39999H2.13334C1.50741 8.39999 1 8.90741 1 9.53333V9.53333H5V8.39999Z" fill="black"/>
+    <rect width="0.999999" height="1.13333" transform="matrix(1 0 0 -1 4 3.4)" fill="black"/>
+    <rect width="0.999999" height="1.13333" transform="matrix(1 0 0 -1 4 1.13333)" fill="black"/>
+    <circle cx="12.5" cy="5.5" r="1.5" fill="black"/>
+    <circle cx="9.5" cy="1.5" r="1.5" fill="black"/>
+    <circle cx="9.5" cy="1.5" r="0.5" fill="white"/>
+    <circle cx="12.5" cy="5.5" r="0.5" fill="white"/>
+    </g>
+    <defs>
+    <clipPath id="clip0">
+    <rect width="17" height="15" fill="white" transform="translate(0 17) rotate(-90)"/>
+    </clipPath>
+    </defs>
+  </svg>
+  `;
+  const CreditSvg = () => <SvgXml xml={credit} />;
+
+  return <CreditSvg />;
+}

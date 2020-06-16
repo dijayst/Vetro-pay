@@ -181,7 +181,7 @@ export default function Home({ navigation }) {
 
       {/** Transaction Modal  */}
       <Modal visible={modalOpen} animationType="slide">
-        <View style={styles.modaalContent}>
+        <View style={styles.modalContent}>
           <MaterialIcons name="close" size={24} onPress={() => setModalOpen(false)} style={styles.modalClose} />
           <View style={styles.transactionDetails}>
             <View style={styles.uniqueTransactionDetails}>
