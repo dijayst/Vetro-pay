@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { View, Text, StyleSheet, TouchableWithoutFeedback } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import AppText from "../../resource/AppText";
 import { Linking } from "expo";
 
@@ -59,13 +59,6 @@ export default function Kyc() {
           </AppText>
         </View>
 
-        <TouchableWithoutFeedback onPress={() => Linking.openURL("https://vetropay.com/mobile/privacy-policy")}>
-          <View o>
-            <AppText bold="true" styles={{ fontSize: 16, color: "#266ddc", marginTop: 40, textAlign: "center" }}>
-              Click here to read our Privacy Policy
-            </AppText>
-          </View>
-        </TouchableWithoutFeedback>
         {/** End Note */}
       </View>
     </View>

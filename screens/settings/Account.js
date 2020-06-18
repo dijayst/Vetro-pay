@@ -36,6 +36,29 @@ export default function Account({ navigation }) {
           </View>
         </TouchableNativeFeedback>
         {/** End Full name */}
+        <Separator />
+
+        {/** UID */}
+        <TouchableNativeFeedback>
+          <View style={styles.listItem}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+              <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
+                <AccountProfileSvgComponent />
+                <View style={{ flexDirection: "column" }}>
+                  <AppText bold="true" styles={{ paddingLeft: 10, fontSize: 15 }}>
+                    UID
+                  </AppText>
+                  <AppText styles={{ fontSize: 12, marginLeft: 10, textTransform: "uppercase" }}>{userAuthentication.user_uid}</AppText>
+                </View>
+              </View>
+
+              <View>
+                <AntDesign name="right" color="grey" size={20} />
+              </View>
+            </View>
+          </View>
+        </TouchableNativeFeedback>
+        {/** End UID */}
 
         <Separator />
 

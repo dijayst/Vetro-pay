@@ -438,8 +438,9 @@ export default function RequestCredit({ navigation }) {
                   </AppText>
 
                   <AppText styles={{ marginTop: 5 }}>
-                    (a) Vetro Credit relies on an independent (yet collaborative) credit scoring algorithm derived from your profile, transaction activity within our network and
-                    your existing national credit history.
+                    (a) Vetro Credit relies on an independent (yet collaborative) credit scoring algorithm derived from your profile, transaction activities within our network and
+                    your existing national credit history. Vetro Credit is an optional service made available to users. Users in their sole-discretion may or may not choose to
+                    utilize this Platform feature.
                   </AppText>
 
                   <AppText styles={{ marginTop: 5 }}>(b). Vetro Credit option is made available to users on a month-to-month performance assesment:</AppText>
@@ -484,7 +485,22 @@ export default function RequestCredit({ navigation }) {
                   </AppText>
 
                   <AppText bold="true" styles={{ fontSize: 16, marginTop: 20 }}>
-                    10. Acceptance of "Terms of Service"
+                    10. User Accountability
+                  </AppText>
+                  <AppText styles={{ marginTop: 5 }}>
+                    You acknowledge and recognize that your Transaction PIN is your security check for effecting payments, transfers and withdrawals on the VetroPay Mobile
+                    Platform, You undertake to be fully and solely responsible for all risks that may arise from the Transactions as well or together with all losses which may be
+                    suffered by You as a result of any unauthorized transfer of monies or other Transactions in your account as a result of the use of your Transaction PIN on the
+                    VetroPay Mobile Platform. PIN will serve as the default authentication for transaction authentication. Password will serve as default authentication for login.
+                  </AppText>
+                  <AppText styles={{ marginTop: 5 }}>
+                    Furthermore, You acknowledge and consent that neither VetroPay nor Ancla Technologies (nor It's parent company, in the event of an acquisition or merger) would
+                    be liable for any loss, fraudulent or unauthorized access or transfer of monies, that may occur on your account as a result of processing Transactions
+                    consummated on your account through VetroPay Mobile Platform.
+                  </AppText>
+
+                  <AppText bold="true" styles={{ fontSize: 16, marginTop: 20 }}>
+                    11. Acceptance of "Terms of Service"
                   </AppText>
 
                   <AppText styles={{ marginTop: 10 }}>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
-import { View, Text, StyleSheet, Image, TextInput, Picker, ImageBackground } from "react-native";
+import { View, Text, StyleSheet, Image, TextInput, Picker, ImageBackground, TouchableWithoutFeedback } from "react-native";
 import Constants from "expo-constants";
 import AppText from "../../resource/AppText";
 import { AppButton } from "../../resource/AppButton";
@@ -76,6 +76,14 @@ export default function Login({ navigation }) {
   useEffect(() => {
     setDisplaySpinner(false);
   });
+
+  const forgotPasswordAlert = () => {
+    Toast.show({
+      text: `Please visit "𝘃𝗲𝘁𝗿𝗼𝗽𝗮𝘆.𝗰𝗼𝗺/𝗺𝗼𝗯𝗶𝗹𝗲/𝗿𝗲𝘀𝗲𝘁-𝗽𝗮𝘀𝘀𝘄𝗼𝗿𝗱"  in your browser to reset your password.`,
+      duration: 5000,
+      type: "success",
+    });
+  };
   return (
     <ImageBackground source={BackgroundImage} style={{ flex: 1 }} imageStyle={{ resizeMode: "cover" }}>
       <View style={styles.container}>
@@ -140,9 +148,13 @@ export default function Login({ navigation }) {
                   secureTextEntry
                   onChangeText={(text) => onValueChange("password", text)}
                 />
-                <AppText bold="true" styles={{ marginTop: 16, color: "#266DDC", fontSize: 16, textAlign: "right" }}>
-                  Forgot Password?
-                </AppText>
+                <TouchableWithoutFeedback onPress={() => forgotPasswordAlert()}>
+                  <View>
+                    <AppText bold="true" styles={{ marginTop: 16, color: "#266DDC", fontSize: 16, textAlign: "right" }}>
+                      Forgot Password?
+                    </AppText>
+                  </View>
+                </TouchableWithoutFeedback>
 
                 <AppButton
                   styles={{

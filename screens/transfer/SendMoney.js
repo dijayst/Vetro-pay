@@ -12,12 +12,15 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { Toast, Spinner } from "native-base";
 
 import { postSendMoneyPreVerify, postSendMoney } from "../../containers/transactions/action";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
-export default function SendMoney() {
+export default function SendMoney({ navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [sendMoneyStage, setSendMoneyStage] = useState(1);
   const [showOptionalFields, setShowOptionalFields] = useState(false);
   const [sendMoneyValidatedData, setSendMoneyValidatedData] = useState({});
+
+  const [outBoundTransfer, setOutBoundTransfer] = useState(false);
   const [sendMoneySuccessData, setSendMoneySuccessData] = useState({});
   const [displayTransactionPinError, setDisplayTransactionPinError] = useState(false);
   const [displayTransactionPinError2, setDisplayTransactionPinError2] = useState(false);
@@ -66,6 +69,11 @@ export default function SendMoney() {
           });
         } else if (sendMoneyPreVerify[sendMoneyPreVerify.length - 1]["status"] == "success") {
           setDisplaySpinner(false);
+          setSendMoneyValidatedData(sendMoneyPreVerify[sendMoneyPreVerify.length - 1]["data"]);
+          setModalOpen(true);
+        } else if (sendMoneyPreVerify[sendMoneyPreVerify.length - 1]["status"] == "warning") {
+          setDisplaySpinner(false);
+          setOutBoundTransfer(true);
           setSendMoneyValidatedData(sendMoneyPreVerify[sendMoneyPreVerify.length - 1]["data"]);
           setModalOpen(true);
         }
@@ -242,7 +250,16 @@ export default function SendMoney() {
               <AppText bold="true" styles={{ fontSize: 18 }}>
                 Recipient Information
               </AppText>
-              <MaterialIcons color="grey" name="close" size={24} onPress={() => setModalOpen(false)} style={{ paddingRight: 10 }} />
+              <MaterialIcons
+                color="grey"
+                name="close"
+                size={24}
+                onPress={() => {
+                  setModalOpen(false);
+                  setOutBoundTransfer(false);
+                }}
+                style={{ paddingRight: 10 }}
+              />
             </View>
             {/** End Modal Header */}
 
@@ -277,6 +294,17 @@ export default function SendMoney() {
                   {`${sendMoneyData.payload.currency} ${sendMoneyValidatedData.transactionCharge}`}
                 </AppText>
               </View>
+            </View>
+
+            <View style={{ marginTop: 12, display: `${outBoundTransfer ? "flex" : "none"}` }}>
+              <AppText bold="true" styles={{ color: "#ffaf40", fontSize: 15 }}>
+                Notice:
+              </AppText>
+              <AppText styles={{ textAlign: "left" }}>
+                (a). Mobile Number <Text style={{ fontWeight: "700" }}>{sendMoneyValidatedData.name}</Text> is not registered yet on VetroPay.
+              </AppText>
+              <AppText>(b). You may proceed with this transaction.</AppText>
+              <AppText>(c). credit Notice and directives on claiming fund will be sent to User via SMS. Fund will be reversed within 5days, if fund remains unclaimed.</AppText>
             </View>
 
             <View style={{ marginTop: 24 }}>
@@ -334,6 +362,7 @@ export default function SendMoney() {
                   });
                   setShowOptionalFields(false);
                   setModalOpen(false);
+                  setOutBoundTransfer(false);
                   setSendMoneyStage(1);
                 }}
                 style={{ paddingRight: 10 }}
@@ -396,7 +425,9 @@ export default function SendMoney() {
       <View style={styles.container}>
         {/** Recipient Information Modal */}
         <Modal transparent visible={modalOpen} animationType="slide">
-          <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.6)" }}>{renderModal()}</View>
+          <KeyboardAwareScrollView enableAutomaticScroll extraScrollHeight={10} enableOnAndroid={true} extraHeight={Platform.select({ android: 150 })} style={{ flexGrow: 1 }}>
+            <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.6)", height: 700 }}>{renderModal()}</View>
+          </KeyboardAwareScrollView>
         </Modal>
 
         {/** End Recipient Information Modal */}
