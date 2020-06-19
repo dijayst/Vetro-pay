@@ -742,7 +742,7 @@ export default function RequestCredit({ navigation }) {
               onPress={() => setCreditModalOpen(true)}
             >
               <AppText bold="true" styles={{ color: "#ffffff", textTransform: "uppercase" }}>
-                Continue >>
+                Continue {">>"}
               </AppText>
             </AppButton>
           </View>

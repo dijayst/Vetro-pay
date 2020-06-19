@@ -127,7 +127,7 @@ export default function Email({ navigation }) {
 
         <View style={styles.balanceUpBackGround}>
           <AppText bold="true" styles={{ fontSize: 18, textTransform: "uppercase", color: "#FFFFFF" }}>
-            Account > Email address
+            Account {">"} Email address
           </AppText>
 
           <View style={styles.recordForm}>
