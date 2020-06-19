@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "vetropay",
-    "slug": "vetropay",
+    "name": "Vetropay Mobile",
+    "slug": "vetropay-mobile",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": ["ios", "android", "web"],
@@ -19,6 +19,10 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.anclatechs.vetropaymobile",
+      "versionCode": 1
     }
   }
 }
