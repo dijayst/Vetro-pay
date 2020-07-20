@@ -96,7 +96,14 @@ export default function Withdraw({ navigation }) {
   });
 
   return (
-    <KeyboardAwareScrollView enableAutomaticScroll extraScrollHeight={10} enableOnAndroid={true} extraHeight={Platform.select({ android: 150 })} style={{ flexGrow: 1 }}>
+    <KeyboardAwareScrollView
+      keyboardShouldPersistTaps="always"
+      enableAutomaticScroll
+      extraScrollHeight={10}
+      enableOnAndroid={true}
+      extraHeight={Platform.select({ android: 150 })}
+      style={{ flexGrow: 1 }}
+    >
       <View style={styles.container}>
         {/** Successful Transaction Modal */}
         <Modal transparent visible={modalOpen} animationType="slide">

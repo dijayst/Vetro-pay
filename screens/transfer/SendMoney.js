@@ -421,11 +421,25 @@ export default function SendMoney({ navigation }) {
   };
 
   return (
-    <KeyboardAwareScrollView enableAutomaticScroll extraScrollHeight={10} enableOnAndroid={true} extraHeight={Platform.select({ android: 150 })} style={{ flexGrow: 1 }}>
+    <KeyboardAwareScrollView
+      keyboardShouldPersistTaps="always"
+      enableAutomaticScroll
+      extraScrollHeight={10}
+      enableOnAndroid={true}
+      extraHeight={Platform.select({ android: 150 })}
+      style={{ flexGrow: 1 }}
+    >
       <View style={styles.container}>
         {/** Recipient Information Modal */}
         <Modal transparent visible={modalOpen} animationType="slide">
-          <KeyboardAwareScrollView enableAutomaticScroll extraScrollHeight={10} enableOnAndroid={true} extraHeight={Platform.select({ android: 150 })} style={{ flexGrow: 1 }}>
+          <KeyboardAwareScrollView
+            keyboardShouldPersistTaps="always"
+            enableAutomaticScroll
+            extraScrollHeight={10}
+            enableOnAndroid={true}
+            extraHeight={Platform.select({ android: 150 })}
+            style={{ flexGrow: 1 }}
+          >
             <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.6)", height: 700 }}>{renderModal()}</View>
           </KeyboardAwareScrollView>
         </Modal>

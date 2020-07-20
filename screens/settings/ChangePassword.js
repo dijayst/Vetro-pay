@@ -89,7 +89,14 @@ export default function ChangePassword({ navigation }) {
   });
 
   return (
-    <KeyboardAwareScrollView enableAutomaticScroll extraScrollHeight={10} enableOnAndroid={true} extraHeight={Platform.select({ android: 150 })} style={{ flexGrow: 1 }}>
+    <KeyboardAwareScrollView
+      keyboardShouldPersistTaps="always"
+      enableAutomaticScroll
+      extraScrollHeight={10}
+      enableOnAndroid={true}
+      extraHeight={Platform.select({ android: 150 })}
+      style={{ flexGrow: 1 }}
+    >
       <View style={styles.container}>
         <View style={styles.upperBackGround}></View>
 

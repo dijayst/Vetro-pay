@@ -318,6 +318,7 @@ export default function Register({ navigation }) {
                     ...styles.formContainer,
                     height: Dimensions.get("window").height - upperContentHeight - (Constants.statusBarHeight + 56) + 10 /** +10 == Margin Bottom Set */,
                   }}
+                  keyboardShouldPersistTaps="always"
                 >
                   <View style={{ marginTop: 15, marginLeft: 24, marginRight: 24 }}>
                     <View
@@ -454,6 +455,7 @@ export default function Register({ navigation }) {
                     ...styles.formContainer,
                     height: Dimensions.get("window").height - upperContentHeight - (Constants.statusBarHeight + 56) + 10 /** +10 == Margin Bottom Set */,
                   }}
+                  keyboardShouldPersistTaps="always"
                 >
                   <View style={{ marginTop: 15, marginLeft: 24, marginRight: 24 }}>
                     <TextInput
@@ -523,6 +525,7 @@ export default function Register({ navigation }) {
                     ...styles.formContainer,
                     height: Dimensions.get("window").height - upperContentHeight - (Constants.statusBarHeight + 56) + 10 /** +10 == Margin Bottom Set */,
                   }}
+                  keyboardShouldPersistTaps="always"
                 >
                   <View style={{ marginTop: 15, marginLeft: 24, marginRight: 24 }}>
                     <View
@@ -645,6 +648,7 @@ export default function Register({ navigation }) {
                   ...styles.formContainer,
                   height: Dimensions.get("window").height - upperContentHeight - (Constants.statusBarHeight + 56) + 10 /** +10 == Margin Bottom Set */,
                 }}
+                keyboardShouldPersistTaps="always"
               >
                 <View style={{ marginTop: 15, marginLeft: 24, marginRight: 24 }}>
                   <Image source={DoneIcon} style={{ marginTop: 40, justifyContent: "center", alignSelf: "center" }} />

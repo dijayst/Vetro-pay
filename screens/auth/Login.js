@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
-import { Dimensions, View, Text, StyleSheet, Image, TextInput, Picker, ImageBackground, TouchableWithoutFeedback, ScrollView } from "react-native";
+import { Dimensions, View, Text, StyleSheet, Image, TextInput, Picker, ImageBackground, TouchableWithoutFeedback, ScrollView, KeyboardAvoidingView } from "react-native";
 import Constants from "expo-constants";
 import AppText from "../../resource/AppText";
 import { AppButton } from "../../resource/AppButton";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Toast, Spinner } from "native-base";
 import { login } from "../../containers/authentication/action";
 
@@ -111,12 +110,13 @@ export default function Login({ navigation }) {
               </AppText>
             </View>
           </View>
-          <KeyboardAwareScrollView enableAutomaticScroll extraScrollHeight={-56} enableOnAndroid={true} extraHeight={Platform.select({ android: 150 })} style={{ flexGrow: 1 }}>
+          <KeyboardAvoidingView extr behavior="height" enabled keyboardVerticalOffset={206}>
             <ScrollView
               style={{
                 ...styles.formContainer,
-                height: Dimensions.get("window").height - upperContentHeight - (Constants.statusBarHeight + 56) + 10 /** +10 == Margin Bottom Set */,
+                height: Dimensions.get("window").height - upperContentHeight - (Constants.statusBarHeight + 56) + 10 /** +10 to offset the 'Signup' margin boottom set*/,
               }}
+              keyboardShouldPersistTaps="always"
             >
               <View style={{ marginTop: 32, marginLeft: 24, marginRight: 24 }}>
                 <View
@@ -195,7 +195,7 @@ export default function Login({ navigation }) {
                   <Spinner color="blue" />
                 </View>
 
-                <AppText styles={{ marginTop: 40, fontSize: 16, textAlign: "center" }}>
+                <AppText styles={{ marginTop: 40, fontSize: 16, textAlign: "center", marginBottom: 20 }}>
                   <Text style={{ fontWeight: "500" }}>
                     Not a user?{" "}
                     <Text onPress={() => navigation.navigate("Register")} style={{ color: "#266DDC", fontWeight: "bold" }}>
@@ -205,7 +205,7 @@ export default function Login({ navigation }) {
                 </AppText>
               </View>
             </ScrollView>
-          </KeyboardAwareScrollView>
+          </KeyboardAvoidingView>
         </View>
       </View>
     </ImageBackground>
