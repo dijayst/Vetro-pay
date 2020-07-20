@@ -165,7 +165,7 @@ export default function AddRecord({ navigation }) {
   });
   return (
     <KeyboardAwareScrollView
-      keyboardShouldPersistTaps="always"
+      keyboardShouldPersistTaps="handled"
       enableAutomaticScroll
       extraScrollHeight={10}
       enableOnAndroid={true}

@@ -149,7 +149,7 @@ export default function LinkBank({ navigation }) {
 
   return (
     <KeyboardAwareScrollView
-      keyboardShouldPersistTaps="always"
+      keyboardShouldPersistTaps="handled"
       enableAutomaticScroll
       extraScrollHeight={10}
       enableOnAndroid={true}

@@ -114,7 +114,7 @@ export default function ChangePin({ navigation }) {
 
   return (
     <KeyboardAwareScrollView
-      keyboardShouldPersistTaps="always"
+      keyboardShouldPersistTaps="handled"
       enableAutomaticScroll
       extraScrollHeight={10}
       enableOnAndroid={true}

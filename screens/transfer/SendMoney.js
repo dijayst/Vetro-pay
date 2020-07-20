@@ -422,7 +422,7 @@ export default function SendMoney({ navigation }) {
 
   return (
     <KeyboardAwareScrollView
-      keyboardShouldPersistTaps="always"
+      keyboardShouldPersistTaps="handled"
       enableAutomaticScroll
       extraScrollHeight={10}
       enableOnAndroid={true}
@@ -433,7 +433,7 @@ export default function SendMoney({ navigation }) {
         {/** Recipient Information Modal */}
         <Modal transparent visible={modalOpen} animationType="slide">
           <KeyboardAwareScrollView
-            keyboardShouldPersistTaps="always"
+            keyboardShouldPersistTaps="handled"
             enableAutomaticScroll
             extraScrollHeight={10}
             enableOnAndroid={true}

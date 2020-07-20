@@ -90,7 +90,7 @@ export default function ChangePassword({ navigation }) {
 
   return (
     <KeyboardAwareScrollView
-      keyboardShouldPersistTaps="always"
+      keyboardShouldPersistTaps="handled"
       enableAutomaticScroll
       extraScrollHeight={10}
       enableOnAndroid={true}

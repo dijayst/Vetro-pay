@@ -110,13 +110,13 @@ export default function Login({ navigation }) {
               </AppText>
             </View>
           </View>
-          <KeyboardAvoidingView extr behavior="height" enabled keyboardVerticalOffset={206}>
+          <KeyboardAvoidingView extr behavior="height" enabled keyboardVerticalOffset={236}>
             <ScrollView
               style={{
                 ...styles.formContainer,
-                height: Dimensions.get("window").height - upperContentHeight - (Constants.statusBarHeight + 56) + 10 /** +10 to offset the 'Signup' margin boottom set*/,
+                height: Dimensions.get("window").height - upperContentHeight - (Constants.statusBarHeight + 56) + 20 /** +20 to offset the 'Signup' margin boottom set*/,
               }}
-              keyboardShouldPersistTaps="always"
+              keyboardShouldPersistTaps="handled"
             >
               <View style={{ marginTop: 32, marginLeft: 24, marginRight: 24 }}>
                 <View
