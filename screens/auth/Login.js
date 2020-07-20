@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
-import { View, Text, StyleSheet, Image, TextInput, Picker, ImageBackground, TouchableWithoutFeedback } from "react-native";
+import { Dimensions, View, Text, StyleSheet, Image, TextInput, Picker, ImageBackground, TouchableWithoutFeedback, ScrollView } from "react-native";
 import Constants from "expo-constants";
 import AppText from "../../resource/AppText";
 import { AppButton } from "../../resource/AppButton";
@@ -14,6 +14,8 @@ const BackgroundImage = require("../../assets/backnet.jpg");
 
 export default function Login({ navigation }) {
   const [displaySpinner, setDisplaySpinner] = useState(false);
+  const [upperContentHeight, SetUpperContentHeight] = useState(0);
+
   const [loginData, setLoginData] = useState({
     payload: {
       country: "NIGERIA",
@@ -21,6 +23,10 @@ export default function Login({ navigation }) {
       password: "",
     },
   });
+
+  const updateUpperContentHeight = (event) => {
+    SetUpperContentHeight(event.nativeEvent.layout.height);
+  };
 
   const dispatch = useDispatch();
 
@@ -79,7 +85,7 @@ export default function Login({ navigation }) {
 
   const forgotPasswordAlert = () => {
     Toast.show({
-      text: `Please visit "𝘃𝗲𝘁𝗿𝗼𝗽𝗮𝘆.𝗰𝗼𝗺/𝗺𝗼𝗯𝗶𝗹𝗲/𝗿𝗲𝘀𝗲𝘁-𝗽𝗮𝘀𝘀𝘄𝗼𝗿𝗱"  in your browser to reset your password.`,
+      text: `Please visit "𝘃𝗲𝘁𝗿𝗼𝗽𝗮𝘆.𝗰𝗼𝗺/𝗰𝘂𝘀𝘁𝗼𝗺𝗲𝗿-𝗰𝗮𝗿𝗲-𝗽𝗼𝗿𝘁𝗮𝗹"  in your browser to reset your password.`,
       duration: 5000,
       type: "success",
     });
@@ -88,23 +94,30 @@ export default function Login({ navigation }) {
     <ImageBackground source={BackgroundImage} style={{ flex: 1 }} imageStyle={{ resizeMode: "cover" }}>
       <View style={styles.container}>
         <View style={styles.innerContainer}>
-          <View style={styles.logo}>
-            <Image source={Logo} style={{ marginTop: 10, height: 40, width: 100 }} />
-            <AppText bold="true" styles={{ fontSize: 30, color: "#FFFFFF", textTransform: "uppercase" }}>
-              VetroPay
-            </AppText>
+          <View onLayout={updateUpperContentHeight}>
+            <View style={styles.logo}>
+              <Image source={Logo} style={{ marginTop: 10, height: 40, width: 100 }} />
+              <AppText bold="true" styles={{ fontSize: 30, color: "#FFFFFF", textTransform: "uppercase" }}>
+                VetroPay
+              </AppText>
+            </View>
+            {/** Welcome Text */}
+            <View style={styles.welcomeText}>
+              <AppText bold="true" styles={{ fontSize: 20, color: "#FFFFFF" }}>
+                Welcome,
+              </AppText>
+              <AppText styles={{ fontSize: 14, color: "#FFFFFF", marginTop: 8 }}>
+                <Text style={{ fontWeight: "700" }}>Login to your Account</Text>
+              </AppText>
+            </View>
           </View>
-          {/** Welcome Text */}
-          <View style={styles.welcomeText}>
-            <AppText bold="true" styles={{ fontSize: 20, color: "#FFFFFF" }}>
-              Welcome,
-            </AppText>
-            <AppText styles={{ fontSize: 14, color: "#FFFFFF", marginTop: 8 }}>
-              <Text style={{ fontWeight: "700" }}>Login to your Account</Text>
-            </AppText>
-          </View>
-          <View style={styles.formContainer}>
-            <KeyboardAwareScrollView enableAutomaticScroll extraScrollHeight={10} enableOnAndroid={true} extraHeight={Platform.select({ android: 150 })} style={{ flexGrow: 1 }}>
+          <KeyboardAwareScrollView enableAutomaticScroll extraScrollHeight={-56} enableOnAndroid={true} extraHeight={Platform.select({ android: 150 })} style={{ flexGrow: 1 }}>
+            <ScrollView
+              style={{
+                ...styles.formContainer,
+                height: Dimensions.get("window").height - upperContentHeight - (Constants.statusBarHeight + 56) + 10 /** +10 == Margin Bottom Set */,
+              }}
+            >
               <View style={{ marginTop: 32, marginLeft: 24, marginRight: 24 }}>
                 <View
                   style={{
@@ -191,8 +204,8 @@ export default function Login({ navigation }) {
                   </Text>
                 </AppText>
               </View>
-            </KeyboardAwareScrollView>
-          </View>
+            </ScrollView>
+          </KeyboardAwareScrollView>
         </View>
       </View>
     </ImageBackground>

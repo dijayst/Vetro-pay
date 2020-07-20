@@ -304,11 +304,12 @@ export default function AddRecord({ navigation }) {
                   >
                     <Picker.Item label="--- Select Category ---" value="" />
                     <Picker.Item label="Income/Wage/Salary" value="INCOME/WAGE/SALARY" />
-                    <Picker.Item label="Gift/Shopping" value="GIFT/SHOPPING" />
+                    <Picker.Item label="Gift/Flex/Flenjo" value="GIFT/FLEX/FLENJO" />
+                    <Picker.Item label="Food/Groceries/Shopping" value="FOOD/GROCERIES/SHOPPING" />
                     <Picker.Item label="School/Education" value="SCHOOL/EDUCATION" />
                     <Picker.Item label="Airtime/Internet/Cable Bill" value="AIRTIME/INTERNET/CABLE" />
                     <Picker.Item label="Electricity/Water/Gas/Fuel" value="ELECTRICITY/WATER/GAS/FUEL" />
-                    <Picker.Item label="Vehicle/Transport/Food" value="VEHICLE/TRANSPORT/FOOD" />
+                    <Picker.Item label="Vehicle/Transport" value="VEHICLE/TRANSPORT" />
                     <Picker.Item label="Business/Official" value="BUSINESS/OFFICIAL" />
                     <Picker.Item label="Donations/Tithes/Offerings" value="DONATIONS/TITHES/OFFERINGS" />
                     <Picker.Item label="Personal/Others" value="PERSONAL/OTHERS" />
