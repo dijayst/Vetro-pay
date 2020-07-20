@@ -25,20 +25,6 @@ export default function Login({ navigation }) {
 
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () => {
-      setKeyboardVisible(true);
-    });
-    const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => {
-      setKeyboardVisible(false);
-    });
-
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
-
   const updateUpperContentHeight = (event) => {
     SetUpperContentHeight(event.nativeEvent.layout.height);
   };
@@ -95,8 +81,20 @@ export default function Login({ navigation }) {
   };
 
   useEffect(() => {
-    setDisplaySpinner(false);
-  });
+    setDisplaySpinner(false); // This should be controlled; as loader stops spinning early before loggin user in
+
+    const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () => {
+      setKeyboardVisible(true);
+    });
+    const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => {
+      setKeyboardVisible(false);
+    });
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
 
   const forgotPasswordAlert = () => {
     Toast.show({
