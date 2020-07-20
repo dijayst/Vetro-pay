@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
-import { Dimensions, View, Text, StyleSheet, Image, TextInput, Picker, ImageBackground, TouchableWithoutFeedback, ScrollView, KeyboardAvoidingView } from "react-native";
+import { Keyboard, Dimensions, View, Text, StyleSheet, Image, TextInput, Picker, ImageBackground, TouchableWithoutFeedback, ScrollView, KeyboardAvoidingView } from "react-native";
 import Constants from "expo-constants";
 import AppText from "../../resource/AppText";
 import { AppButton } from "../../resource/AppButton";
@@ -198,7 +198,13 @@ export default function Login({ navigation }) {
                 <AppText styles={{ marginTop: 40, fontSize: 16, textAlign: "center", marginBottom: 20 }}>
                   <Text style={{ fontWeight: "500" }}>
                     Not a user?{" "}
-                    <Text onPress={() => navigation.navigate("Register")} style={{ color: "#266DDC", fontWeight: "bold" }}>
+                    <Text
+                      onPress={() => {
+                        Keyboard.dismiss();
+                        navigation.navigate("Register");
+                      }}
+                      style={{ color: "#266DDC", fontWeight: "bold" }}
+                    >
                       Sign up here
                     </Text>
                   </Text>
