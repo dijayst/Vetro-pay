@@ -12,7 +12,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { Toast, Spinner } from "native-base";
 
 import { postSendMoneyPreVerify, postSendMoney } from "../../containers/transactions/action";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+//import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 export default function SendMoney({ navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -421,25 +421,11 @@ export default function SendMoney({ navigation }) {
   };
 
   return (
-    <KeyboardAwareScrollView
-      keyboardShouldPersistTaps="handled"
-      enableAutomaticScroll
-      extraScrollHeight={10}
-      enableOnAndroid={true}
-      extraHeight={Platform.select({ android: 150 })}
-      style={{ flexGrow: 1 }}
-    >
+    <KeyboardAwareScrollView enableAutomaticScroll extraScrollHeight={10} enableOnAndroid={true} extraHeight={Platform.select({ android: 150 })} style={{ flexGrow: 1 }}>
       <View style={styles.container}>
         {/** Recipient Information Modal */}
         <Modal transparent visible={modalOpen} animationType="slide">
-          <KeyboardAwareScrollView
-            keyboardShouldPersistTaps="handled"
-            enableAutomaticScroll
-            extraScrollHeight={10}
-            enableOnAndroid={true}
-            extraHeight={Platform.select({ android: 150 })}
-            style={{ flexGrow: 1 }}
-          >
+          <KeyboardAwareScrollView enableAutomaticScroll extraScrollHeight={10} enableOnAndroid={true} extraHeight={Platform.select({ android: 150 })} style={{ flexGrow: 1 }}>
             <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.6)", height: 700 }}>{renderModal()}</View>
           </KeyboardAwareScrollView>
         </Modal>

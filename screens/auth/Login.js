@@ -23,6 +23,22 @@ export default function Login({ navigation }) {
     },
   });
 
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () => {
+      setKeyboardVisible(true);
+    });
+    const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => {
+      setKeyboardVisible(false);
+    });
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
   const updateUpperContentHeight = (event) => {
     SetUpperContentHeight(event.nativeEvent.layout.height);
   };
@@ -200,8 +216,11 @@ export default function Login({ navigation }) {
                     Not a user?{" "}
                     <Text
                       onPress={() => {
-                        Keyboard.dismiss();
-                        navigation.navigate("Register");
+                        if (isKeyboardVisible) {
+                          Keyboard.dismiss();
+                        } else {
+                          navigation.navigate("Register");
+                        }
                       }}
                       style={{ color: "#266DDC", fontWeight: "bold" }}
                     >
