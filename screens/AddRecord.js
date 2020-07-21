@@ -164,14 +164,7 @@ export default function AddRecord({ navigation }) {
     }
   });
   return (
-    <KeyboardAwareScrollView
-      keyboardShouldPersistTaps="handled"
-      enableAutomaticScroll
-      extraScrollHeight={10}
-      enableOnAndroid={true}
-      extraHeight={Platform.select({ android: 150 })}
-      style={{ flexGrow: 1 }}
-    >
+    <KeyboardAwareScrollView enableAutomaticScroll extraScrollHeight={10} enableOnAndroid={true} extraHeight={Platform.select({ android: 150 })} style={{ flexGrow: 1 }}>
       <View style={styles.container}>
         <View style={styles.upperBackGround}></View>
         <View style={styles.balanceUpBackGround}>

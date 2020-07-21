@@ -93,6 +93,10 @@ export default function Credit({ navigation }) {
     }
   });
 
+  const shortenNames = (text, max) => {
+    return text && text.length > max ? text.slice(0, max).split(" ").slice(0, -1).join(" ") : text;
+  };
+
   const getBaseInfo = () => {
     if (creditTempMessage == "User does not meet credit requirement") {
       return (
@@ -332,7 +336,7 @@ export default function Credit({ navigation }) {
                     <text transform="matrix(1 0 0 1 60.106 295.0121)" id="svgnumber" class="st2 st3 st4">${userAuthentication.country == "NIGERIA" ? "NGN" : "KES"} ${
                   creditState.creditBalance
                 }</text>
-                    <text transform="matrix(1 0 0 1 54.1064 428.1723)" id="svgname" class="st2 st5 st6">${userAuthentication.fullname}</text>
+                    <text transform="matrix(1 0 0 1 54.1064 428.1723)" id="svgname" class="st2 st5 st6">${shortenNames(userAuthentication.fullname, 16)}</text>
                     <text transform="matrix(1 0 0 1 54.1074 389.8793)" class="st7 st5 st8">Customer Name</text>
                     <text transform="matrix(1 0 0 1 479.7754 388.8793)" class="st7 st5 st8">Due payment</text>
                     <text transform="matrix(1 0 0 1 65.1054 241.5)" class="st7 st5 st8">Credit Balance</text>
