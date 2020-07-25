@@ -1,4 +1,6 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
+import { View } from "react-native";
+import AppText from "../resource/AppText";
 import { createStackNavigator } from "react-navigation-stack";
 import Header from "../resource/Header";
 import Settings from "../screens/settings/Settings";
@@ -10,6 +12,7 @@ import Email from "../screens/settings/Email";
 import ChangePasswordPin from "../screens/settings/ChangePasswordPin";
 import ChangePassword from "../screens/settings/ChangePassword";
 import ChangePin from "../screens/settings/ChangePin";
+const BusinessLink = lazy(() => import("../screens/settings/BusinessLink"));
 
 const screens = {
   Settings: {
@@ -104,6 +107,31 @@ const screens = {
     navigationOptions: ({ navigation }) => {
       return {
         title: "Change Pin",
+        headerStyle: { backgroundColor: "#266ddc" },
+        headerTitleStyle: { color: "#fff", fontWeight: "700" },
+        headerTintColor: "#fff",
+      };
+    },
+  },
+  BusinessLink: {
+    screen: () => {
+      return (
+        <View>
+          <Suspense
+            fallback={
+              <View style={{ flex: 1, justifyContent: "center", alignItems: "center", marginTop: "50%" }}>
+                <AppText styles={{ fontSize: 18 }}>Loading...</AppText>
+              </View>
+            }
+          >
+            <BusinessLink />
+          </Suspense>
+        </View>
+      );
+    },
+    navigationOptions: ({ navigation }) => {
+      return {
+        title: "Link Business",
         headerStyle: { backgroundColor: "#266ddc" },
         headerTitleStyle: { color: "#fff", fontWeight: "700" },
         headerTintColor: "#fff",

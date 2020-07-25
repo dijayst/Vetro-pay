@@ -1,6 +1,6 @@
 import axios from "axios";
 import { tokenConfig } from "../authentication/action";
-import { AUTH_ERROR, POST_PREREG_DETAILS, REG_AUTH_CHECKER, REGISTER_USER, POST_EMAIL, EMAIL_VERIFY } from "../rootAction/types";
+import { AUTH_ERROR, POST_PREREG_DETAILS, REG_AUTH_CHECKER, REGISTER_USER, POST_EMAIL, EMAIL_VERIFY, NOTIFICATION_TOKEN } from "../rootAction/types";
 import { returnErrors } from "../messages/messages";
 import { BASE_URL } from "../rootAction/env";
 
@@ -108,6 +108,21 @@ export const emailVerify = (email, authCode) => (dispatch, getState) => {
     .then((res) => {
       dispatch({
         type: EMAIL_VERIFY,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+    });
+};
+
+//UPDATE NOTIFICATION TOKEN
+export const updateNotificationToken = (deviceToken) => (dispatch, getState) => {
+  axios
+    .post(`${BASE_URL}/api/user/device-token`, { device_token: deviceToken }, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: NOTIFICATION_TOKEN,
         payload: res.data,
       });
     })

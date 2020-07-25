@@ -7,6 +7,7 @@ import regvalidate from "../regvalidate/reducer";
 import transactions from "../transactions/reducer";
 import banks from "../banks/reducer";
 import credit from "../credit/reducer";
+import business from "../business/reducer";
 
 export default combineReducers({
   errors,
@@ -17,4 +18,5 @@ export default combineReducers({
   transactions,
   banks,
   credit,
+  business,
 });

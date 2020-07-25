@@ -1,9 +1,10 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Text, View, StyleSheet, TouchableNativeFeedback } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import AppText from "../../resource/AppText";
-import { AccountProfileSvgComponent, EmailSvgComponent, KycSvgComponent, QrCodeSvgComponent, UserPinSvgComponent } from "../../resource/Svg";
+import { AccountProfileSvgComponent, EmailSvgComponent, KycSvgComponent, QrCodeSvgComponent, UserPinSvgComponent, BusinessSvgComponent } from "../../resource/Svg";
+import { loadUser } from "../../containers/authentication/action";
 
 function Separator() {
   return <View style={styles.separator} />;
@@ -11,6 +12,15 @@ function Separator() {
 
 export default function Account({ navigation }) {
   const userAuthentication = useSelector((state) => state.authentication.user);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    /**NAVIGATIOON */
+    navigation.addListener("didFocus", () => {
+      dispatch(loadUser());
+    });
+  }, [navigation]);
 
   return (
     <View style={styles.container}>
@@ -148,6 +158,42 @@ export default function Account({ navigation }) {
           </View>
         </TouchableNativeFeedback>
         {/** End QR code */}
+
+        <Separator />
+
+        {/** Link Business */}
+        <TouchableNativeFeedback
+          onPress={() => {
+            if (userAuthentication.linked_business_status == "UNLINKED") {
+              navigation.navigate("BusinessLink");
+            }
+          }}
+        >
+          <View style={styles.listItem}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+              <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
+                <BusinessSvgComponent />
+                <View style={{ flexDirection: "column" }}>
+                  <AppText bold="true" styles={{ paddingLeft: 10, fontSize: 15 }}>
+                    VetroPay Business
+                  </AppText>
+                  <AppText styles={{ fontSize: 12, marginLeft: 10, color: `${userAuthentication.linked_business_status == "UNLINKED" ? "black" : "green"}` }}>
+                    {`${
+                      userAuthentication.linked_business_status == "UNLINKED"
+                        ? "Link Business account"
+                        : `${userAuthentication.linked_business_status == "AWAITING" ? "Request Awaiting Approval" : `${userAuthentication.linked_business_name}`.toUpperCase()}`
+                    }`}
+                  </AppText>
+                </View>
+              </View>
+
+              <View>
+                <AntDesign name="right" color="grey" size={20} />
+              </View>
+            </View>
+          </View>
+        </TouchableNativeFeedback>
+        {/** End Link Business */}
 
         <Separator />
 

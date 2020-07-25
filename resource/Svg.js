@@ -244,3 +244,15 @@ export function CreditSvgComponent() {
 
   return <CreditSvg />;
 }
+
+export function BusinessSvgComponent() {
+  const business = `
+  <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12.5" cy="12.5" r="12.5" fill="#266DDC"/>
+    <path d="M11.25 15V14.375H6.88125L6.875 16.875C6.875 17.5688 7.43125 18.125 8.125 18.125H16.875C17.5688 18.125 18.125 17.5688 18.125 16.875V14.375H13.75V15H11.25ZM17.5 9.375H14.9937V8.125L13.7437 6.875H11.2437L9.99375 8.125V9.375H7.5C6.8125 9.375 6.25 9.9375 6.25 10.625V12.5C6.25 13.1938 6.80625 13.75 7.5 13.75H11.25V12.5H13.75V13.75H17.5C18.1875 13.75 18.75 13.1875 18.75 12.5V10.625C18.75 9.9375 18.1875 9.375 17.5 9.375ZM13.75 9.375H11.25V8.125H13.75V9.375Z" fill="white"/>
+  </svg>
+  `;
+  const BusinessSvg = () => <SvgXml xml={business} />;
+
+  return <BusinessSvg />;
+}

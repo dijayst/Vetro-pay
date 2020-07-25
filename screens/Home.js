@@ -2,6 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 
+import Constants from "expo-constants";
+import * as Notifications from "expo-notifications";
+import * as Permissions from "expo-permissions";
+
 import { Dimensions, StyleSheet, Text, View, Picker, FlatList } from "react-native";
 import { Modal, TouchableOpacity } from "react-native";
 
@@ -12,6 +16,8 @@ import { AppButton, PrimaryButton, DangerButton } from "../resource/AppButton";
 import { MaterialIcons, Ionicons, AntDesign } from "@expo/vector-icons";
 
 import { getSysPeriod, getUserTransaction } from "../containers/transactions/action";
+import { updateNotificationToken } from "../containers/regvalidate/action";
+
 import { Spinner } from "native-base";
 //import { convertUTCDateToLocalDate } from "../resource/MetaFunctions";
 
@@ -52,10 +58,69 @@ export default function Home({ navigation }) {
   const userTransactions = useSelector((state) => state.transactions.usertransactions);
   const prevUserTransactions = usePrevious(userTransactions);
 
+  const [expoPushToken, setExpoPushToken] = useState("");
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
+
+    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+      setNotification(notification);
+    });
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
+      console.log(response);
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener);
+      Notifications.removeNotificationSubscription(responseListener);
+    };
+  }, []);
+
+  async function registerForPushNotificationsAsync() {
+    let token;
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+      let finalStatus = existingStatus;
+      if (existingStatus !== "granted") {
+        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        finalStatus = status;
+      }
+      if (finalStatus !== "granted") {
+        alert("Failed to get push token for push notification!");
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log(token);
+    } else {
+      alert("Must use physical device for Push Notifications");
+    }
+
+    if (Platform.OS === "android") {
+      Notifications.setNotificationChannelAsync("default", {
+        name: "default",
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: "#FF231F7C",
+      });
+    }
+
+    return token;
+  }
+
   useEffect(() => {
     /**NAVIGATIOON */
     navigation.addListener("didFocus", () => {
       dispatch(getUserTransaction(""));
+
+      //Manage Notification Token :: It would be best to figure out how to know if
+      //User is coming from the Login Page
+      if (expoPushToken !== "") {
+        dispatch(updateNotificationToken(expoPushToken));
+      }
     });
   }, [navigation]);
 
