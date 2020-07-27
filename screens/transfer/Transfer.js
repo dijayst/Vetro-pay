@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { View, StyleSheet, TouchableNativeFeedback } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import AppText from "../../resource/AppText";
@@ -9,11 +10,21 @@ function Separator() {
 }
 
 export default function Transfer({ navigation }) {
+  const userAuthentication = useSelector((state) => state.authentication.user);
+
   return (
     <View style={styles.container}>
       <View style={styles.listContainer}>
         {/** Send Money */}
-        <TouchableNativeFeedback onPress={() => navigation.navigate("SendMoney")}>
+        <TouchableNativeFeedback
+          onPress={() => {
+            if (userAuthentication.linked_business) {
+              navigation.navigate("TransferBusiness");
+            } else {
+              navigation.navigate("SendMoney");
+            }
+          }}
+        >
           <View style={styles.listItem}>
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
               <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>

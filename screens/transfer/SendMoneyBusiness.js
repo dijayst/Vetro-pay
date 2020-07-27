@@ -14,8 +14,6 @@ import { Toast, Spinner } from "native-base";
 import { postSendMoneyPreVerify, postSendMoney } from "../../containers/transactions/action";
 import { shortenNames } from "../../resource/MetaFunctions";
 
-//import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-
 export default function SendMoney({ navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [sendMoneyStage, setSendMoneyStage] = useState(1);
@@ -34,10 +32,10 @@ export default function SendMoney({ navigation }) {
       country: userAuthentication["country"],
       currency: `${userAuthentication.country == "NIGERIA" ? "NGN" : "KES"}`,
       transactionCharge: "0.00",
-      phoneNumberUID: "",
+      phoneNumberUID: userAuthentication.linked_business_uid,
       amount: "",
       international: false,
-      paymentCategory: "",
+      paymentCategory: "BUSINESS/OFFICIAL",
       note: "",
       transactionPin: "",
     },
@@ -96,67 +94,8 @@ export default function SendMoney({ navigation }) {
     }
   });
 
-  const changeRecipientCountry = (itemValue, itemIndex) => {
-    setSendMoneyData((prevState) => ({
-      ...prevState,
-      payload: {
-        ...prevState.payload,
-        country: itemValue,
-      },
-    }));
-    if (userAuthentication.country == "NIGERIA") {
-      if (itemValue == "KENYA") {
-        setSendMoneyData((prevState) => ({
-          ...prevState,
-          payload: {
-            ...prevState.payload,
-            transactionCharge: "500.00",
-            international: true,
-          },
-        }));
-      } else {
-        setSendMoneyData((prevState) => ({
-          ...prevState,
-          payload: {
-            ...prevState.payload,
-            transactionCharge: "0.00",
-            international: false,
-          },
-        }));
-      }
-    } else if (userAuthentication.country == "KENYA") {
-      if (itemValue == "KENYA") {
-        setSendMoneyData((prevState) => ({
-          ...prevState,
-          payload: {
-            ...prevState.payload,
-            transactionCharge: "150.00",
-            international: true,
-          },
-        }));
-      } else {
-        setSendMoneyData((prevState) => ({
-          ...prevState,
-          payload: {
-            ...prevState.payload,
-            transactionCharge: "0.00",
-            international: false,
-          },
-        }));
-      }
-    }
-  };
-
   const onValueChange = (fieldName, value) => {
-    if (fieldName == "phoneNumberUID") {
-      setSendMoneyData((prevState) => ({
-        ...prevState,
-        payload: {
-          ...prevState.payload,
-          phoneNumberUID: value,
-        },
-      }));
-    } else if (fieldName == "amount") {
+    if (fieldName == "amount") {
       setSendMoneyData((prevState) => ({
         ...prevState,
         payload: {
@@ -354,10 +293,10 @@ export default function SendMoney({ navigation }) {
                       country: userAuthentication["country"],
                       currency: `${userAuthentication.country == "NIGERIA" ? "NGN" : "KES"}`,
                       transactionCharge: "0.00",
-                      phoneNumberUID: "",
+                      phoneNumberUID: userAuthentication.linked_business_uid,
                       amount: "",
                       international: false,
-                      paymentCategory: "",
+                      paymentCategory: "BUSINESS/OFFICIAL",
                       note: "",
                       transactionPin: "",
                     },
@@ -391,10 +330,10 @@ export default function SendMoney({ navigation }) {
                       country: userAuthentication["country"],
                       currency: `${userAuthentication.country == "NIGERIA" ? "NGN" : "KES"}`,
                       transactionCharge: "0.00",
-                      phoneNumberUID: "",
+                      phoneNumberUID: userAuthentication.linked_business_uid,
                       amount: "",
                       international: false,
-                      paymentCategory: "",
+                      paymentCategory: "BUSINESS/OFFICIAL",
                       note: "",
                       transactionPin: "",
                     },
@@ -444,41 +383,16 @@ export default function SendMoney({ navigation }) {
             <View style={{ marginTop: 8, paddingLeft: 4, paddingRight: 4 }}>
               <View style={styles.formGroup}>
                 <AppText>
-                  <Text style={{ fontWeight: "700" }}>Recipient Country</Text>
+                  <Text style={{ fontWeight: "700" }}>Business UID</Text>
                 </AppText>
-                <View
-                  style={{
-                    marginTop: 10,
-                    borderWidth: 1,
-                    borderColor: "#266ddc",
-                    borderTopLeftRadius: 4,
-                    borderBottomLeftRadius: 4,
-                    borderBottomRightRadius: 4,
-                    borderTopRightRadius: 4,
-                  }}
-                >
-                  <Picker
-                    style={{ height: 40 }}
-                    onValueChange={(itemValue, itemIndex) => changeRecipientCountry(itemValue, itemIndex)}
-                    selectedValue={sendMoneyData.payload.country}
-                  >
-                    <Picker.Item label="🇳🇬  Nigeria" value="NIGERIA" />
-                    <Picker.Item label="🇰🇪  Kenya" value="KENYA" />
-                  </Picker>
-                </View>
+                <TextInput style={{ ...styles.textInput, borderColor: "#266ddc", backgroundColor: "#F0F0F8" }} editable={false} value={sendMoneyData.payload.phoneNumberUID} />
               </View>
 
               <View style={styles.formGroup}>
                 <AppText>
-                  <Text style={{ fontWeight: "700" }}>Recipient Phone Number/Vetropay UID</Text>
+                  <Text style={{ fontWeight: "700" }}>Business Name</Text>
                 </AppText>
-                <TextInput
-                  style={{ ...styles.textInput, borderColor: "#266ddc" }}
-                  placeholder="Enter Phone Number or Vetropay UID"
-                  keyboardType="numeric"
-                  onChangeText={(text) => onValueChange("phoneNumberUID", text)}
-                  value={sendMoneyData.payload.phoneNumberUID}
-                />
+                <TextInput style={{ ...styles.textInput, borderColor: "#266ddc", backgroundColor: "#F0F0F8" }} editable={false} value={userAuthentication.linked_business_name} />
               </View>
 
               <View style={styles.formGroup}>
@@ -547,15 +461,7 @@ export default function SendMoney({ navigation }) {
                       }}
                       selectedValue={sendMoneyData.payload.paymentCategory}
                     >
-                      <Picker.Item label="--- Select Category ---" value="" />
-                      <Picker.Item label="Gift/Shopping" value="GIFT/SHOPPING" />
-                      <Picker.Item label="School/Education" value="SCHOOL/EDUCATION" />
-                      <Picker.Item label="Airtime/Internet/Cable Bill" value="AIRTIME/INTERNET/CABLE" />
-                      <Picker.Item label="Electricity/Water/Gas/Fuel" value="ELECTRICITY/WATER/GAS/FUEL" />
-                      <Picker.Item label="Vehicle/Transport/Food" value="VEHICLE/TRANSPORT/FOOD" />
                       <Picker.Item label="Business/Official" value="BUSINESS/OFFICIAL" />
-                      <Picker.Item label="Donations/Tithes/Offerings" value="DONATIONS/TITHES/OFFERINGS" />
-                      <Picker.Item label="Personal/Others" value="PERSONAL/OTHERS" />
                     </Picker>
                   </View>
                 </View>

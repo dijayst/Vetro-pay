@@ -59,26 +59,42 @@ export default function Home({ navigation }) {
   const prevUserTransactions = usePrevious(userTransactions);
 
   const [expoPushToken, setExpoPushToken] = useState("");
+  const prevExpoPushToken = usePrevious(expoPushToken);
+  const [sendToken, setSendToken] = useState(false);
+
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
+    let isMounted = true;
+    registerForPushNotificationsAsync().then((token) => {
+      setExpoPushToken(token);
+    });
 
     notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
       setNotification(notification);
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log(response);
+      //console.log(response);
     });
 
     return () => {
       Notifications.removeNotificationSubscription(notificationListener);
       Notifications.removeNotificationSubscription(responseListener);
+      isMounted = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (prevExpoPushToken !== expoPushToken) {
+      if (expoPushToken !== "" && !sendToken) {
+        dispatch(updateNotificationToken(expoPushToken));
+        setSendToken(true);
+      }
+    }
+  }, [expoPushToken]);
 
   async function registerForPushNotificationsAsync() {
     let token;
@@ -94,7 +110,6 @@ export default function Home({ navigation }) {
         return;
       }
       token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log(token);
     } else {
       alert("Must use physical device for Push Notifications");
     }
@@ -115,12 +130,6 @@ export default function Home({ navigation }) {
     /**NAVIGATIOON */
     navigation.addListener("didFocus", () => {
       dispatch(getUserTransaction(""));
-
-      //Manage Notification Token :: It would be best to figure out how to know if
-      //User is coming from the Login Page
-      if (expoPushToken !== "") {
-        dispatch(updateNotificationToken(expoPushToken));
-      }
     });
   }, [navigation]);
 

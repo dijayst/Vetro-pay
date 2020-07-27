@@ -414,7 +414,7 @@ export default function Register({ navigation }) {
                       </Text>
                     </AppText>
 
-                    <AppText styles={{ marginTop: 30, marginBottom: 30, fontSize: 16, textAlign: "center" }}>
+                    <AppText styles={{ marginTop: 30, marginBottom: 50, fontSize: 16, textAlign: "center" }}>
                       <Text style={{ fontWeight: "500" }}>
                         Already a user?{" "}
                         <Text onPress={() => navigation.navigate("Login")} style={{ color: "#266DDC", fontWeight: "bold" }}>

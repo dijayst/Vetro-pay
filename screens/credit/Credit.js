@@ -8,6 +8,7 @@ import { AppButton } from "../../resource/AppButton";
 import CreditHistory from "../../resource/CreditHistory";
 import { getCreditStatus } from "../../containers/credit/action";
 import { Spinner } from "native-base";
+import { shortenNames } from "../../resource/MetaFunctions";
 
 function Separator() {
   return <View style={styles.separator} />;
@@ -92,10 +93,6 @@ export default function Credit({ navigation }) {
       dispatch(getCreditStatus());
     }
   });
-
-  const shortenNames = (text, max) => {
-    return text && text.length > max ? text.slice(0, max).split(" ").slice(0, -1).join(" ") : text;
-  };
 
   const getBaseInfo = () => {
     if (creditTempMessage == "User does not meet credit requirement") {

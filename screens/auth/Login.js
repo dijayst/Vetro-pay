@@ -94,7 +94,7 @@ export default function Login({ navigation }) {
       keyboardDidHideListener.remove();
       keyboardDidShowListener.remove();
     };
-  }, []);
+  });
 
   const forgotPasswordAlert = () => {
     Toast.show({
@@ -124,7 +124,7 @@ export default function Login({ navigation }) {
               </AppText>
             </View>
           </View>
-          <KeyboardAvoidingView extr behavior="height" enabled keyboardVerticalOffset={236}>
+          <KeyboardAvoidingView behavior="height" enabled keyboardVerticalOffset={250}>
             <ScrollView
               style={{
                 ...styles.formContainer,

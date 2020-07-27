@@ -4,6 +4,7 @@ import Navigator from "./routes/drawer";
 import AuthNavigator from "./routes/authStack";
 import { AppLoading } from "expo";
 import * as Font from "expo-font";
+import { StatusBar } from "expo-status-bar";
 import { connect } from "react-redux";
 
 import store from "./containers/store/store";
@@ -83,6 +84,7 @@ class AppRoot extends Component {
         <View style={styles.container}>
           {this.props.auth.isAuthenticated && <Navigator />}
           {!this.props.auth.isAuthenticated && <AuthNavigator />}
+          <StatusBar style="light" translucent={true} backgroundColor="#00000066" />
         </View>
       </Root>
     );

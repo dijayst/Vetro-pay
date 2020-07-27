@@ -5,7 +5,9 @@ import Header from "../resource/Header";
 import SendMoney from "../screens/transfer/SendMoney";
 import Withdraw from "../screens/transfer/Withdraw";
 import LinkBank from "../screens/transfer/LinkBank";
-import ScanPay from "../screens/transfer//ScanPay";
+import ScanPay from "../screens/transfer/ScanPay";
+import TransferBusiness from "../screens/transfer/TransferBusiness";
+import SendMoneyBusiness from "../screens/transfer/SendMoneyBusiness";
 
 const screens = {
   Transfer: {
@@ -55,6 +57,28 @@ const screens = {
     navigationOptions: ({ navigation }) => {
       return {
         title: "Scan to Pay",
+        headerStyle: { backgroundColor: "#266ddc" },
+        headerTitleStyle: { color: "#fff", fontWeight: "700" },
+        headerTintColor: "#fff",
+      };
+    },
+  },
+  TransferBusiness: {
+    screen: TransferBusiness,
+    navigationOptions: ({ navigation }) => {
+      return {
+        title: "Business Transfer",
+        headerStyle: { backgroundColor: "#266ddc" },
+        headerTitleStyle: { color: "#fff", fontWeight: "700" },
+        headerTintColor: "#fff",
+      };
+    },
+  },
+  SendMoneyBusiness: {
+    screen: SendMoneyBusiness,
+    navigationOptions: ({ navigation }) => {
+      return {
+        title: "Send to Business",
         headerStyle: { backgroundColor: "#266ddc" },
         headerTitleStyle: { color: "#fff", fontWeight: "700" },
         headerTintColor: "#fff",

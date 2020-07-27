@@ -3,9 +3,9 @@
     "name": "Vetropay Mobile",
     "slug": "vetropay-mobile",
     "privacy": "public",
-    "sdkVersion": "36.0.0",
+    "sdkVersion": "38.0.0",
     "platforms": ["ios", "android", "web"],
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -22,8 +22,14 @@
     },
     "android": {
       "package": "com.anclatechs.vetropaymobile",
-      "versionCode": 2,
-      "useNextNotificationsApi": true
+      "versionCode": 3,
+      "useNextNotificationsApi": true,
+      "enableDangerousExperimentalLeanBuilds": true
+    },
+    "androidStatusBar": {
+      "barStyle": "light-content",
+      "backgroundColor": "#00000066",
+      "translucent": true
     },
     "description": ""
   }

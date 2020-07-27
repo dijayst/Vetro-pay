@@ -11,3 +11,7 @@ export const convertUTCDateToLocalDate = (date) => {
 export const numberWithCommas = (x) => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
+
+export const shortenNames = (text, max) => {
+  return text && text.length > max ? text.slice(0, max).split(" ").slice(0, -1).join(" ") : text;
+};
