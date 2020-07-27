@@ -5,7 +5,7 @@
     "privacy": "public",
     "sdkVersion": "38.0.0",
     "platforms": ["ios", "android", "web"],
-    "version": "1.0.2",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -21,8 +21,9 @@
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "package": "com.anclatechs.vetropaymobile",
-      "versionCode": 3,
+      "versionCode": 5,
       "useNextNotificationsApi": true,
       "enableDangerousExperimentalLeanBuilds": true
     },

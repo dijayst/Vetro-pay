@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "995925676593",
+    "firebase_url": "https://vetropay-mobile.firebaseio.com",
+    "project_id": "vetropay-mobile",
+    "storage_bucket": "vetropay-mobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:995925676593:android:74cc5cb20c22d7925c7b10",
+        "android_client_info": {
+          "package_name": "com.anclatechs.vetropaymobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "995925676593-gt09pim7olrepia92c99udpkcdqhls5s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3Iq5X_Zlr34IRpzUDEzDx1mp3nahCezs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "995925676593-gt09pim7olrepia92c99udpkcdqhls5s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
