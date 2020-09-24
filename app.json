@@ -23,7 +23,7 @@
     "android": {
       "googleServicesFile": "./google-services.json",
       "package": "com.anclatechs.vetropaymobile",
-      "versionCode": 5,
+      "versionCode": 6,
       "useNextNotificationsApi": true,
       "enableDangerousExperimentalLeanBuilds": true
     },
