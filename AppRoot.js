@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
-import Navigator from "./routes/drawer";
-import AuthNavigator from "./routes/authStack";
+import Navigator from "./routes/main";
+import AuthNavigator from "./routes/auth";
 import { AppLoading } from "expo";
 import * as Font from "expo-font";
 import { StatusBar } from "expo-status-bar";
@@ -10,12 +10,14 @@ import { connect } from "react-redux";
 import store from "./containers/store/store";
 import { loadUser } from "./containers/authentication/action";
 import { Toast, Root } from "native-base";
+import * as SecureStore from "expo-secure-store";
 
 class AppRoot extends Component {
   constructor() {
     super();
     this.state = {
       fontsLoaded: false,
+      storedFirstName: "",
     };
   }
 
@@ -28,11 +30,22 @@ class AppRoot extends Component {
     });
     this.setState({ fontsLoaded: true });
 
+    //Get user details is on mobile device
+    SecureStore.getItemAsync("firstName", SecureStore.WHEN_UNLOCKED).then((data) => this.setState({ storedFirstName: data }));
+
     store.dispatch(loadUser());
   }
 
   componentDidUpdate(prevProps) {
-    const { error, message } = this.props;
+    const { error, message, auth } = this.props;
+
+    if (auth.isAuthenticated && auth.token !== null) {
+      if (this.state.storedFirstName == null) {
+        // Store User detail if not available
+        SecureStore.setItemAsync("firstName", auth.user.fullname.split(" ")[0], SecureStore.WHEN_UNLOCKED);
+        SecureStore.setItemAsync("phoneNumber", auth.user.phone_number, SecureStore.WHEN_UNLOCKED);
+      }
+    }
 
     if (error !== prevProps.error) {
       if (error.msg.phone_number) {
@@ -75,6 +88,7 @@ class AppRoot extends Component {
       }
     }
   }
+
   render() {
     if (!this.state.fontsLoaded) {
       return <AppLoading />;

@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Text, View, StyleSheet, TouchableNativeFeedback } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import AppText from "../../resource/AppText";
-import { AccountProfileSvgComponent, EmailSvgComponent, KycSvgComponent, QrCodeSvgComponent, UserPinSvgComponent, BusinessSvgComponent } from "../../resource/Svg";
+import AppText from "../../resources/AppText";
+import { AccountProfileSvgComponent, EmailSvgComponent, KycSvgComponent, QrCodeSvgComponent, UserPinSvgComponent, BusinessSvgComponent } from "../../resources/Svg";
 import { loadUser } from "../../containers/authentication/action";
 
 function Separator() {
@@ -17,7 +17,7 @@ export default function Account({ navigation }) {
 
   useEffect(() => {
     /**NAVIGATIOON */
-    navigation.addListener("didFocus", () => {
+    navigation.addListener("focus", () => {
       dispatch(loadUser());
     });
   }, [navigation]);

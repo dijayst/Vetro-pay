@@ -6,12 +6,12 @@ import { Dimensions, View, Text, StyleSheet, Modal, TextInput } from "react-nati
 import { ImageBackground } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
-import AppText from "../../resource/AppText";
-import { PrimaryButton } from "../../resource/AppButton";
+import AppText from "../../resources/AppText";
+import { PrimaryButton } from "../../resources/AppButton";
 
 import { getBank } from "../../containers/banks/action";
 const BankBackgroundImage = require("../../assets/rectangle.png");
-import { BankWalletSvgComponent, SuccessfulSvgComponent } from "../../resource/Svg";
+import { BankWalletSvgComponent, SuccessfulSvgComponent } from "../../resources/Svg";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Toast, Spinner } from "native-base";
 
@@ -100,7 +100,7 @@ export default function Withdraw({ navigation }) {
       <View style={styles.container}>
         {/** Successful Transaction Modal */}
         <Modal transparent visible={modalOpen} animationType="slide">
-          <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.6)" }}>
+          <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.6)", height: 1000 }}>
             <View style={{ ...styles.modalContent, borderColor: "#266ddc", borderWidth: 2 }}>
               {/** Modal Header */}
               <View style={{ marginTop: 16, flexDirection: "row", justifyContent: "flex-end" }}>

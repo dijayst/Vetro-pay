@@ -2,8 +2,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { View, StyleSheet, TouchableNativeFeedback } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import AppText from "../../resource/AppText";
-import { SendMoneySvgComponent, WithdrawToBankComponent, ScanQRComponent } from "../../resource/Svg";
+import AppText from "../../resources/AppText";
+import { SendMoneySvgComponent, WithdrawToBankComponent, ScanQRComponent } from "../../resources/Svg";
 
 function Separator() {
   return <View style={styles.separator} />;

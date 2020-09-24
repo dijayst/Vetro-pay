@@ -6,7 +6,7 @@ import { BASE_URL } from "../rootAction/env";
 //Create Token Config
 export const tokenConfig = (getState) => {
   //Get token from state
-  const token = getState().authentication.token;
+  token = getState().authentication.token;
 
   //Headers
   const config = {

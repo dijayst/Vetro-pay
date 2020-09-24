@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 
 import { Dimensions, View, Text, StyleSheet, Picker, TextInput } from "react-native";
-import AppText from "../../resource/AppText";
-import { PrimaryButton } from "../../resource/AppButton";
+import AppText from "../../resources/AppText";
+import { PrimaryButton } from "../../resources/AppButton";
 import { Toast, Spinner } from "native-base";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 

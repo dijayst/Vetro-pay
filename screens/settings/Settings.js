@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
 import { Text, View, StyleSheet, TouchableNativeFeedback, Share, Alert } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import AppText from "../../resource/AppText";
-import { AccountProfileSvgComponent, HelpSvgComponent, InviteFriendSvgComponent } from "../../resource/Svg";
+import AppText from "../../resources/AppText";
+import { AccountProfileSvgComponent, HelpSvgComponent, InviteFriendSvgComponent } from "../../resources/Svg";
 
 const onShare = async () => {
   try {

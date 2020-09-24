@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, StyleSheet, TouchableNativeFeedback } from "react-native";
-import AppText from "../../resource/AppText";
-import { UserPasswordSvgComponent, UserPinSvgComponent } from "../../resource/Svg";
+import AppText from "../../resources/AppText";
+import { UserPasswordSvgComponent, UserPinSvgComponent } from "../../resources/Svg";
 
 function Separator() {
   return <View style={styles.separator} />;

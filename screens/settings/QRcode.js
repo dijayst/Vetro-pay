@@ -3,13 +3,13 @@ import { useSelector } from "react-redux";
 
 import { View, Text, StyleSheet } from "react-native";
 import QRCode from "react-native-qrcode-svg";
-import AppText from "../../resource/AppText";
-import { AppButton } from "../../resource/AppButton";
-import { Toast } from "native-base";
-import { CameraRoll } from "react-native";
-import * as MediaLibrary from "expo-media-library";
-import * as FileSystem from "expo-file-system";
-import * as Permissions from "expo-permissions";
+import AppText from "../../resources/AppText";
+import { AppButton } from "../../resources/AppButton";
+//import { Toast } from "native-base";
+// import { CameraRoll } from "react-native";
+// import * as MediaLibrary from "expo-media-library";
+// import * as FileSystem from "expo-file-system";
+// import * as Permissions from "expo-permissions";
 
 export default function QRcode() {
   const [qrRef, setQrRef] = useState({});

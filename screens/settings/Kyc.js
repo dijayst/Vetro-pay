@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { View, Text, StyleSheet } from "react-native";
-import AppText from "../../resource/AppText";
+import AppText from "../../resources/AppText";
 import { Linking } from "expo";
 
 function Separator() {
@@ -46,16 +46,16 @@ export default function Kyc() {
           </AppText>
           <AppText styles={{ fontSize: 16, marginTop: 10 }}>Email body should contain the following:</AppText>
           <AppText bold="true" styles={{ marginLeft: 10 }}>
-            >>> Country of Domicile
+            {">>>"} Country of Domicile
           </AppText>
           <AppText bold="true" styles={{ marginLeft: 10 }}>
-            >>> Full Name
+            {">>>"} Full Name
           </AppText>
           <AppText bold="true" styles={{ marginLeft: 10 }}>
-            >>> If you are Nigerian; Bank Verification Number
+            {">>>"} If you are Nigerian; Bank Verification Number
           </AppText>
           <AppText bold="true" styles={{ marginLeft: 10 }}>
-            >>> An attachment of a current and valid ID card e.g National ID card, International Passport, Voter's Card, Driving License, Student ID card.
+            {">>>"} An attachment of a current and valid ID card e.g National ID card, International Passport, Voter's Card, Driving License, Student ID card.
           </AppText>
         </View>
 

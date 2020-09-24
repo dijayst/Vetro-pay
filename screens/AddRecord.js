@@ -3,14 +3,14 @@ import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Dimensions, View, Text, StyleSheet, TextInput, Picker } from "react-native";
-import AppText from "../resource/AppText";
-import { AppButton, PrimaryButton } from "../resource/AppButton";
+import AppText from "../resources/AppText";
+import { AppButton, PrimaryButton } from "../resources/AppButton";
 import { AntDesign } from "@expo/vector-icons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Toast, Spinner } from "native-base";
 
 import { postTransaction } from "../containers/transactions/action";
-import { convertUTCDateToLocalDate } from "../resource/MetaFunctions";
+import { convertUTCDateToLocalDate } from "../resources/MetaFunctions";
 
 export default function AddRecord({ navigation }) {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);

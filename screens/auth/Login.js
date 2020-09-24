@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import PropTypes from "prop-types";
-import { Keyboard, Dimensions, View, Text, StyleSheet, Image, TextInput, Picker, ImageBackground, TouchableWithoutFeedback, ScrollView, KeyboardAvoidingView } from "react-native";
-import Constants from "expo-constants";
-import AppText from "../../resource/AppText";
-import { AppButton } from "../../resource/AppButton";
+import { View, StyleSheet, TextInput, Text, Picker, Alert } from "react-native";
+import AppText from "../../resources/AppText";
+import { AppButton } from "../../resources/AppButton";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as SecureStore from "expo-secure-store";
 import { Toast, Spinner } from "native-base";
+import { useNetInfo } from "@react-native-community/netinfo";
+import OfflineNotice from "../../resources/OfflineNotice";
+import * as LocalAuthentication from "expo-local-authentication";
 import { login } from "../../containers/authentication/action";
-
-const Logo = require("../../assets/vlogo.png");
-const BackgroundImage = require("../../assets/backnet.jpg");
+import { Linking } from "expo";
 
 export default function Login({ navigation }) {
-  const [displaySpinner, setDisplaySpinner] = useState(false);
-  const [upperContentHeight, SetUpperContentHeight] = useState(0);
+  const [storedFirstName, setStoredFirstName] = useState("");
+  const [storedPhoneNumberData, setStoredPhoneNumberData] = useState("");
+  const [storedPassData, setStoredPassData] = useState("");
+  const [fingerPrintHardware, setFingerPrintHardware] = useState(false);
 
   const [loginData, setLoginData] = useState({
     payload: {
@@ -22,14 +25,15 @@ export default function Login({ navigation }) {
       password: "",
     },
   });
+  const [displaySpinner, setDisplaySpinner] = useState(false);
 
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  SecureStore.getItemAsync("firstName", SecureStore.WHEN_UNLOCKED).then((data) => setStoredFirstName(data));
+  SecureStore.getItemAsync("phoneNumber", SecureStore.WHEN_UNLOCKED).then((data) => setStoredPhoneNumberData(data));
+  SecureStore.getItemAsync("pass", SecureStore.WHEN_UNLOCKED).then((data) => setStoredPassData(data));
 
-  const updateUpperContentHeight = (event) => {
-    SetUpperContentHeight(event.nativeEvent.layout.height);
-  };
-
+  const netInfo = useNetInfo();
   const dispatch = useDispatch();
+  const userAuth = useSelector((state) => state.authentication);
 
   const onValueChange = (fieldName, value) => {
     if (fieldName == "phoneNumber") {
@@ -75,192 +79,196 @@ export default function Login({ navigation }) {
         });
       }
     } else {
+      SecureStore.setItemAsync("pass", loginData.payload.password, SecureStore.WHEN_UNLOCKED);
       setDisplaySpinner(true);
       dispatch(login(getMobileNumberCountryCode(loginData.payload.country, loginData.payload.phoneNumber), loginData.payload.password));
     }
   };
 
   useEffect(() => {
-    setDisplaySpinner(false); // This should be controlled; as loader stops spinning early before loggin user in
+    setDisplaySpinner(false);
+  }, [userAuth]);
 
-    const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () => {
-      setKeyboardVisible(true);
-    });
-    const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => {
-      setKeyboardVisible(false);
-    });
-
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
+  useEffect(() => {
+    checkDeviceHardware();
   });
 
-  const forgotPasswordAlert = () => {
-    Toast.show({
-      text: `Please visit "𝘃𝗲𝘁𝗿𝗼𝗽𝗮𝘆.𝗰𝗼𝗺/𝗰𝘂𝘀𝘁𝗼𝗺𝗲𝗿-𝗰𝗮𝗿𝗲-𝗽𝗼𝗿𝘁𝗮𝗹"  in your browser to reset your password.`,
-      duration: 5000,
-      type: "success",
-    });
+  const checkDeviceHardware = async () => {
+    let compatible = await LocalAuthentication.hasHardwareAsync();
+    if (compatible) {
+      setFingerPrintHardware(true);
+    } else {
+      setFingerPrintHardware(false);
+    }
   };
-  return (
-    <ImageBackground source={BackgroundImage} style={{ flex: 1 }} imageStyle={{ resizeMode: "cover" }}>
-      <View style={styles.container}>
-        <View style={styles.innerContainer}>
-          <View onLayout={updateUpperContentHeight}>
-            <View style={styles.logo}>
-              <Image source={Logo} style={{ marginTop: 10, height: 40, width: 100 }} />
-              <AppText bold="true" styles={{ fontSize: 30, color: "#FFFFFF", textTransform: "uppercase" }}>
-                VetroPay
-              </AppText>
-            </View>
-            {/** Welcome Text */}
-            <View style={styles.welcomeText}>
-              <AppText bold="true" styles={{ fontSize: 20, color: "#FFFFFF" }}>
-                Welcome,
-              </AppText>
-              <AppText styles={{ fontSize: 14, color: "#FFFFFF", marginTop: 8 }}>
-                <Text style={{ fontWeight: "700" }}>Login to your Account</Text>
-              </AppText>
-            </View>
-          </View>
-          <KeyboardAvoidingView behavior="height" enabled keyboardVerticalOffset={250}>
-            <ScrollView
-              style={{
-                ...styles.formContainer,
-                height: Dimensions.get("window").height - upperContentHeight - (Constants.statusBarHeight + 56) + 20 /** +20 to offset the 'Signup' margin boottom set*/,
+
+  const checkForBiometrics = async () => {
+    let biometricRecords = await LocalAuthentication.isEnrolledAsync();
+    if (!biometricRecords) {
+      Alert.alert("No Biometrics Found");
+    } else {
+      handleFingerPrintAuthentication();
+    }
+  };
+
+  const handleLoginPress = async () => {
+    checkForBiometrics();
+  };
+
+  const handleFingerPrintAuthentication = async () => {
+    let result = await LocalAuthentication.authenticateAsync();
+    if (result.success) {
+      setDisplaySpinner(true);
+      dispatch(login(storedPhoneNumberData, storedPassData));
+    }
+  };
+
+  const clearUserDeviceDetails = () => {
+    SecureStore.deleteItemAsync("firstName", SecureStore.WHEN_UNLOCKED).then((data) => setStoredFirstName(null));
+    SecureStore.deleteItemAsync("phoneNumber", SecureStore.WHEN_UNLOCKED).then((data) => setStoredPhoneNumberData(null));
+    SecureStore.deleteItemAsync("pass", SecureStore.WHEN_UNLOCKED).then((data) => setStoredPassData(null));
+  };
+
+  const serveWithSavedData = () => {
+    return (
+      <View style={styles.viewContainer}>
+        <AppText bold="true" styles={styles.loginBold}>
+          Welcome, {storedFirstName}
+        </AppText>
+        <AppText bold="true" styles={styles.loginIntro}>
+          Please sign in to continue.
+        </AppText>
+
+        <View>
+          <TextInput style={{ ...styles.textInput, marginTop: 20 }} placeholder="Password" placeholderTextColor="gray" textContentType="password" secureTextEntry />
+        </View>
+
+        <View style={{ alignItems: "center", flexDirection: "row", justifyContent: "space-around", display: `${!displaySpinner ? "flex" : "none"}` }}>
+          <AppButton styles={styles.loginButton}>
+            <AppText styles={styles.buttonText}>Sign in</AppText>
+          </AppButton>
+
+          <AppButton styles={styles.thumbButton} onPress={() => handleLoginPress()}>
+            <MaterialCommunityIcons name="fingerprint" size={24} color="white" />
+          </AppButton>
+        </View>
+
+        <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
+          <Spinner color="blue" />
+        </View>
+
+        <AppText bold="true" styles={{ ...styles.loginIntro, marginTop: 20, textAlign: "center", color: "#266ddc" }}>
+          <Text onPress={() => clearUserDeviceDetails()}>Not You</Text>
+        </AppText>
+      </View>
+    );
+  };
+
+  const serveasNew = () => {
+    return (
+      <View style={styles.viewContainer}>
+        <AppText bold="true" styles={styles.loginBold}>
+          Welcome,
+        </AppText>
+        <AppText bold="true" styles={styles.loginIntro}>
+          Please sign in to continue.
+        </AppText>
+
+        <View>
+          <View
+            style={{
+              marginTop: 10,
+              borderWidth: 0.5,
+              borderColor: "#266ddc",
+              borderRadius: 15,
+            }}
+          >
+            <Picker
+              style={{ height: 40 }}
+              onValueChange={(itemValue, itemIndex) => {
+                setLoginData((prevState) => ({
+                  ...prevState,
+                  payload: {
+                    ...prevState.payload,
+                    country: itemValue,
+                  },
+                }));
               }}
-              keyboardShouldPersistTaps="handled"
+              selectedValue={loginData.payload.country}
             >
-              <View style={{ marginTop: 32, marginLeft: 24, marginRight: 24 }}>
-                <View
-                  style={{
-                    marginTop: 10,
-                    borderWidth: 0.5,
-                    borderColor: "#266ddc",
-                    borderColor: "transparent",
-                    borderBottomColor: "#266DDC",
-                  }}
-                >
-                  <Picker
-                    style={{ height: 40 }}
-                    onValueChange={(itemValue, itemIndex) => {
-                      setLoginData((prevState) => ({
-                        ...prevState,
-                        payload: {
-                          ...prevState.payload,
-                          country: itemValue,
-                        },
-                      }));
-                    }}
-                    selectedValue={loginData.payload.country}
-                  >
-                    <Picker.Item label="🇳🇬  Nigeria" value="NIGERIA" />
-                    <Picker.Item label="🇰🇪  Kenya" value="KENYA" />
-                  </Picker>
-                </View>
-                <TextInput
-                  style={{ ...styles.textInput, marginTop: 20 }}
-                  placeholder="Phone Number"
-                  placeholderTextColor="#000000"
-                  textContentType="telephoneNumber"
-                  keyboardType="visible-password"
-                  onChangeText={(text) => onValueChange("phoneNumber", text)}
-                />
-                <TextInput
-                  style={{ ...styles.textInput, marginTop: 20 }}
-                  placeholder="Password"
-                  placeholderTextColor="#000000"
-                  textContentType="password"
-                  secureTextEntry
-                  onChangeText={(text) => onValueChange("password", text)}
-                />
-                <TouchableWithoutFeedback onPress={() => forgotPasswordAlert()}>
-                  <View>
-                    <AppText bold="true" styles={{ marginTop: 16, color: "#266DDC", fontSize: 16, textAlign: "right" }}>
-                      Forgot Password?
-                    </AppText>
-                  </View>
-                </TouchableWithoutFeedback>
+              <Picker.Item label="🇳🇬  Nigeria" value="NIGERIA" />
+              <Picker.Item label="🇰🇪  Kenya" value="KENYA" />
+            </Picker>
+          </View>
 
-                <AppButton
-                  styles={{
-                    width: "100%",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginTop: 40,
-                    backgroundColor: "#266DDC",
-                    borderWidth: 1,
-                    borderColor: "#266ddc",
-                    height: 44,
-                    borderRadius: 8,
-                    elevation: 4,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    display: `${!displaySpinner ? "flex" : "none"}`,
-                  }}
-                  onPress={() => loginUserFunction()}
-                >
-                  <AppText bold="true" styles={{ color: "#FFFFFF", fontSize: 18 }}>
-                    Log In
-                  </AppText>
-                </AppButton>
-                <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-                  <Spinner color="blue" />
-                </View>
+          <TextInput
+            style={{ ...styles.textInput, marginTop: 20 }}
+            placeholder="Phone Number"
+            placeholderTextColor="gray"
+            textContentType="telephoneNumber"
+            keyboardType="visible-password"
+            onChangeText={(text) => onValueChange("phoneNumber", text)}
+          />
 
-                <AppText styles={{ marginTop: 40, fontSize: 16, textAlign: "center", marginBottom: 20 }}>
-                  <Text style={{ fontWeight: "500" }}>
-                    Not a user?{" "}
-                    <Text
-                      onPress={() => {
-                        if (isKeyboardVisible) {
-                          Keyboard.dismiss();
-                        } else {
-                          navigation.navigate("Register");
-                        }
-                      }}
-                      style={{ color: "#266DDC", fontWeight: "bold" }}
-                    >
-                      Sign up here
-                    </Text>
-                  </Text>
-                </AppText>
-              </View>
-            </ScrollView>
-          </KeyboardAvoidingView>
+          <TextInput
+            style={{ ...styles.textInput, marginTop: 10 }}
+            placeholder="Password"
+            placeholderTextColor="gray"
+            textContentType="password"
+            secureTextEntry
+            onChangeText={(text) => onValueChange("password", text)}
+          />
+        </View>
+
+        <View style={{ alignItems: "center", flexDirection: "row", justifyContent: "space-around" }}>
+          <AppButton styles={{ ...styles.loginButton, width: "100%", display: `${!displaySpinner ? "flex" : "none"}` }} onPress={() => loginUserFunction()}>
+            <AppText styles={styles.buttonText}>Sign in</AppText>
+          </AppButton>
+          <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
+            <Spinner color="blue" />
+          </View>
         </View>
       </View>
-    </ImageBackground>
+    );
+  };
+  return (
+    <View style={styles.container}>
+      <OfflineNotice variant={netInfo.isConnected} />
+      {storedFirstName !== null && serveWithSavedData()}
+      {storedFirstName == null && serveasNew()}
+
+      <View>
+        <AppText bold="true" styles={{ ...styles.loginIntro, marginBottom: 10, textAlign: "center", color: "#266ddc" }}>
+          <Text onPress={() => Linking.openURL("https://vetropay.com/customer-care-portal")}>Forgot Password</Text>
+        </AppText>
+
+        <AppText bold="true" styles={{ ...styles.loginIntro, marginBottom: 30, textAlign: "center" }}>
+          Don't have an account?{" "}
+          <Text style={{ color: "#266ddc" }} onPress={() => navigation.navigate("Register")}>
+            Sign up
+          </Text>
+        </AppText>
+      </View>
+    </View>
   );
 }
 
-Login.propTypes = {
-  login: PropTypes.func,
-};
-
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#f2f2f2",
     flex: 1,
-    backgroundColor: "rgba(38, 109, 220, 0.6)",
-  },
-  innerContainer: {
-    marginTop: Constants.statusBarHeight + 56, //56 == Navigation Header Height
-  },
-  logo: {
     justifyContent: "center",
-    alignItems: "center",
   },
-  welcomeText: {
-    marginTop: 24,
-    marginLeft: 24,
+  viewContainer: {
+    paddingHorizontal: 20,
+    flex: 1,
+    justifyContent: "center",
   },
-  formContainer: {
-    marginTop: 23,
-    backgroundColor: "#FFFFFF",
-    height: "100%",
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+  loginBold: {
+    fontSize: 25,
+  },
+  loginIntro: {
+    color: "gray",
   },
   textInput: {
     height: 40,
@@ -269,7 +277,34 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderWidth: 0.5,
-    borderColor: "transparent",
+    borderColor: "#266ddc",
+    borderRadius: 15,
     borderBottomColor: "#266DDC",
+  },
+  loginButton: {
+    marginTop: 10,
+    backgroundColor: "#266ddc",
+    width: "70%",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+    elevation: 3,
+    borderRadius: 25,
+  },
+  thumbButton: {
+    marginTop: 10,
+    backgroundColor: "#266ddc",
+    width: 50,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+    elevation: 3,
+    borderRadius: 20,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 16,
   },
 });

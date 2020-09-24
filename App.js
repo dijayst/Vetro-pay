@@ -1,14 +1,13 @@
-import React, { Component } from "react";
+import { StatusBar as ExpoStatusBar } from "expo-status-bar";
+import React from "react";
 import { Provider } from "react-redux";
 import store from "./containers/store/store";
-import AppRoot from "./AppRoot";
+import Approot from "./AppRoot";
 
-export default class App extends Component {
-  render() {
-    return (
-      <Provider store={store}>
-        <AppRoot />
-      </Provider>
-    );
-  }
+export default function App() {
+  return (
+    <Provider store={store}>
+      <Approot />
+    </Provider>
+  );
 }

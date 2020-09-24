@@ -4,15 +4,15 @@ import PropTypes from "prop-types";
 import { Dimensions, View, Text, StyleSheet, Picker, TextInput } from "react-native";
 import { Modal, Switch } from "react-native";
 
-import AppText from "../../resource/AppText";
-import { PrimaryButton } from "../../resource/AppButton";
+import AppText from "../../resources/AppText";
+import { PrimaryButton } from "../../resources/AppButton";
 import { MaterialIcons } from "@expo/vector-icons";
-import { SuccessfulSvgComponent } from "../../resource/Svg";
+import { SuccessfulSvgComponent } from "../../resources/Svg";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Toast, Spinner } from "native-base";
 
 import { postSendMoneyPreVerify, postSendMoney } from "../../containers/transactions/action";
-import { shortenNames } from "../../resource/MetaFunctions";
+import { shortenNames } from "../../resources/MetaFunctions";
 
 export default function SendMoney({ navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -367,7 +367,7 @@ export default function SendMoney({ navigation }) {
         {/** Recipient Information Modal */}
         <Modal transparent visible={modalOpen} animationType="slide">
           <KeyboardAwareScrollView enableAutomaticScroll extraScrollHeight={10} enableOnAndroid={true} extraHeight={Platform.select({ android: 150 })} style={{ flexGrow: 1 }}>
-            <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.6)", height: 700 }}>{renderModal()}</View>
+            <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.6)", height: 1000 }}>{renderModal()}</View>
           </KeyboardAwareScrollView>
         </Modal>
 

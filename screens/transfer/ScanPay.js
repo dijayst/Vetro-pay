@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Text, View, StyleSheet, Button, Modal, Picker, TextInput, Switch } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import AppText from "../../resource/AppText";
+import AppText from "../../resources/AppText";
 import { MaterialIcons } from "@expo/vector-icons";
-import { SuccessfulSvgComponent } from "../../resource/Svg";
+import { SuccessfulSvgComponent } from "../../resources/Svg";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { PrimaryButton } from "../../resource/AppButton";
+import { PrimaryButton } from "../../resources/AppButton";
 import { Spinner } from "native-base";
 
 import { postSendMoneyPreVerify, postSendMoney } from "../../containers/transactions/action";
@@ -504,7 +504,7 @@ export default function App() {
       {/** Transaction Information Modal */}
       <Modal transparent visible={modalOpen} animationType="slide">
         <KeyboardAwareScrollView enableAutomaticScroll extraScrollHeight={10} enableOnAndroid={true} extraHeight={Platform.select({ android: 150 })} style={{ flexGrow: 1 }}>
-          <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.6)" }}>{renderModal()}</View>
+          <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.6)", height: 1000 }}>{renderModal()}</View>
         </KeyboardAwareScrollView>
       </Modal>
 

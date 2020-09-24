@@ -1,8 +1,8 @@
 import React from "react";
 import { View, StyleSheet, TouchableNativeFeedback, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import AppText from "../../resource/AppText";
-import { AccountProfileSvgComponent, BusinessSvgComponent } from "../../resource/Svg";
+import AppText from "../../resources/AppText";
+import { AccountProfileSvgComponent, BusinessSvgComponent } from "../../resources/Svg";
 
 function Separator() {
   return <View style={styles.separator} />;

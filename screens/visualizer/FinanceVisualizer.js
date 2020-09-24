@@ -6,7 +6,7 @@ import { View, StyleSheet, Picker, ScrollView } from "react-native";
 import { Text as RNtext } from "react-native";
 import { PieChart } from "react-native-svg-charts";
 import { Text } from "react-native-svg";
-import AppText from "../../resource/AppText";
+import AppText from "../../resources/AppText";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import { getSysPeriod, getVisualizerData } from "../../containers/transactions/action";
