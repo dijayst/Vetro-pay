@@ -5,7 +5,7 @@
     "privacy": "public",
     "sdkVersion": "38.0.0",
     "platforms": ["ios", "android", "web"],
-    "version": "1.0.4.2",
+    "version": "1.0.4.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -23,7 +23,7 @@
     "android": {
       "googleServicesFile": "./google-services.json",
       "package": "com.anclatechs.vetropaymobile",
-      "versionCode": 6,
+      "versionCode": 7,
       "useNextNotificationsApi": true,
       "enableDangerousExperimentalLeanBuilds": true
     },
@@ -32,6 +32,10 @@
       "backgroundColor": "#00000066",
       "translucent": true
     },
+    "facebookScheme": "fb713268446200988",
+    "facebookAppId": "713268446200988",
+    "facebookDisplayName": "VetroPay Mobile",
+    "facebookAutoLogAppEventsEnabled": true,
     "description": ""
   }
 }

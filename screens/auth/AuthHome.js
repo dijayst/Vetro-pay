@@ -2,9 +2,11 @@ import React from "react";
 import { StyleSheet, Text, View, ImageBackground } from "react-native";
 import AppText from "../../resources/AppText";
 import { AppButton } from "../../resources/AppButton";
+import * as Facebook from "expo-facebook";
 const BackgroundImage = require("../../assets/authHome.png");
 
 export default function AuthHome({ navigation }) {
+  Facebook.initializeAsync();
   return (
     <ImageBackground source={BackgroundImage} style={{ flex: 1 }} imageStyle={{ resizeMode: "cover" }}>
       <View style={styles.container}>
