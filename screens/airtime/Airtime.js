@@ -343,118 +343,120 @@ export default function Airtime() {
         </KeyboardAwareScrollView>
       </Modal>
       <View style={styles.innerContainer}>
-        <AppText bold="true" styles={{ marginTop: 10, fontSize: 16, marginBottom: 5 }}>
-          Select network provider
-        </AppText>
-        <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
-          <TouchableOpacity onPress={() => setNetworkProvider("MTN")}>
-            <View style={{ ...styles.airtimeCard, borderWidth: 2, borderColor: `${networkProvider == "MTN" ? "#266ddc" : "#ffffff"}` }}>
-              <Image style={styles.logos} source={MTNlogo} />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => setNetworkProvider("GLO")}>
-            <View style={{ ...styles.airtimeCard, borderWidth: 2, borderColor: `${networkProvider == "GLO" ? "#266ddc" : "#ffffff"}` }}>
-              <Image style={styles.logos} source={GloLogo} />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => setNetworkProvider("AIRTEL")}>
-            <View style={{ ...styles.airtimeCard, borderWidth: 2, borderColor: `${networkProvider == "AIRTEL" ? "#266ddc" : "#ffffff"}` }}>
-              <Image style={styles.logos} source={AirtelLogo} />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => setNetworkProvider("9MOBILE")}>
-            <View style={{ ...styles.airtimeCard, borderWidth: 2, borderColor: `${networkProvider == "9MOBILE" ? "#266ddc" : "#ffffff"}` }}>
-              <Image style={styles.logos} source={etisalatLogo} />
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        <View style={{ flexDirection: "row", justifyContent: "space-evenly", marginTop: 20 }}>
-          <TouchableOpacity
-            onPress={() => {
-              setModalPhoneBookOpen(true);
-            }}
-          >
-            <View style={styles.choiceBox}>
-              <AppText styles={styles.choiceBoxText}>
-                <Text style={{ fontWeight: "700" }}>Open PhoneBook</Text>
-              </AppText>
-            </View>
-          </TouchableOpacity>
-
-          <View style={styles.choiceBox}>
-            <AppText styles={styles.choiceBoxText}>
-              <Text style={{ fontWeight: "700" }}>Find Beneficiary</Text>
-            </AppText>
-          </View>
-        </View>
-
-        <View style={styles.formGroup}>
-          <TextInput
-            style={{ ...styles.textInput, borderColor: "#266ddc" }}
-            placeholder="Enter Phone Number"
-            value={phoneNumber}
-            keyboardType="numeric"
-            onChangeText={(text) => setPhoneNumber(text.replace(/\s/g, ""))}
-          />
-        </View>
-
-        <AppText>
-          <Text style={{ fontWeight: "700" }}>Select Amount</Text>
-        </AppText>
-        <View style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 10, justifyContent: "space-evenly" }}>
-          <TouchableOpacity onPress={() => setAmount("100")}>
-            <View style={styles.choiceBox}>
-              <AppText styles={styles.choiceBoxText}>
-                <Text style={{ fontWeight: "700" }}>₦100</Text>
-              </AppText>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => setAmount("500")}>
-            <View style={styles.choiceBox}>
-              <AppText styles={styles.choiceBoxText}>
-                <Text style={{ fontWeight: "700" }}>₦500</Text>
-              </AppText>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => setAmount("1000")}>
-            <View style={styles.choiceBox}>
-              <AppText styles={styles.choiceBoxText}>
-                <Text style={{ fontWeight: "700" }}>₦1000</Text>
-              </AppText>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => setAmount("2000")}>
-            <View style={styles.choiceBox}>
-              <AppText styles={styles.choiceBoxText}>
-                <Text style={{ fontWeight: "700" }}>₦2000</Text>
-              </AppText>
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.formGroup}>
-          <TextInput
-            style={{ ...styles.textInput, borderColor: "#266ddc" }}
-            placeholder="Enter Amount"
-            keyboardType="numeric"
-            value={amount}
-            onChangeText={(text) => {
-              setAmount(text.replace(/\s/g, ""));
-            }}
-          />
-        </View>
-
-        <AppButton onPress={() => proceedToPayments()} styles={{ backgroundColor: "#266ddc", padding: 12, justifyContent: "center", alignItems: "center" }}>
-          <AppText bold="true" styles={{ textTransform: "uppercase", fontSize: 15, color: "#ffffff" }}>
-            Proceed
+        <KeyboardAwareScrollView enableAutomaticScroll extraScrollHeight={10} enableOnAndroid={true} extraHeight={Platform.select({ android: 150 })} style={{ flexGrow: 1 }}>
+          <AppText bold="true" styles={{ marginTop: 10, fontSize: 16, marginBottom: 5 }}>
+            Select network provider
           </AppText>
-        </AppButton>
+          <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
+            <TouchableOpacity onPress={() => setNetworkProvider("MTN")}>
+              <View style={{ ...styles.airtimeCard, borderWidth: 2, borderColor: `${networkProvider == "MTN" ? "#266ddc" : "#ffffff"}` }}>
+                <Image style={styles.logos} source={MTNlogo} />
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => setNetworkProvider("GLO")}>
+              <View style={{ ...styles.airtimeCard, borderWidth: 2, borderColor: `${networkProvider == "GLO" ? "#266ddc" : "#ffffff"}` }}>
+                <Image style={styles.logos} source={GloLogo} />
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => setNetworkProvider("AIRTEL")}>
+              <View style={{ ...styles.airtimeCard, borderWidth: 2, borderColor: `${networkProvider == "AIRTEL" ? "#266ddc" : "#ffffff"}` }}>
+                <Image style={styles.logos} source={AirtelLogo} />
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => setNetworkProvider("9MOBILE")}>
+              <View style={{ ...styles.airtimeCard, borderWidth: 2, borderColor: `${networkProvider == "9MOBILE" ? "#266ddc" : "#ffffff"}` }}>
+                <Image style={styles.logos} source={etisalatLogo} />
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          <View style={{ flexDirection: "row", justifyContent: "space-evenly", marginTop: 20 }}>
+            <TouchableOpacity
+              onPress={() => {
+                setModalPhoneBookOpen(true);
+              }}
+            >
+              <View style={styles.choiceBox}>
+                <AppText styles={styles.choiceBoxText}>
+                  <Text style={{ fontWeight: "700" }}>Open PhoneBook</Text>
+                </AppText>
+              </View>
+            </TouchableOpacity>
+
+            <View style={styles.choiceBox}>
+              <AppText styles={styles.choiceBoxText}>
+                <Text style={{ fontWeight: "700" }}>Find Beneficiary</Text>
+              </AppText>
+            </View>
+          </View>
+
+          <View style={styles.formGroup}>
+            <TextInput
+              style={{ ...styles.textInput, borderColor: "#266ddc" }}
+              placeholder="Enter Phone Number"
+              value={phoneNumber}
+              keyboardType="numeric"
+              onChangeText={(text) => setPhoneNumber(text.replace(/\s/g, ""))}
+            />
+          </View>
+
+          <AppText>
+            <Text style={{ fontWeight: "700" }}>Select Amount</Text>
+          </AppText>
+          <View style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 10, justifyContent: "space-evenly" }}>
+            <TouchableOpacity onPress={() => setAmount("100")}>
+              <View style={styles.choiceBox}>
+                <AppText styles={styles.choiceBoxText}>
+                  <Text style={{ fontWeight: "700" }}>₦100</Text>
+                </AppText>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => setAmount("500")}>
+              <View style={styles.choiceBox}>
+                <AppText styles={styles.choiceBoxText}>
+                  <Text style={{ fontWeight: "700" }}>₦500</Text>
+                </AppText>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => setAmount("1000")}>
+              <View style={styles.choiceBox}>
+                <AppText styles={styles.choiceBoxText}>
+                  <Text style={{ fontWeight: "700" }}>₦1000</Text>
+                </AppText>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => setAmount("2000")}>
+              <View style={styles.choiceBox}>
+                <AppText styles={styles.choiceBoxText}>
+                  <Text style={{ fontWeight: "700" }}>₦2000</Text>
+                </AppText>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.formGroup}>
+            <TextInput
+              style={{ ...styles.textInput, borderColor: "#266ddc" }}
+              placeholder="Enter Amount"
+              keyboardType="numeric"
+              value={amount}
+              onChangeText={(text) => {
+                setAmount(text.replace(/\s/g, ""));
+              }}
+            />
+          </View>
+
+          <AppButton onPress={() => proceedToPayments()} styles={{ backgroundColor: "#266ddc", padding: 12, justifyContent: "center", alignItems: "center" }}>
+            <AppText bold="true" styles={{ textTransform: "uppercase", fontSize: 15, color: "#ffffff" }}>
+              Proceed
+            </AppText>
+          </AppButton>
+        </KeyboardAwareScrollView>
       </View>
     </View>
   );

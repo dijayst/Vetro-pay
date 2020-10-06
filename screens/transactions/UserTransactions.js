@@ -3,13 +3,14 @@ import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import AppText from "../../resources/AppText";
 import { AppButton, PrimaryButton, DangerButton } from "../../resources/AppButton";
-import { Dimensions, StyleSheet, Text, View, Picker, FlatList } from "react-native";
+import { Dimensions, StyleSheet, Text, View, Picker, FlatList, ScrollView } from "react-native";
 import { Modal, TouchableOpacity } from "react-native";
 import { MaterialIcons, Ionicons, AntDesign } from "@expo/vector-icons";
 import TransactionHistory from "../../resources/TransactionHistory";
 import { getSysPeriod, getUserTransaction } from "../../containers/transactions/action";
 import { Spinner } from "native-base";
 //import { convertUTCDateToLocalDate } from "../resource/MetaFunctions";
+import { Linking } from "expo";
 
 function Separator() {
   return <View style={styles.separator} />;
@@ -114,101 +115,123 @@ export default function UserTransactions({ navigation }) {
       {/** Transaction Modal  */}
       <Modal visible={modalOpen} animationType="slide">
         <View style={styles.modalContent}>
-          <MaterialIcons name="close" size={24} onPress={() => setModalOpen(false)} style={styles.modalClose} />
-          <View style={styles.transactionDetails}>
-            <View style={styles.uniqueTransactionDetails}>
-              <AppText styles={styles.transactionDetailsText}>Transaction Date:</AppText>
-              <AppText bold="true" styles={{ textTransform: "uppercase" }}>
-                {modalData.transaction_date}
-              </AppText>
-            </View>
-            <View style={styles.uniqueTransactionDetails}>
-              <AppText styles={styles.transactionDetailsText}>Transaction Class:</AppText>
-              <AppText
-                bold="true"
-                styles={{
-                  paddingBottom: 2,
-                  width: 87,
-                  paddingBottom: 2,
-                  textAlign: "center",
-                  color: "#f2f2f2",
-                  textTransform: "uppercase",
-                  borderRadius: 10,
-                  backgroundColor: `${modalData.transaction_type == "CREATED" ? "#696969" : `${modalData.transaction_type == "CREDIT" ? "#219653" : "red"}`}`,
-                }}
-              >
-                {modalData.transaction_type}
-              </AppText>
-            </View>
-            <View style={styles.uniqueTransactionDetails}>
-              <AppText style={styles.transactionDetailsText}>Payment Method:</AppText>
-              <AppText
-                bold="true"
-                styles={{
-                  width: 87,
-                  paddingBottom: 2,
-                  textAlign: "center",
-                  color: "#32363F",
-                  textTransform: "uppercase",
-                  borderRadius: 10,
-                  backgroundColor: "#F2C94C",
-                }}
-              >
-                {modalData.payment_method}
-              </AppText>
-            </View>
-            <View style={styles.uniqueTransactionDetails}>
-              <AppText styles={styles.transactionDetailsText}>Amount:</AppText>
-              <AppText bold="true">
-                {currency} {modalData.amount}
-              </AppText>
-            </View>
-            <View style={styles.uniqueTransactionDetails}>
-              <AppText styles={styles.transactionDetailsText}>Category:</AppText>
-              <AppText bold="true">{modalData.transaction_category}</AppText>
-            </View>
-            <View style={styles.uniqueTransactionDetails}>
-              <AppText style={styles.transactionDetailsText}>Note:</AppText>
-              <AppText bold="true">{modalData.note}</AppText>
-            </View>
-
-            <View style={styles.uniqueTransactionDetails}>
-              <AppText styles={styles.transactionDetailsText}>Date of Entry:</AppText>
-              <AppText bold="true">
-                {new Date(modalData.datetime_of_entry).toDateString()} {new Date(modalData.datetime_of_entry).toLocaleTimeString()}
-              </AppText>
-            </View>
-          </View>
-          <View style={styles.modalActionButtons}>
-            <PrimaryButton disabled={!modalData.editable} onPress={() => console.log("Home")}>
-              <MaterialIcons color="#fff" name="edit" size={20} />
-              <AppText bold="true" styles={{ color: "#fff", marginLeft: 2, fontSize: 16 }}>
-                Edit
-              </AppText>
-            </PrimaryButton>
-            <DangerButton disabled={!modalData.editable} onPress={() => console.log("Home")}>
-              <Ionicons color="#fff" name="ios-trash" size={20} />
-              <AppText bold="true" styles={{ color: "#fff", marginLeft: 5, fontSize: 16 }}>
-                Delete
-              </AppText>
-            </DangerButton>
-          </View>
-          <Separator />
-          {/*INSIGHTS */}
-          <View style={styles.uniqueTransactionDetails}>
-            <AppText bold="true">Insight</AppText>
-          </View>
-          {/**Enumerated Insights */}
-          {modalData.transaction_insight.split("Nnn").map((info, index) => {
-            return (
-              <View key={index} style={{ flexDirection: "row", alignItems: "center", marginBottom: 10 }}>
-                <AntDesign name="doubleright" size={14} />
-                <AppText styles={{ fontSize: 14, marginLeft: 5 }}>
-                  <Text style={{ fontWeight: "bold" }}>{info}</Text>
+          <ScrollView>
+            <MaterialIcons name="close" size={24} onPress={() => setModalOpen(false)} style={styles.modalClose} />
+            <View style={styles.transactionDetails}>
+              <View style={styles.uniqueTransactionDetails}>
+                <AppText styles={styles.transactionDetailsText}>Transaction Date:</AppText>
+                <AppText bold="true" styles={{ textTransform: "uppercase" }}>
+                  {modalData.transaction_date}
                 </AppText>
               </View>
-            );
-          })}
+              <View style={styles.uniqueTransactionDetails}>
+                <AppText styles={styles.transactionDetailsText}>Transaction Class:</AppText>
+                <AppText
+                  bold="true"
+                  styles={{
+                    paddingBottom: 2,
+                    width: 87,
+                    paddingBottom: 2,
+                    textAlign: "center",
+                    color: "#f2f2f2",
+                    textTransform: "uppercase",
+                    borderRadius: 10,
+                    backgroundColor: `${modalData.transaction_type == "CREATED" ? "#696969" : `${modalData.transaction_type == "CREDIT" ? "#219653" : "red"}`}`,
+                  }}
+                >
+                  {modalData.transaction_type}
+                </AppText>
+              </View>
+              <View style={styles.uniqueTransactionDetails}>
+                <AppText style={styles.transactionDetailsText}>Payment Method:</AppText>
+                <AppText
+                  bold="true"
+                  styles={{
+                    width: 87,
+                    paddingBottom: 2,
+                    textAlign: "center",
+                    color: "#32363F",
+                    textTransform: "uppercase",
+                    borderRadius: 10,
+                    backgroundColor: "#F2C94C",
+                  }}
+                >
+                  {modalData.payment_method}
+                </AppText>
+              </View>
+              <View style={styles.uniqueTransactionDetails}>
+                <AppText styles={styles.transactionDetailsText}>Amount:</AppText>
+                <AppText bold="true">
+                  {currency} {modalData.amount}
+                </AppText>
+              </View>
+              <View style={styles.uniqueTransactionDetails}>
+                <AppText styles={styles.transactionDetailsText}>Category:</AppText>
+                <AppText bold="true">{modalData.transaction_category}</AppText>
+              </View>
+              <View style={styles.uniqueTransactionDetails}>
+                <AppText style={styles.transactionDetailsText}>Note:</AppText>
+                <AppText bold="true">{modalData.note}</AppText>
+              </View>
+
+              <View style={styles.uniqueTransactionDetails}>
+                <AppText styles={styles.transactionDetailsText}>Date of Entry:</AppText>
+                <AppText bold="true">
+                  {new Date(modalData.datetime_of_entry).toDateString()} {new Date(modalData.datetime_of_entry).toLocaleTimeString()}
+                </AppText>
+              </View>
+            </View>
+            <View style={styles.modalActionButtons}>
+              <PrimaryButton disabled={!modalData.editable} onPress={() => console.log("Home")}>
+                <MaterialIcons color="#fff" name="edit" size={20} />
+                <AppText bold="true" styles={{ color: "#fff", marginLeft: 2, fontSize: 16 }}>
+                  Edit
+                </AppText>
+              </PrimaryButton>
+              <DangerButton disabled={!modalData.editable} onPress={() => console.log("Home")}>
+                <Ionicons color="#fff" name="ios-trash" size={20} />
+                <AppText bold="true" styles={{ color: "#fff", marginLeft: 5, fontSize: 16 }}>
+                  Delete
+                </AppText>
+              </DangerButton>
+            </View>
+            <Separator />
+            {/*INSIGHTS */}
+            <View style={styles.uniqueTransactionDetails}>
+              <AppText bold="true">Insight</AppText>
+            </View>
+            {/**Enumerated Insights */}
+            {modalData.transaction_insight.split("Nnn").map((info, index) => {
+              return (
+                <View key={index} style={{ flexDirection: "row", alignItems: "center", marginBottom: 10 }}>
+                  <AntDesign name="doubleright" size={14} />
+                  <AppText styles={{ fontSize: 14, marginLeft: 5 }}>
+                    <Text style={{ fontWeight: "bold" }}>{info}</Text>
+                  </AppText>
+                </View>
+              );
+            })}
+
+            {/** Add Verify Button */}
+            {modalData.transaction_insight.substring(0, 5) == "Smart" && (
+              <AppButton
+                onPress={() =>
+                  Linking.openURL(
+                    `https://vetropay.com/marketplace/transaction/${modalData.transaction_insight
+                      .split("Nnn ")
+                      .reverse()[1]
+                      .split(": ")[1]
+                      .replace(/\s/g, "")}/${modalData.transaction_insight.split("Nnn ").reverse()[0].split(": ")[1].replace(/\s/g, "")}`
+                  )
+                }
+                styles={{ backgroundColor: "#266ddc", padding: 12, justifyContent: "center", alignItems: "center", marginTop: 10, marginBottom: 10 }}
+              >
+                <AppText bold="true" styles={{ textTransform: "uppercase", fontSize: 15, color: "#ffffff" }}>
+                  Verify/Print Receipt
+                </AppText>
+              </AppButton>
+            )}
+          </ScrollView>
         </View>
       </Modal>
 
