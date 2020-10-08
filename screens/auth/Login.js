@@ -85,6 +85,20 @@ export default function Login({ navigation }) {
     }
   };
 
+  const loginUserFunctionII = () => {
+    if (loginData.payload.password.length < 8) {
+      Toast.show({
+        text: "Incorrect password",
+        duration: 3000,
+        type: "danger",
+      });
+    } else {
+      SecureStore.setItemAsync("pass", loginData.payload.password, SecureStore.WHEN_UNLOCKED);
+      setDisplaySpinner(true);
+      dispatch(login(storedPhoneNumberData, loginData.payload.password));
+    }
+  };
+
   useEffect(() => {
     setDisplaySpinner(false);
   }, [userAuth]);
@@ -140,11 +154,18 @@ export default function Login({ navigation }) {
         </AppText>
 
         <View>
-          <TextInput style={{ ...styles.textInput, marginTop: 20 }} placeholder="Password" placeholderTextColor="gray" textContentType="password" secureTextEntry />
+          <TextInput
+            style={{ ...styles.textInput, marginTop: 20 }}
+            placeholder="Password"
+            placeholderTextColor="gray"
+            textContentType="password"
+            secureTextEntry
+            onChangeText={(text) => onValueChange("password", text)}
+          />
         </View>
 
         <View style={{ alignItems: "center", flexDirection: "row", justifyContent: "space-around", display: `${!displaySpinner ? "flex" : "none"}` }}>
-          <AppButton styles={styles.loginButton}>
+          <AppButton styles={styles.loginButton} onPress={() => loginUserFunctionII()}>
             <AppText styles={styles.buttonText}>Sign in</AppText>
           </AppButton>
 
