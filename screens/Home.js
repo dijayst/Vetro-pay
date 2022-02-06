@@ -293,7 +293,7 @@ export default function Home({ navigation }) {
             <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(114, 191, 247, 0.3)" }}>
               <Feather name="more-horizontal" size={24} color="black" />
             </View>
-            <AppText styles={styles.activityButtonIIText}>More</AppText>
+            <AppText styles={styles.activityButtonIIText}>Get Loans</AppText>
           </View>
         </View>
       </View>

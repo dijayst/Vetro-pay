@@ -56,6 +56,7 @@ export default function Airtime() {
   const [phoneContacts, setPhoneContacts] = useState([]);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [amount, setAmount] = useState("");
+  const [amountError, setAmountError] = useState(false)
   const [transactionPin, setTransactionPin] = useState("");
   const [displaySpinner, setDisplaySpinner] = useState(false);
   const [displayTransactionPinError, setDisplayTransactionPinError] = useState(false);
@@ -152,11 +153,16 @@ export default function Airtime() {
     setTransactionPin("");
     setTransactionGenericError("");
     setDisplayTransactionPinError(false);
+    setAmountError(false)
   };
 
   const proceedToPayments = () => {
     if (networkProvider !== "" && phoneNumber !== "" && amount !== "") {
+      if(Number(amount) < 100){
+        setAmountError(true)
+      }else{
       setPaymentModalOpen(true);
+      }
     }
   };
 
@@ -440,6 +446,7 @@ export default function Airtime() {
             </TouchableOpacity>
           </View>
           <View style={styles.formGroup}>
+            <AppText styles={{ fontSize: 14, color: "red", display: `${amountError ? "flex": "none"}` }}>Amount cannot be less than ₦100 </AppText>
             <TextInput
               style={{ ...styles.textInput, borderColor: "#266ddc" }}
               placeholder="Enter Amount"
