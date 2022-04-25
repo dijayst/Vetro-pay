@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import Navigator from "./routes/main";
 import AuthNavigator from "./routes/auth";
-import { AppLoading } from "expo";
+import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
 import { StatusBar } from "expo-status-bar";
 import { connect } from "react-redux";

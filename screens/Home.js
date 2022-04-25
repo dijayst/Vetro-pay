@@ -4,18 +4,12 @@ import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 import AppText from "../resources/AppText";
-import { StyleSheet, Text, View, StatusBar, Button, TouchableOpacity, Alert, TouchableNativeFeedback } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-import { Octicons } from "@expo/vector-icons";
-import { SimpleLineIcons } from "@expo/vector-icons";
-import { Foundation } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
+import { StyleSheet, Image, Text, View, StatusBar, FlatList, Button, TouchableOpacity, Alert, TouchableNativeFeedback, Pressable } from "react-native";
+import { MaterialCommunityIcons, AntDesign, Feather, Octicons, SimpleLineIcons, FontAwesome, Foundation, Fontisto, MaterialIcons, Entypo } from "@expo/vector-icons";
 import { logout } from "../containers/authentication/action";
 import { getUserTransaction } from "../containers/transactions/action";
 import { updateNotificationToken } from "../containers/regvalidate/action";
+import NairaLog from "../assets/naira.png";
 
 export default function Home({ navigation }) {
   const userAuthentication = useSelector((state) => state.authentication.user);
@@ -144,16 +138,143 @@ export default function Home({ navigation }) {
     );
   };
 
-  const alertDeals = () => {
-    Alert.alert("Deals & Offers", "Opps! There are no deals and offers at the moment. Enjoy, we will update you soon.", [
-      {
-        text: "Ok",
-        onPress: () => {
-          return null;
-        },
+  const menusItem = [
+    {
+      name: "Airtime & Data",
+      action: () => navigation.navigate("Airtime"),
+      content: () => {
+        return (
+          <View style={styles.activityButtonIIContainer}>
+            <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(114, 191, 247, 0.3)" }}>
+              <AntDesign name="wifi" size={24} color="black" />
+            </View>
+            <AppText bold styles={styles.activityButtonIIText}>
+              Airtime {"&"} Data
+            </AppText>
+          </View>
+        );
       },
-    ]);
-  };
+    },
+
+    {
+      name: "Cable",
+      action: () => navigation.navigate("Tv"),
+      content: () => {
+        return (
+          <View style={styles.activityButtonIIContainer}>
+            <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(147, 254, 170, 0.3)" }}>
+              <Feather name="tv" size={24} color="rgb(72, 140, 86)" />
+            </View>
+            <AppText bold styles={styles.activityButtonIIText}>
+              Cable
+            </AppText>
+          </View>
+        );
+      },
+    },
+
+    {
+      name: "Electricity",
+      action: () => navigation.navigate("Electricity"),
+      content: () => {
+        return (
+          <View style={styles.activityButtonIIContainer}>
+            <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(240,230,140, 0.3)" }}>
+              <Octicons name="zap" size={24} color="rgb(189,183,107)" />
+            </View>
+            <AppText bold styles={styles.activityButtonIIText}>
+              Electricity
+            </AppText>
+          </View>
+        );
+      },
+    },
+    {
+      name: "Offers",
+      action: () => navigation.navigate("Marketplace"),
+      content: () => {
+        return (
+          <View style={styles.activityButtonIIContainer}>
+            <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(252, 130, 130, 0.3)" }}>
+              {/* <Foundation name="ticket" size={24} color="rgb(196, 87, 87)" /> */}
+              <FontAwesome name="bank" size={24} color="rgb(196, 87, 87)" />
+            </View>
+            <AppText bold styles={styles.activityButtonIIText}>
+              Pay Hub
+            </AppText>
+          </View>
+        );
+      },
+    },
+
+    {
+      name: "Get Loans",
+      action: () => {},
+      content: () => {
+        return (
+          <View style={styles.activityButtonIIContainer}>
+            <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(114, 191, 247, 0.3)" }}>
+              <Image source={NairaLog} style={{ width: 24, height: 24, resizeMode: "contain" }} />
+            </View>
+            <AppText bold styles={styles.activityButtonIIText}>
+              Credit {"&"} Loans
+            </AppText>
+          </View>
+        );
+      },
+    },
+
+    {
+      name: "Manager",
+      action: () => navigation.navigate("FinanceVisualizer"),
+      content: () => {
+        return (
+          <View style={styles.activityButtonIIContainer}>
+            <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(147, 254, 170, 0.3)" }}>
+              <Entypo name="suitcase" size={24} color="rgb(72, 140, 86)" />
+            </View>
+            <AppText bold styles={styles.activityButtonIIText}>
+              Manager
+            </AppText>
+          </View>
+        );
+      },
+    },
+
+    {
+      name: "Subscriptions",
+      action: () => navigation.navigate("Subscriptions"),
+      content: () => {
+        return (
+          <View style={styles.activityButtonIIContainer}>
+            <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(114, 191, 247, 0.3)" }}>
+              <AntDesign name="addfolder" size={24} color="black" />
+            </View>
+            <AppText bold styles={styles.activityButtonIIText}>
+              Subscriptions
+            </AppText>
+          </View>
+        );
+      },
+    },
+
+    {
+      name: "Transactions",
+      action: () => navigation.navigate("UserTransactions"),
+      content: () => {
+        return (
+          <View style={styles.activityButtonIIContainer}>
+            <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(252, 130, 130, 0.3)" }}>
+              <MaterialIcons name="history" size={24} color="black" />
+            </View>
+            <AppText bold styles={styles.activityButtonIIText}>
+              Transactions
+            </AppText>
+          </View>
+        );
+      },
+    },
+  ];
   return (
     <View style={styles.container}>
       <View style={{ backgroundColor: "#266ddc", borderBottomLeftRadius: 15, borderBottomRightRadius: 15, paddingBottom: 30 }}>
@@ -208,106 +329,33 @@ export default function Home({ navigation }) {
       </View>
       <View style={{ justifyContent: "center", alignItems: "center" }}>
         <View style={styles.menuBoard}>
-          <TouchableOpacity onPress={() => navigation.navigate("Airtime")}>
-            <View style={styles.activityButtonIIContainer}>
-              <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(114, 191, 247, 0.3)" }}>
-                <AntDesign name="wifi" size={24} color="black" />
-              </View>
-              <AppText styles={styles.activityButtonIIText}>Airtime & Data</AppText>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => navigation.navigate("Tv")}>
-            <View style={styles.activityButtonIIContainer}>
-              <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(147, 254, 170, 0.3)" }}>
-                <Feather name="tv" size={24} color="rgb(72, 140, 86)" />
-              </View>
-              <AppText styles={styles.activityButtonIIText}>Cable</AppText>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => navigation.navigate("Electricity")}>
-            <View style={styles.activityButtonIIContainer}>
-              <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(240,230,140, 0.3)" }}>
-                <Octicons name="zap" size={24} color="rgb(189,183,107)" />
-              </View>
-              <AppText styles={styles.activityButtonIIText}>Electricity</AppText>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => navigation.navigate("Marketplace")}>
-            <View style={styles.activityButtonIIContainer}>
-              <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(189, 165, 116, 0.3)" }}>
-                <SimpleLineIcons name="globe" size={24} color="rgb(132, 110, 66)" />
-              </View>
-              <AppText styles={styles.activityButtonIIText}>MarketPlace</AppText>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => alertDeals()}>
-            <View style={styles.activityButtonIIContainer}>
-              <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(252, 130, 130, 0.3)" }}>
-                <Foundation name="ticket" size={24} color="rgb(196, 87, 87)" />
-              </View>
-              <AppText styles={styles.activityButtonIIText}>Offers</AppText>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
-            <View style={styles.activityButtonIIContainer}>
-              <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(189, 165, 116, 0.3)" }}>
-                <AntDesign name="user" size={24} color="rgb(189,183,107)" />
-              </View>
-              <AppText styles={styles.activityButtonIIText}>My Account</AppText>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => navigation.navigate("Subscriptions")}>
-            <View style={styles.activityButtonIIContainer}>
-              <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(114, 191, 247, 0.3)" }}>
-                <AntDesign name="addfolder" size={24} color="black" />
-              </View>
-              <AppText styles={styles.activityButtonIIText}>Subscriptions</AppText>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => navigation.navigate("FinanceVisualizer")}>
-            <View style={styles.activityButtonIIContainer}>
-              <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(147, 254, 170, 0.3)" }}>
-                <Entypo name="suitcase" size={24} color="rgb(72, 140, 86)" />
-              </View>
-              <AppText styles={styles.activityButtonIIText}>Manager</AppText>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => navigation.navigate("UserTransactions")}>
-            <View style={styles.activityButtonIIContainer}>
-              <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(252, 130, 130, 0.3)" }}>
-                <MaterialIcons name="history" size={24} color="black" />
-              </View>
-              <AppText styles={styles.activityButtonIIText}>Transactions</AppText>
-            </View>
-          </TouchableOpacity>
-
-          <View style={styles.activityButtonIIContainer}>
-            <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(114, 191, 247, 0.3)" }}>
-              <Feather name="more-horizontal" size={24} color="black" />
-            </View>
-            <AppText styles={styles.activityButtonIIText}>Get Loans</AppText>
-          </View>
+          <FlatList
+            horizontal={false}
+            numColumns={4}
+            data={menusItem}
+            renderItem={({ item }) => <TouchableOpacity onPress={() => item.action()}>{item.content()}</TouchableOpacity>}
+            keyExtractor={(item, index) => index}
+            contentContainerStyle={{ alignItems: "center", justifyContent: "space-around", width: "100%" }}
+          />
         </View>
       </View>
 
-      <AppText styles={{ marginTop: 10, marginHorizontal: 10, fontSize: 16 }}>Did you spend outside vetropay today? Keep track of your expenses</AppText>
+      <AppText styles={{ marginTop: 20, marginHorizontal: 10, fontSize: 16, textAlign: "center" }}>
+        Did you spend outside Vetropay today? Keep track of your everyday expenses
+      </AppText>
 
-      <View style={{ display: "flex", marginTop: 5, alignItems: "center", justifyContent: "center" }}>
+      <View style={{ display: "flex", marginTop: 10, alignItems: "center", justifyContent: "center" }}>
         <View style={{ width: "80%" }}>
-          <Button onPress={() => navigation.navigate("AddRecord")} title="Record Off-App Transaction"></Button>
+          <Pressable style={{ width: "100%", backgroundColor: "#266ddc", padding: 10, alignItems: "center", borderRadius: 5 }} onPress={() => navigation.navigate("AddRecord")}>
+            <AppText styles={{ color: "#FFFFFF" }} bold>
+              Record Off-App Transaction
+            </AppText>
+          </Pressable>
         </View>
       </View>
 
       <AppText bold="true" styles={{ marginTop: 15, fontSize: 16, marginHorizontal: 10 }}>
-        Deals {"&"} Offers
+        Promos {"&"} Offers
       </AppText>
       <StatusBar style="light" translucent={true} backgroundColor="#00000066" />
     </View>
@@ -346,12 +394,11 @@ const styles = StyleSheet.create({
   },
 
   activityButtonII: {
-    height: 50,
-    width: 50,
+    height: 55,
+    width: 55,
     borderWidth: 0.5,
     backgroundColor: "#f2f2f2",
     borderColor: "#f2f2f2",
-    marginRight: 5,
     marginTop: 20,
     justifyContent: "center",
     alignItems: "center",
@@ -360,7 +407,7 @@ const styles = StyleSheet.create({
 
   menuBoard: {
     backgroundColor: "#ffffff",
-    height: 180,
+    height: 190,
     width: "90%",
     marginTop: -30,
     borderRadius: 5,
@@ -379,5 +426,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    paddingHorizontal: 3,
+    width: 85,
   },
 });

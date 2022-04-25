@@ -3,8 +3,11 @@
     "name": "Vetropay Mobile",
     "slug": "vetropay-mobile",
     "privacy": "public",
-    "sdkVersion": "38.0.0",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "version": "1.0.4.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,7 +19,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
