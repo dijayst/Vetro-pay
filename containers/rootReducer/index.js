@@ -9,6 +9,7 @@ import banks from "../banks/reducer";
 import business from "../business/reducer";
 import utility from "../utility/reducer";
 import busnotifications from "../busnotifications/reducer";
+import deposit from "../deposit/reducer";
 
 export default combineReducers({
   errors,
@@ -21,4 +22,5 @@ export default combineReducers({
   business,
   utility,
   busnotifications,
+  deposit,
 });

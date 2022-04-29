@@ -1,15 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, createRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import AppText from "../../resources/AppText";
 import { AppButton, PrimaryButton, DangerButton } from "../../resources/AppButton";
-import { Dimensions, StyleSheet, Text, View, Picker, FlatList, ScrollView } from "react-native";
+import { Dimensions, StyleSheet, Text, View, FlatList, ScrollView, Pressable } from "react-native";
 import { Modal, TouchableOpacity } from "react-native";
 import { MaterialIcons, Ionicons, AntDesign } from "@expo/vector-icons";
 import TransactionHistory from "../../resources/TransactionHistory";
 import { getSysPeriod, getUserTransaction } from "../../containers/transactions/action";
-import { Spinner } from "native-base";
+import { Spinner, Picker } from "native-base";
 //import { convertUTCDateToLocalDate } from "../resource/MetaFunctions";
+import moment from "moment";
 import { Linking } from "expo";
 
 function Separator() {
@@ -42,6 +43,8 @@ export default function UserTransactions({ navigation }) {
     });
     return ref.current;
   };
+
+  let pickerRef = useRef();
 
   const userSystemPeriod = useSelector((state) => state.transactions.userperiod);
   const userTransactions = useSelector((state) => state.transactions.usertransactions);
@@ -238,10 +241,11 @@ export default function UserTransactions({ navigation }) {
       <View style={styles.upperBackGround}></View>
 
       <View style={styles.balanceUpBackGround}>
-        <View style={{ flexDirection: "row" }}>
+        <View>
           <Picker
-            mode="dropdown"
-            style={{ height: 30, width: 130, backgroundColor: "#FFFFFF", marginTop: 8, borderRadius: 2, elevation: 5 }}
+            ref={pickerRef}
+            mode="dialog"
+            style={{ height: 30, opacity: 0, width: 130, backgroundColor: "#FFFFFF", marginTop: 8, borderRadius: 2, elevation: 5 }}
             onValueChange={(itemValue, itemIndex) => {
               setUserSelectSystemPeriod(itemValue);
               userSystemPeriodUpdate(itemValue);
@@ -256,7 +260,27 @@ export default function UserTransactions({ navigation }) {
                   return <Picker.Item label="Loading..." value="" />;
                 }}
           </Picker>
-          <MaterialIcons name="arrow-drop-down" size={25} style={{ paddingVertical: 10 }} />
+          <Pressable
+            onPress={() => {
+              pickerRef.current.wrappedInstance.focus();
+            }}
+            style={{
+              position: "absolute",
+              backgroundColor: "rgba(228,228,237, 1)",
+              right: 0,
+              top: 16,
+              height: 30,
+              width: 130,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <AppText brandgrey small medium>
+              {moment(userSelectSystemPeriod || new Date()).format("MMM, YYYY")}
+            </AppText>
+            <MaterialIcons name="arrow-drop-down" size={20} color="black" />
+          </Pressable>
         </View>
 
         <View onLayout={layoutEvent} style={styles.vpCard}>
@@ -268,7 +292,7 @@ export default function UserTransactions({ navigation }) {
             <AppText bold="true" styles={{ textAlign: "center", fontSize: 25, marginRight: 10 }}>
               {currency} {accountBalance}
             </AppText>
-            <TouchableOpacity onPress={() => setModalFundOpen(true)}>
+            <TouchableOpacity onPress={() => navigation.navigate("DepositFund")}>
               <MaterialIcons name="add-circle" color="#219653" size={35} />
             </TouchableOpacity>
           </View>
@@ -278,8 +302,9 @@ export default function UserTransactions({ navigation }) {
               onPress={() => {
                 setSummaryActive(!summaryActive);
               }}
+              style={{ paddingVertical: 5 }}
             >
-              <Ionicons color="#266DDC" name="md-arrow-dropdown-circle" size={30}></Ionicons>
+              <AntDesign color="#266DDC" name="circledown" size={25}></AntDesign>
             </TouchableOpacity>
             {/**Credit and Debit Summary */}
             <View style={{ display: `${summaryActive ? "flex" : "none"}` }}>

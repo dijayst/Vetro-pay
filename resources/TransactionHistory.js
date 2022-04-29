@@ -1,18 +1,18 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import AppText from "./AppText";
 
 export default function TransactionHistory({ date, amount, type }) {
   return (
     <View style={styles.transactionCard}>
-      <View style={{ paddingLeft: 8, paddingTop: 8 }}>
+      <View style={{ paddingLeft: 8 }}>
         <AppText>
           Date: <Text style={{ fontWeight: "700" }}>{date}</Text>
         </AppText>
-        <Ionicons style={{ marginTop: 4 }} color="#266ddc" name="md-arrow-dropdown-circle" size={20}></Ionicons>
+        <MaterialIcons style={{ marginTop: 4 }} color="#266ddc" name="expand-more" size={20}></MaterialIcons>
       </View>
-      <View style={{ paddingRight: 8, paddingTop: 8 }}>
+      <View style={{ paddingRight: 8 }}>
         <AppText>
           Amount:{" "}
           <Text
@@ -48,7 +48,9 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     borderRadius: 4,
     elevation: 4,
+    height: 65,
   },
 });

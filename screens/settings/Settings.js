@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { Text, View, StyleSheet, TouchableNativeFeedback, Share, Alert } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import AppText from "../../resources/AppText";
 import { AccountProfileSvgComponent, HelpSvgComponent, InviteFriendSvgComponent } from "../../resources/Svg";
 
@@ -45,6 +45,31 @@ export default function Settings({ navigation }) {
           </View>
         </TouchableNativeFeedback>
         {/** End Account Information */}
+
+        <Separator />
+        {/**Linked Cards */}
+        <TouchableNativeFeedback onPress={() => navigation.navigate("Help")}>
+          <View style={styles.listItem}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+              <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
+                <View style={{ backgroundColor: "#266ddc", height: 26, width: 26, borderRadius: 13, justifyContent: "center", alignItems: "center" }}>
+                  <FontAwesome name="credit-card-alt" size={13} color="#FFFFFF" />
+                </View>
+                <View style={{ flexDirection: "column" }}>
+                  <AppText bold="true" styles={{ paddingLeft: 10, fontSize: 15 }}>
+                    Cards
+                  </AppText>
+                  <AppText styles={{ fontSize: 12, marginLeft: 10 }}>Linked debit cards</AppText>
+                </View>
+              </View>
+
+              <View>
+                <AntDesign name="right" color="grey" size={20} />
+              </View>
+            </View>
+          </View>
+        </TouchableNativeFeedback>
+        {/**End Linked Cards */}
 
         <Separator />
         {/**Help */}

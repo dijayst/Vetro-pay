@@ -2,7 +2,7 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../routes/home";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Entypo, Feather } from "@expo/vector-icons";
 import Notifications from "../routes/notification";
 import Settings from "../routes/settings";
 
@@ -12,20 +12,22 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        tabBarOptions={{
-          activeTintColor: "#266ddc",
-          inactiveTintColor: "gray",
+        screenOptions={{
+          tabBarStyle: {
+            paddingVertical: 5,
+          },
+          tabBarLabelStyle: {
+            marginBottom: 5,
+            fontFamily: "Quicksand",
+          },
         }}
       >
         <Tab.Screen
           name="Home"
           options={{
+            headerShown: false,
             tabBarIcon: ({ focused }) => {
-              if (focused) {
-                return <AntDesign name="home" size={24} color="#266ddc" />;
-              } else {
-                return <AntDesign name="home" size={24} color="gray" />;
-              }
+              return <Feather name="home" size={24} color={focused ? "#266ddc" : "gray"} />;
             },
           }}
           component={Home}
@@ -33,12 +35,14 @@ export default function App() {
         <Tab.Screen
           name="Notifications"
           options={{
+            headerShown: false,
             tabBarIcon: ({ focused }) => {
-              if (focused) {
-                return <AntDesign name="mail" size={24} color="#266ddc" />;
-              } else {
-                return <AntDesign name="mail" size={24} color="gray" />;
-              }
+              return <Entypo name="megaphone" size={24} color={focused ? "#266ddc" : "gray"} />;
+            },
+            tabBarBadgeStyle: {
+              maxWidth: 7,
+              height: 7,
+              borderRadius: 5,
             },
             tabBarBadge: "",
           }}
@@ -47,6 +51,7 @@ export default function App() {
         <Tab.Screen
           name="Settings"
           options={{
+            headerShown: false,
             tabBarIcon: ({ focused }) => {
               if (focused) {
                 return <AntDesign name="setting" size={24} color="#266ddc" />;
