@@ -69,14 +69,14 @@ export default function ReceiveFund() {
 
         <AppText styles={{ fontSize: 16 }}>Simply Share your Phone Number, VetroPay Unique-ID or QR Code</AppText>
 
-        <View style={{ marginTop: 8, marginBottom: 8, alignItems: "center", flexDirection: "row", justifyContent: "space-evenly" }}>
-          <PrimaryButton onPress={() => shareUID()}>
+        <View style={{ width: "100%", marginTop: 17, marginBottom: 8, alignItems: "center", flexDirection: "row", justifyContent: "space-evenly" }}>
+          <PrimaryButton styles={{ width: "40%" }} onPress={() => shareUID()}>
             <AppText bold="true" styles={{ color: "#fff", fontSize: 16 }}>
               Share UID
             </AppText>
           </PrimaryButton>
 
-          <PrimaryButton onPress={() => setModalOpen(true)}>
+          <PrimaryButton styles={{ width: "40%" }} onPress={() => setModalOpen(true)}>
             <AppText bold="true" styles={{ color: "#fff", fontSize: 16 }}>
               Open QR
             </AppText>

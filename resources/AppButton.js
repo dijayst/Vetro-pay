@@ -18,7 +18,7 @@ export function AppButton(props) {
 export function PrimaryButton(props) {
   return (
     <TouchableNativeFeedback disabled={props.disabled} onPress={props.onPress}>
-      <View style={{ ...styles.button, backgroundColor: `${props.disabled ? "rgba(38, 109, 220, 0.4)" : "#266ddc"}` }}>{props.children}</View>
+      <View style={{ ...styles.button, ...props.styles, backgroundColor: `${props.disabled ? "rgba(38, 109, 220, 0.4)" : "#266ddc"}` }}>{props.children}</View>
     </TouchableNativeFeedback>
   );
 }

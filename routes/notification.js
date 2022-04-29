@@ -9,7 +9,7 @@ export default function NotificationStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Notifications"
+        name="NotificationsHome"
         options={{
           title: "Notifications",
           headerStyle: { backgroundColor: "#266ddc" },

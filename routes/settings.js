@@ -16,7 +16,7 @@ export default function NotificationStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Settings"
+        name="SettingsHome"
         options={{
           title: "Settings",
           headerStyle: { backgroundColor: "#266ddc" },
