@@ -44,31 +44,25 @@ export default function Tv() {
           Select cable provider
         </AppText>
         <View>
-          <TouchableOpacity onPress={() => openModalFunction("DSTV")}>
-            <View style={styles.tvCard}>
-              <Image style={styles.logos} source={DSTVlogo} />
-              <AppText bold="true" styles={{ fontSize: 16 }}>
-                DSTV
-              </AppText>
-            </View>
+          <TouchableOpacity onPress={() => openModalFunction("DSTV")} style={styles.tvCard}>
+            <Image style={styles.logos} source={DSTVlogo} />
+            <AppText bold="true" styles={{ fontSize: 16 }}>
+              DSTV
+            </AppText>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => openModalFunction("GOTV")}>
-            <View style={styles.tvCard}>
-              <Image style={styles.logos} source={GOTVLogo} />
-              <AppText bold="true" styles={{ fontSize: 16 }}>
-                GOTV
-              </AppText>
-            </View>
+          <TouchableOpacity onPress={() => openModalFunction("GOTV")} style={styles.tvCard}>
+            <Image style={styles.logos} source={GOTVLogo} />
+            <AppText bold="true" styles={{ fontSize: 16 }}>
+              GOTV
+            </AppText>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => openModalFunction("STARTIMES")}>
-            <View style={styles.tvCard}>
-              <Image style={styles.logos} source={StartimesLogo} />
-              <AppText bold="true" styles={{ fontSize: 16 }}>
-                Startimes
-              </AppText>
-            </View>
+          <TouchableOpacity onPress={() => openModalFunction("STARTIMES")} style={styles.tvCard}>
+            <Image style={styles.logos} source={StartimesLogo} />
+            <AppText bold="true" styles={{ fontSize: 16 }}>
+              Startimes
+            </AppText>
           </TouchableOpacity>
         </View>
       </View>

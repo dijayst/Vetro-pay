@@ -8,7 +8,7 @@ const onShare = async () => {
   try {
     const result = await Share.share({
       message:
-        "Hi there, \n\nHave you tried *VetroPay*; a bill payment plattform and a personal financial accountant all in one. I think you'd love it. \n\nDownload here: https://ancl.at/vetropay",
+        "Hi there, \nHave you tried *VetroPay*; an interest free loan plattform, bill payment and a personal accountant all in one. I think you'd love it. \n\nDownload here:  https://play.google.com/store/apps/details?id=com.anclatechs.vetropaymobile",
     });
   } catch (error) {
     Alert.alert("Error", "Error sending invite");
@@ -48,7 +48,7 @@ export default function Settings({ navigation }) {
 
         <Separator />
         {/**Linked Cards */}
-        <TouchableNativeFeedback onPress={() => navigation.navigate("Help")}>
+        <TouchableNativeFeedback onPress={() => navigation.navigate("LinkedCards")}>
           <View style={styles.listItem}>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>

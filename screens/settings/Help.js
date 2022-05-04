@@ -2,7 +2,7 @@ import React from "react";
 import { Text, View, StyleSheet, TouchableNativeFeedback } from "react-native";
 import AppText from "../../resources/AppText";
 import { HelpSvgComponent, PrivacyPoilicySvgComponent } from "../../resources/Svg";
-import { Linking } from "expo";
+import * as Linking from "expo-linking";
 
 function Separator() {
   return <View style={styles.separator} />;

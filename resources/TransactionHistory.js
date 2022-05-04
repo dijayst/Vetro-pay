@@ -1,11 +1,11 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import AppText from "./AppText";
 
-export default function TransactionHistory({ date, amount, type }) {
+export default function TransactionHistory({ onPress, date, amount, type }) {
   return (
-    <View style={styles.transactionCard}>
+    <TouchableOpacity onPress={onPress} style={styles.transactionCard}>
       <View style={{ paddingLeft: 8 }}>
         <AppText>
           Date: <Text style={{ fontWeight: "700" }}>{date}</Text>
@@ -36,7 +36,7 @@ export default function TransactionHistory({ date, amount, type }) {
           </Text>
         </AppText>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

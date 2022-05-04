@@ -3,12 +3,8 @@
     "name": "Vetropay Mobile",
     "slug": "vetropay-mobile",
     "privacy": "public",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
-    "version": "1.0.4.4",
+    "platforms": ["ios", "android", "web"],
+    "version": "1.0.4.5",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -19,18 +15,16 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "googleServicesFile": "./google-services.json",
       "package": "com.anclatechs.vetropaymobile",
-      "versionCode": 8,
+      "versionCode": 9,
       "useNextNotificationsApi": true,
-      "enableDangerousExperimentalLeanBuilds": true
+      "permissions": []
     },
     "androidStatusBar": {
       "barStyle": "light-content",

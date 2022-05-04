@@ -19,6 +19,7 @@ import LinkBank from "../screens/transfer/LinkBank";
 import AddRecord from "../screens/AddRecord";
 import ReceiveFund from "../screens/ReceiveFund";
 import DepositFund from "../screens/DepositFund";
+import Credit from "../screens/Credit";
 
 const Stack = createStackNavigator();
 
@@ -229,6 +230,17 @@ export default function HomeStack() {
           headerTintColor: "#fff",
         }}
         component={DepositFund}
+      />
+
+      <Stack.Screen
+        name="CreditHome"
+        options={{
+          title: "Credit & Loans",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={Credit}
       />
     </Stack.Navigator>
   );

@@ -421,85 +421,67 @@ export default function Electricity() {
 
         <ScrollView>
           <View style={{ flex: 1, marginBottom: 40 }}>
-            <TouchableOpacity onPress={() => openTransactionModal("EKEDC")}>
-              <View style={styles.electCard}>
-                <Image style={styles.logos} source={Ekologo} />
-                <AppText bold="true" styles={{ fontSize: 16 }}>
-                  EKEDC
-                </AppText>
-              </View>
+            <TouchableOpacity onPress={() => openTransactionModal("EKEDC")} style={styles.electCard}>
+              <Image style={styles.logos} source={Ekologo} />
+              <AppText bold="true" styles={{ fontSize: 16 }}>
+                EKEDC
+              </AppText>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => openTransactionModal("IBEDC")}>
-              <View style={styles.electCard}>
-                <Image style={styles.logos} source={IBEDClogo} />
-                <AppText bold="true" styles={{ fontSize: 16 }}>
-                  IBEDC
-                </AppText>
-              </View>
+            <TouchableOpacity onPress={() => openTransactionModal("IBEDC")} style={styles.electCard}>
+              <Image style={styles.logos} source={IBEDClogo} />
+              <AppText bold="true" styles={{ fontSize: 16 }}>
+                IBEDC
+              </AppText>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => openTransactionModal("IKEDC")}>
-              <View style={styles.electCard}>
-                <Image style={styles.logos} source={IKEDClogo} />
-                <AppText bold="true" styles={{ fontSize: 16 }}>
-                  IKEDC
-                </AppText>
-              </View>
+            <TouchableOpacity onPress={() => openTransactionModal("IKEDC")} style={styles.electCard}>
+              <Image style={styles.logos} source={IKEDClogo} />
+              <AppText bold="true" styles={{ fontSize: 16 }}>
+                IKEDC
+              </AppText>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => openTransactionModal("KANO")}>
-              <View style={styles.electCard}>
-                <Image style={styles.logos} source={KANOlogo} />
-                <AppText bold="true" styles={{ fontSize: 16 }}>
-                  KANO
-                </AppText>
-              </View>
+            <TouchableOpacity onPress={() => openTransactionModal("KANO")} style={styles.electCard}>
+              <Image style={styles.logos} source={KANOlogo} />
+              <AppText bold="true" styles={{ fontSize: 16 }}>
+                KANO
+              </AppText>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => openTransactionModal("ABUJA")}>
-              <View style={styles.electCard}>
-                <Image style={styles.logos} source={ABUJAlogo} />
-                <AppText bold="true" styles={{ fontSize: 16 }}>
-                  ABUJA
-                </AppText>
-              </View>
+            <TouchableOpacity onPress={() => openTransactionModal("ABUJA")} style={styles.electCard}>
+              <Image style={styles.logos} source={ABUJAlogo} />
+              <AppText bold="true" styles={{ fontSize: 16 }}>
+                ABUJA
+              </AppText>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => openTransactionModal("JOS")}>
-              <View style={styles.electCard}>
-                <Image style={styles.logos} source={JOSlogo} />
-                <AppText bold="true" styles={{ fontSize: 16 }}>
-                  JOS
-                </AppText>
-              </View>
+            <TouchableOpacity onPress={() => openTransactionModal("JOS")} style={styles.electCard}>
+              <Image style={styles.logos} source={JOSlogo} />
+              <AppText bold="true" styles={{ fontSize: 16 }}>
+                JOS
+              </AppText>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => openTransactionModal("KADUNA")}>
-              <View style={styles.electCard}>
-                <Image style={styles.logos} source={KADUNAlogo} />
-                <AppText bold="true" styles={{ fontSize: 16 }}>
-                  KADUNA
-                </AppText>
-              </View>
+            <TouchableOpacity onPress={() => openTransactionModal("KADUNA")} style={styles.electCard}>
+              <Image style={styles.logos} source={KADUNAlogo} />
+              <AppText bold="true" styles={{ fontSize: 16 }}>
+                KADUNA
+              </AppText>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => openTransactionModal("ENUGU")}>
-              <View style={styles.electCard}>
-                <Image style={styles.logos} source={ENUGUlogo} />
-                <AppText bold="true" styles={{ fontSize: 16 }}>
-                  ENUGU
-                </AppText>
-              </View>
+            <TouchableOpacity onPress={() => openTransactionModal("ENUGU")} style={styles.electCard}>
+              <Image style={styles.logos} source={ENUGUlogo} />
+              <AppText bold="true" styles={{ fontSize: 16 }}>
+                ENUGU
+              </AppText>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => openTransactionModal("PORTH")}>
-              <View style={styles.electCard}>
-                <Image style={styles.logos} source={PORTHlogo} />
-                <AppText bold="true" styles={{ fontSize: 16 }}>
-                  PORT HARCOURT
-                </AppText>
-              </View>
+            <TouchableOpacity onPress={() => openTransactionModal("PORTH")} style={styles.electCard}>
+              <Image style={styles.logos} source={PORTHlogo} />
+              <AppText bold="true" styles={{ fontSize: 16 }}>
+                PORT HARCOURT
+              </AppText>
             </TouchableOpacity>
           </View>
         </ScrollView>

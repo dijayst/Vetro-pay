@@ -149,7 +149,7 @@ export default function Register({ navigation }) {
   };
 
   const goToSecurityPin = () => {
-    if (Number(registerData.payload.authCode) == NaN || Number(registerData.payload.authCode) < 11234 || Number(registerData.payload.authCode) > 99000) {
+    if (Number(registerData.payload.authCode) == NaN || registerData.payload.authCode == "") {
       Toast.show({
         text: "Auth code incorrect",
         duration: 3000,
@@ -305,7 +305,7 @@ export default function Register({ navigation }) {
                   }}
                 >
                   <Picker
-                    style={{ height: 40 }}
+                    style={{ height: 45 }}
                     onValueChange={(itemValue, itemIndex) => {
                       setRegisterData((prevState) => ({
                         ...prevState,
@@ -1004,7 +1004,7 @@ const styles = StyleSheet.create({
     color: "gray",
   },
   textInput: {
-    height: 40,
+    height: 45,
     marginTop: 10,
     marginBottom: 10,
     paddingHorizontal: 10,

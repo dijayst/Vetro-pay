@@ -7,15 +7,9 @@ import AppText from "../../resources/AppText";
 import { PrimaryButton } from "../../resources/AppButton";
 import { Toast, Spinner } from "native-base";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useNavigation } from "react-navigation-hooks";
 import { verifyBusinessUID, linkMobileBusiness } from "../../containers/business/action";
 
-export default function BusinessLink() {
-  //navigation prop isn't getting passed to component hence:
-  const navigation = useNavigation();
-
-  //
-
+export default function BusinessLink({ navigation }) {
   const [businessValid, setBusinessValid] = useState(false);
   const [businessName, setBusinessName] = useState("");
   const [businessUID, setBusinessUID] = useState("");

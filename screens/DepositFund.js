@@ -170,7 +170,8 @@ export default function DepositFund({ navigation }) {
             onRedirect={handleOnRedirect}
             options={{
               tx_ref: generateTransactionRef(10),
-              authorization: "FLWPUBK_TEST-027039407f038ace6e72f7225463538c-X",
+              //authorization: "FLWPUBK_TEST-027039407f038ace6e72f7225463538c-X",
+              authorization: "FLWPUBK-8eb02ef54745a2638cf6e092e65b96e6-X",
               customer: {
                 email: userAuthentication.email || `${userAuthentication.phone_number}@vetropay.com`,
               },

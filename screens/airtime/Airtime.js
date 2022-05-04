@@ -56,7 +56,7 @@ export default function Airtime() {
   const [phoneContacts, setPhoneContacts] = useState([]);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [amount, setAmount] = useState("");
-  const [amountError, setAmountError] = useState(false)
+  const [amountError, setAmountError] = useState(false);
   const [transactionPin, setTransactionPin] = useState("");
   const [displaySpinner, setDisplaySpinner] = useState(false);
   const [displayTransactionPinError, setDisplayTransactionPinError] = useState(false);
@@ -153,15 +153,15 @@ export default function Airtime() {
     setTransactionPin("");
     setTransactionGenericError("");
     setDisplayTransactionPinError(false);
-    setAmountError(false)
+    setAmountError(false);
   };
 
   const proceedToPayments = () => {
     if (networkProvider !== "" && phoneNumber !== "" && amount !== "") {
-      if(Number(amount) < 100){
-        setAmountError(true)
-      }else{
-      setPaymentModalOpen(true);
+      if (Number(amount) < 100) {
+        setAmountError(true);
+      } else {
+        setPaymentModalOpen(true);
       }
     }
   };
@@ -354,28 +354,32 @@ export default function Airtime() {
             Select network provider
           </AppText>
           <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
-            <TouchableOpacity onPress={() => setNetworkProvider("MTN")}>
-              <View style={{ ...styles.airtimeCard, borderWidth: 2, borderColor: `${networkProvider == "MTN" ? "#266ddc" : "#ffffff"}` }}>
-                <Image style={styles.logos} source={MTNlogo} />
-              </View>
+            <TouchableOpacity
+              onPress={() => setNetworkProvider("MTN")}
+              style={{ ...styles.airtimeCard, borderWidth: 2, borderColor: `${networkProvider == "MTN" ? "#266ddc" : "#ffffff"}` }}
+            >
+              <Image style={styles.logos} source={MTNlogo} />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => setNetworkProvider("GLO")}>
-              <View style={{ ...styles.airtimeCard, borderWidth: 2, borderColor: `${networkProvider == "GLO" ? "#266ddc" : "#ffffff"}` }}>
-                <Image style={styles.logos} source={GloLogo} />
-              </View>
+            <TouchableOpacity
+              onPress={() => setNetworkProvider("GLO")}
+              style={{ ...styles.airtimeCard, borderWidth: 2, borderColor: `${networkProvider == "GLO" ? "#266ddc" : "#ffffff"}` }}
+            >
+              <Image style={styles.logos} source={GloLogo} />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => setNetworkProvider("AIRTEL")}>
-              <View style={{ ...styles.airtimeCard, borderWidth: 2, borderColor: `${networkProvider == "AIRTEL" ? "#266ddc" : "#ffffff"}` }}>
-                <Image style={styles.logos} source={AirtelLogo} />
-              </View>
+            <TouchableOpacity
+              onPress={() => setNetworkProvider("AIRTEL")}
+              style={{ ...styles.airtimeCard, borderWidth: 2, borderColor: `${networkProvider == "AIRTEL" ? "#266ddc" : "#ffffff"}` }}
+            >
+              <Image style={styles.logos} source={AirtelLogo} />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => setNetworkProvider("9MOBILE")}>
-              <View style={{ ...styles.airtimeCard, borderWidth: 2, borderColor: `${networkProvider == "9MOBILE" ? "#266ddc" : "#ffffff"}` }}>
-                <Image style={styles.logos} source={etisalatLogo} />
-              </View>
+            <TouchableOpacity
+              onPress={() => setNetworkProvider("9MOBILE")}
+              style={{ ...styles.airtimeCard, borderWidth: 2, borderColor: `${networkProvider == "9MOBILE" ? "#266ddc" : "#ffffff"}` }}
+            >
+              <Image style={styles.logos} source={etisalatLogo} />
             </TouchableOpacity>
           </View>
 
@@ -384,12 +388,11 @@ export default function Airtime() {
               onPress={() => {
                 setModalPhoneBookOpen(true);
               }}
+              style={styles.choiceBox}
             >
-              <View style={styles.choiceBox}>
-                <AppText styles={styles.choiceBoxText}>
-                  <Text style={{ fontWeight: "700" }}>Open PhoneBook</Text>
-                </AppText>
-              </View>
+              <AppText styles={styles.choiceBoxText}>
+                <Text style={{ fontWeight: "700" }}>Open PhoneBook</Text>
+              </AppText>
             </TouchableOpacity>
 
             <View style={styles.choiceBox}>
@@ -413,40 +416,32 @@ export default function Airtime() {
             <Text style={{ fontWeight: "700" }}>Select Amount</Text>
           </AppText>
           <View style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 10, justifyContent: "space-evenly" }}>
-            <TouchableOpacity onPress={() => setAmount("100")}>
-              <View style={styles.choiceBox}>
-                <AppText styles={styles.choiceBoxText}>
-                  <Text style={{ fontWeight: "700" }}>₦100</Text>
-                </AppText>
-              </View>
+            <TouchableOpacity onPress={() => setAmount("100")} style={styles.choiceBox}>
+              <AppText styles={styles.choiceBoxText}>
+                <Text style={{ fontWeight: "700" }}>₦100</Text>
+              </AppText>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => setAmount("500")}>
-              <View style={styles.choiceBox}>
-                <AppText styles={styles.choiceBoxText}>
-                  <Text style={{ fontWeight: "700" }}>₦500</Text>
-                </AppText>
-              </View>
+            <TouchableOpacity onPress={() => setAmount("500")} style={styles.choiceBox}>
+              <AppText styles={styles.choiceBoxText}>
+                <Text style={{ fontWeight: "700" }}>₦500</Text>
+              </AppText>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => setAmount("1000")}>
-              <View style={styles.choiceBox}>
-                <AppText styles={styles.choiceBoxText}>
-                  <Text style={{ fontWeight: "700" }}>₦1000</Text>
-                </AppText>
-              </View>
+            <TouchableOpacity onPress={() => setAmount("1000")} style={styles.choiceBox}>
+              <AppText styles={styles.choiceBoxText}>
+                <Text style={{ fontWeight: "700" }}>₦1000</Text>
+              </AppText>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => setAmount("2000")}>
-              <View style={styles.choiceBox}>
-                <AppText styles={styles.choiceBoxText}>
-                  <Text style={{ fontWeight: "700" }}>₦2000</Text>
-                </AppText>
-              </View>
+            <TouchableOpacity onPress={() => setAmount("2000")} style={styles.choiceBox}>
+              <AppText styles={styles.choiceBoxText}>
+                <Text style={{ fontWeight: "700" }}>₦2000</Text>
+              </AppText>
             </TouchableOpacity>
           </View>
           <View style={styles.formGroup}>
-            <AppText styles={{ fontSize: 14, color: "red", display: `${amountError ? "flex": "none"}` }}>Amount cannot be less than ₦100 </AppText>
+            <AppText styles={{ fontSize: 14, color: "red", display: `${amountError ? "flex" : "none"}` }}>Amount cannot be less than ₦100 </AppText>
             <TextInput
               style={{ ...styles.textInput, borderColor: "#266ddc" }}
               placeholder="Enter Amount"

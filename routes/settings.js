@@ -9,6 +9,8 @@ import Email from "../screens/settings/Email";
 import ChangePasswordPin from "../screens/settings/ChangePasswordPin";
 import ChangePassword from "../screens/settings/ChangePassword";
 import ChangePin from "../screens/settings/ChangePin";
+import BusinessLink from "../screens/settings/BusinessLink";
+import LinkedCards from "../screens/settings/LinkedCards";
 
 const Stack = createStackNavigator();
 
@@ -112,6 +114,28 @@ export default function NotificationStack() {
           headerTintColor: "#fff",
         }}
         component={ChangePin}
+      />
+
+      <Stack.Screen
+        name="BusinessLink"
+        options={{
+          title: "Link Business",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={BusinessLink}
+      />
+
+      <Stack.Screen
+        name="LinkedCards"
+        options={{
+          title: "Linked Cards",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={LinkedCards}
       />
     </Stack.Navigator>
   );

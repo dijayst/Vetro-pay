@@ -11,7 +11,7 @@ import { getSysPeriod, getUserTransaction } from "../../containers/transactions/
 import { Spinner, Picker } from "native-base";
 //import { convertUTCDateToLocalDate } from "../resource/MetaFunctions";
 import moment from "moment";
-import { Linking } from "expo";
+import * as Linking from "expo-linking";
 
 function Separator() {
   return <View style={styles.separator} />;
@@ -30,7 +30,7 @@ export default function UserTransactions({ navigation }) {
   const [transactionsLoaded, setTransactionsLoaded] = useState(false);
   const [transactionData, setTransactionData] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalData, setModalData] = useState({ transaction_insight: "Loading..." });
+  const [modalData, setModalData] = useState({ transaction_insight: [] });
   const [summaryActive, setSummaryActive] = useState(false);
   const [nonTransactionHeight, SetNonTransactionHeight] = useState(0);
 
@@ -204,7 +204,7 @@ export default function UserTransactions({ navigation }) {
               <AppText bold="true">Insight</AppText>
             </View>
             {/**Enumerated Insights */}
-            {modalData.transaction_insight.split("Nnn").map((info, index) => {
+            {modalData.transaction_insight.map((info, index) => {
               return (
                 <View key={index} style={{ flexDirection: "row", alignItems: "center", marginBottom: 10 }}>
                   <AntDesign name="doubleright" size={14} />
@@ -216,17 +216,16 @@ export default function UserTransactions({ navigation }) {
             })}
 
             {/** Add Verify Button */}
-            {modalData.transaction_insight.substring(0, 5) == "Smart" && (
+            {modalData.transaction_insight[0]?.substring(0, 5) == "Smart" && (
               <AppButton
-                onPress={() =>
+                onPress={() => {
                   Linking.openURL(
-                    `https://vetropay.com/marketplace/transaction/${modalData.transaction_insight
-                      .split("Nnn ")
-                      .reverse()[1]
+                    `https://vetropay.com/marketplace/transaction/${modalData.transaction_insight[3].split(": ")[1].replace(/\s/g, "")}/${modalData.transaction_insight
+                      .reverse()[0]
                       .split(": ")[1]
-                      .replace(/\s/g, "")}/${modalData.transaction_insight.split("Nnn ").reverse()[0].split(": ")[1].replace(/\s/g, "")}`
-                  )
-                }
+                      .replace(/\s/g, "")}`
+                  );
+                }}
                 styles={{ backgroundColor: "#266ddc", padding: 12, justifyContent: "center", alignItems: "center", marginTop: 10, marginBottom: 10 }}
               >
                 <AppText bold="true" styles={{ textTransform: "uppercase", fontSize: 15, color: "#ffffff" }}>
@@ -355,14 +354,15 @@ export default function UserTransactions({ navigation }) {
               data={transactionData}
               keyExtractor={(item, index) => String(item.id)}
               renderItem={({ item }) => (
-                <TouchableOpacity
+                <TransactionHistory
                   onPress={() => {
-                    setModalOpen(true);
                     setModalData(item);
+                    setModalOpen(true);
                   }}
-                >
-                  <TransactionHistory date={item.transaction_date} amount={item.amount} type={item.transaction_type} />
-                </TouchableOpacity>
+                  date={item.transaction_date}
+                  amount={item.amount}
+                  type={item.transaction_type}
+                />
               )}
             />
           ) : (

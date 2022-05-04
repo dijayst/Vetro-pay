@@ -10,7 +10,7 @@ import { useNetInfo } from "@react-native-community/netinfo";
 import OfflineNotice from "../../resources/OfflineNotice";
 import * as LocalAuthentication from "expo-local-authentication";
 import { login } from "../../containers/authentication/action";
-import { Linking } from "expo";
+import * as Linking from "expo-linking";
 
 export default function Login({ navigation }) {
   const [storedFirstName, setStoredFirstName] = useState("");
@@ -205,7 +205,7 @@ export default function Login({ navigation }) {
             }}
           >
             <Picker
-              style={{ height: 40 }}
+              style={{ height: 45 }}
               onValueChange={(itemValue, itemIndex) => {
                 setLoginData((prevState) => ({
                   ...prevState,
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
     color: "gray",
   },
   textInput: {
-    height: 40,
+    height: 45,
     marginTop: 10,
     marginBottom: 10,
     paddingHorizontal: 10,

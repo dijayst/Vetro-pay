@@ -209,7 +209,7 @@ export default function Home({ navigation }) {
 
     {
       name: "Get Loans",
-      action: () => {},
+      action: () => navigation.navigate("CreditHome"),
       content: () => {
         return (
           <View style={styles.activityButtonIIContainer}>
