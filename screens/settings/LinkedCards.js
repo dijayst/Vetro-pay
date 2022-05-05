@@ -28,7 +28,7 @@ export default function Help() {
                     {data["details"]["issuer"]}/ {data["details"]["country"]}
                   </AppText>
                 </View>
-                <AntDesign name="checkcircle" size={24} color="#388641" />
+                {data.primary ? <AntDesign name="checkcircle" size={24} color="#388641" /> : <Entypo name="circle" size={24} color="#fc9c3d" />}
               </TouchableOpacity>
             );
           })}

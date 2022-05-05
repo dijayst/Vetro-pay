@@ -1,7 +1,8 @@
-import { CARD_DEPOSIT } from "../rootAction/types";
+import { CARD_DEPOSIT, TOKEN_DEPOSIT } from "../rootAction/types";
 
 const initialState = {
   card: [],
+  token: [],
 };
 
 export default function (state = initialState, action) {
@@ -10,6 +11,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         card: [...state.card, action.payload],
+      };
+    case TOKEN_DEPOSIT:
+      return {
+        ...state,
+        token: [...state.token, action.payload],
       };
     default:
       return state;
