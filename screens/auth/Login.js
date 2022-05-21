@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { View, StyleSheet, TextInput, Text, Picker, Alert } from "react-native";
+import { View, StyleSheet, TextInput, Text, Picker, Alert, Image, TouchableOpacity } from "react-native";
 import AppText from "../../resources/AppText";
 import { AppButton } from "../../resources/AppButton";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import * as SecureStore from "expo-secure-store";
 import { Toast, Spinner } from "native-base";
 import { useNetInfo } from "@react-native-community/netinfo";
@@ -16,7 +16,9 @@ export default function Login({ navigation }) {
   const [storedFirstName, setStoredFirstName] = useState("");
   const [storedPhoneNumberData, setStoredPhoneNumberData] = useState("");
   const [storedPassData, setStoredPassData] = useState("");
-  const [fingerPrintHardware, setFingerPrintHardware] = useState(false);
+  const [biometricHardware, setBiometricHardware] = useState(false);
+  const [biometricHardwareType, setBiometricHardwareType] = useState([]);
+  const [biometricHardwareTypeSet, setBiometricHardwareTypeSet] = useState(false);
 
   const [loginData, setLoginData] = useState({
     payload: {
@@ -110,9 +112,12 @@ export default function Login({ navigation }) {
   const checkDeviceHardware = async () => {
     let compatible = await LocalAuthentication.hasHardwareAsync();
     if (compatible) {
-      setFingerPrintHardware(true);
+      setBiometricHardware(true);
+      if (!biometricHardwareTypeSet) {
+        checkDeviceHardwareType();
+      }
     } else {
-      setFingerPrintHardware(false);
+      setBiometricHardware(false);
     }
   };
 
@@ -121,15 +126,21 @@ export default function Login({ navigation }) {
     if (!biometricRecords) {
       Alert.alert("No Biometrics Found");
     } else {
-      handleFingerPrintAuthentication();
+      handleBiometricAuthentication();
     }
+  };
+
+  const checkDeviceHardwareType = async () => {
+    let hardware = await LocalAuthentication.supportedAuthenticationTypesAsync();
+    setBiometricHardwareType(hardware);
+    setBiometricHardwareTypeSet(true);
   };
 
   const handleLoginPress = async () => {
     checkForBiometrics();
   };
 
-  const handleFingerPrintAuthentication = async () => {
+  const handleBiometricAuthentication = async () => {
     let result = await LocalAuthentication.authenticateAsync();
     if (result.success) {
       setDisplaySpinner(true);
@@ -169,9 +180,23 @@ export default function Login({ navigation }) {
             <AppText styles={styles.buttonText}>Sign in</AppText>
           </AppButton>
 
-          <AppButton styles={styles.thumbButton} onPress={() => handleLoginPress()}>
-            <MaterialCommunityIcons name="fingerprint" size={24} color="white" />
-          </AppButton>
+          {biometricHardwareType.includes(1) && (
+            <AppButton styles={styles.thumbButton} onPress={() => handleLoginPress()}>
+              <MaterialCommunityIcons name="fingerprint" size={24} color="white" />
+            </AppButton>
+          )}
+
+          {biometricHardwareType.includes(2) && (
+            <TouchableOpacity style={styles.thumbButton} onPress={() => handleLoginPress()}>
+              <Image style={{ height: 30, width: 30, resizeMode: "contain" }} source={require("../../assets/face.png")} />
+            </TouchableOpacity>
+          )}
+
+          {biometricHardwareType.length == 0 && (
+            <AppButton styles={styles.thumbButton}>
+              <MaterialIcons name="lock" size={24} color="white" />
+            </AppButton>
+          )}
         </View>
 
         <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>

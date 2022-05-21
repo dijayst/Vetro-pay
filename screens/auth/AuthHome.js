@@ -6,8 +6,7 @@ import * as Facebook from "expo-facebook";
 const BackgroundImage = require("../../assets/authHome.png");
 
 export default function AuthHome({ navigation }) {
-  Facebook.initializeAsync({ appId: "713268446200988", appName: "VetroPay Mobile" });
-  Facebook.logEventAsync("Open App");
+  Facebook.initializeAsync({ appId: "713268446200988", appName: "VetroPay Mobile", autoLogAppEvents: true });
   return (
     <ImageBackground source={BackgroundImage} style={{ flex: 1 }} imageStyle={{ resizeMode: "cover" }}>
       <View style={styles.container}>
