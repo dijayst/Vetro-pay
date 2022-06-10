@@ -1,6 +1,6 @@
 import axios from "axios";
 import { tokenConfig } from "../authentication/action";
-import { GET_USER_PERIODS, GET_USER_TRANSACTION, POST_TRANSACTION, SEND_MONEY_PRE_VERIFY, POST_SEND_MONEY, FINANCE_VISUALIZER } from "../rootAction/types";
+import { GET_USER_PERIODS, GET_USER_TRANSACTION, POST_TRANSACTION, SEND_MONEY_PRE_VERIFY, POST_SEND_MONEY, FINANCE_VISUALIZER, GET_FX_RATE } from "../rootAction/types";
 import { returnErrors } from "../messages/messages";
 import { BASE_URL } from "../rootAction/env";
 
@@ -122,6 +122,21 @@ export const getVisualizerData = (userPeriod) => (dispatch, getState) => {
     .then((res) => {
       dispatch({
         type: FINANCE_VISUALIZER,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+    });
+};
+
+// GET FX_RATE
+export const getFxRates = () => (dispatch, getState) => {
+  axios
+    .get(`${BASE_URL}/api/ngn/fx-rate`, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: GET_FX_RATE,
         payload: res.data,
       });
     })

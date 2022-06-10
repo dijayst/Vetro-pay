@@ -4,7 +4,7 @@
     "slug": "vetropay-mobile",
     "privacy": "public",
     "platforms": ["ios", "android", "web"],
-    "version": "1.0.4.5",
+    "version": "1.0.4.6",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -22,7 +22,7 @@
     "android": {
       "googleServicesFile": "./google-services.json",
       "package": "com.anclatechs.vetropaymobile",
-      "versionCode": 9,
+      "versionCode": 10,
       "useNextNotificationsApi": true,
       "permissions": ["USE_BIOMETRIC", "USE_FINGERPRINT", "READ_CONTACTS", "CAMERA"]
     },

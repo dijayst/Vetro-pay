@@ -311,6 +311,7 @@ export default function AddRecord({ navigation }) {
                     <Picker.Item label="Electricity/Water/Gas/Fuel" value="ELECTRICITY/WATER/GAS/FUEL" />
                     <Picker.Item label="Vehicle/Transport" value="VEHICLE/TRANSPORT" />
                     <Picker.Item label="Business/Official" value="BUSINESS/OFFICIAL" />
+                    <Picker.Item label="Savings/Investment" value="SAVINGS/INVESTMENT" />
                     <Picker.Item label="Donations/Tithes/Offerings" value="DONATIONS/TITHES/OFFERINGS" />
                     <Picker.Item label="Personal/Others" value="PERSONAL/OTHERS" />
                   </Picker>

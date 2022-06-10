@@ -50,3 +50,5 @@ export const CARD_DEPOSIT = "CARD_DEPOSIT";
 
 export const GET_CARDS = "GET_CARDS";
 export const TOKEN_DEPOSIT = "TOKEN_DEPOSIT";
+
+export const GET_FX_RATE = "GET_FX_RATE";

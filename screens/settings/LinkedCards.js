@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import AppText from "../../resources/AppText";
-import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, MaterialIcons, Entypo } from "@expo/vector-icons";
 import { getCards } from "../../containers/cards/action";
 
 export default function Help() {
