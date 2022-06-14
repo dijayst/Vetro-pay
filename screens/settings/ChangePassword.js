@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 4,
   },
   textInput: {
-    height: 40,
+    height: 45,
     marginTop: 10,
     marginBottom: 10,
     paddingHorizontal: 10,

@@ -171,6 +171,7 @@ export default function Login({ navigation }) {
             placeholderTextColor="gray"
             textContentType="password"
             secureTextEntry
+            autoComplete="off"
             onChangeText={(text) => onValueChange("password", text)}
           />
         </View>
@@ -253,6 +254,7 @@ export default function Login({ navigation }) {
             placeholderTextColor="gray"
             textContentType="telephoneNumber"
             keyboardType="visible-password"
+            autoComplete="off"
             onChangeText={(text) => onValueChange("phoneNumber", text)}
           />
 
@@ -262,6 +264,7 @@ export default function Login({ navigation }) {
             placeholderTextColor="gray"
             textContentType="password"
             secureTextEntry
+            autoComplete="off"
             onChangeText={(text) => onValueChange("password", text)}
           />
         </View>

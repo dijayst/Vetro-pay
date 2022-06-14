@@ -1,4 +1,4 @@
-import { BUY_UTILITY, GET_TV_BOUQUETS, GET_BOUQUETS_ADDONS, GET_CUSTOMER_NAME, ELECTRICITY_VALIDATE } from "../rootAction/types";
+import { BUY_UTILITY, GET_TV_BOUQUETS, GET_BOUQUETS_ADDONS, GET_CUSTOMER_NAME, ELECTRICITY_VALIDATE, GET_DATA_BUNDLES } from "../rootAction/types";
 
 const initialState = {
   buyutility: [],
@@ -6,6 +6,7 @@ const initialState = {
   tvaddons: [],
   tvcustomer: [],
   electricityvalidate: [],
+  databundles: [],
 };
 
 export default function (state = initialState, action) {
@@ -34,6 +35,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         electricityvalidate: [...state.electricityvalidate, action.payload],
+      };
+
+    case GET_DATA_BUNDLES:
+      return {
+        ...state,
+        databundles: [...state.databundles, action.payload],
       };
     default:
       return state;

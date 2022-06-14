@@ -1,6 +1,6 @@
 import axios from "axios";
 import { tokenConfig } from "../authentication/action";
-import { BUY_UTILITY, GET_BOUQUETS_ADDONS, GET_TV_BOUQUETS, GET_CUSTOMER_NAME, ELECTRICITY_VALIDATE } from "../rootAction/types";
+import { BUY_UTILITY, GET_BOUQUETS_ADDONS, GET_TV_BOUQUETS, GET_CUSTOMER_NAME, ELECTRICITY_VALIDATE, GET_DATA_BUNDLES } from "../rootAction/types";
 import { returnErrors } from "../messages/messages";
 import { BASE_URL } from "../rootAction/env";
 
@@ -11,6 +11,21 @@ export const buyUtility = (transactionPin, transactionDetails, amount) => (dispa
     .then((res) => {
       dispatch({
         type: BUY_UTILITY,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+    });
+};
+
+// GET DATA BUNDLES
+export const getDataBundleSubscription = (serviceType) => (dispatch, getState) => {
+  axios
+    .post(`${BASE_URL}/api/utility/data-bundles`, { provider: serviceType }, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: GET_DATA_BUNDLES,
         payload: res.data,
       });
     })

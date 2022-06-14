@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
   logos: {
     width: 55,
     height: 40,
+    borderRadius: 5,
   },
   tvCard: {
     backgroundColor: "#ffffff",

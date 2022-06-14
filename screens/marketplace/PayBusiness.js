@@ -522,7 +522,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F0F0F8",
   },
   textInput: {
-    height: 40,
+    height: 45,
     marginTop: 10,
     marginBottom: 10,
     paddingHorizontal: 10,

@@ -271,7 +271,12 @@ export default function AddRecord({ navigation }) {
                 <AppText>
                   <Text style={{ fontWeight: "700" }}>Amount</Text>
                 </AppText>
-                <TextInput style={{ ...styles.textInput, borderColor: "#266ddc" }} keyboardType="numeric" onChangeText={(text) => onValueChange("amount", text)} />
+                <TextInput
+                  style={{ ...styles.textInput, borderColor: "#266ddc" }}
+                  keyboardType="numeric"
+                  onChangeText={(text) => onValueChange("amount", text)}
+                  placeholder={"Transaction amount"}
+                />
               </View>
 
               <View style={styles.formGroup}>
@@ -377,7 +382,7 @@ const styles = StyleSheet.create({
   },
 
   textInput: {
-    height: 40,
+    height: 45,
     marginTop: 10,
     marginBottom: 10,
     paddingHorizontal: 10,
