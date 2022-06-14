@@ -5,11 +5,12 @@ import PropTypes from "prop-types";
 import { Dimensions, View, Text, StyleSheet, Picker, TextInput } from "react-native";
 import AppText from "../../resources/AppText";
 import { PrimaryButton } from "../../resources/AppButton";
-import { Toast, Spinner } from "native-base";
+import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import { postEmail, emailVerify } from "../../containers/regvalidate/action";
 import { loadUser } from "../../containers/authentication/action";
+import { toastColorObject } from "../../resources/rStyledComponent";
 
 export default function Email({ navigation }) {
   const userAuthentication = useSelector((state) => state.authentication.user);
@@ -22,6 +23,7 @@ export default function Email({ navigation }) {
   });
   const [mailSent, setMailSent] = useState(false);
 
+  const toast = useToast();
   const dispatch = useDispatch();
 
   const usePrevious = (value) => {
@@ -45,10 +47,12 @@ export default function Email({ navigation }) {
       setDisplaySpinner(true);
       dispatch(postEmail(verifactionPayload.payload.email));
     } else {
-      Toast.show({
-        text: "Input a valid email address",
-        duration: 3000,
-        type: "danger",
+      toast.show({
+        render: () => (
+          <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+            <NativeBaseText style={{ color: "#FFFFFF" }}>Input a valid email address</NativeBaseText>
+          </Box>
+        ),
       });
     }
   };
@@ -62,10 +66,12 @@ export default function Email({ navigation }) {
       Number(verifactionPayload.payload.verificationCode) < 112340
     ) {
       if (verifactionPayload.payload.email == "" || String(verifactionPayload.payload.email).match(re) == null) {
-        Toast.show({
-          text: "Email address error",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Email address error</NativeBaseText>
+            </Box>
+          ),
         });
       }
       if (
@@ -73,10 +79,12 @@ export default function Email({ navigation }) {
         Number(verifactionPayload.payload.verificationCode) == NaN ||
         Number(verifactionPayload.payload.verificationCode) < 112340
       ) {
-        Toast.show({
-          text: "Verification code incorrect",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Verification code incorrect</NativeBaseText>
+            </Box>
+          ),
         });
       }
     } else {
@@ -93,10 +101,12 @@ export default function Email({ navigation }) {
           setDisplaySpinner(false);
         } else {
           setDisplaySpinner(false);
-          Toast.show({
-            text: `${postEmailResponse[postEmailResponse.length - 1]["message"]}`,
-            duration: 5000,
-            type: "danger",
+          toast.show({
+            render: () => (
+              <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+                <NativeBaseText style={{ color: "#FFFFFF" }}>{`${postEmailResponse[postEmailResponse.length - 1]["message"]}`}</NativeBaseText>
+              </Box>
+            ),
           });
         }
       }
@@ -110,10 +120,12 @@ export default function Email({ navigation }) {
           navigation.goBack();
         } else {
           setDisplaySpinner(false);
-          Toast.show({
-            text: `${postEmailVerifyResponse[postEmailVerifyResponse.length - 1]["message"]}`,
-            duration: 5000,
-            type: "danger",
+          toast.show({
+            render: () => (
+              <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+                <NativeBaseText style={{ color: "#FFFFFF" }}>{`${postEmailVerifyResponse[postEmailVerifyResponse.length - 1]["message"]}`}</NativeBaseText>
+              </Box>
+            ),
           });
         }
       }
@@ -206,7 +218,7 @@ export default function Email({ navigation }) {
               </View>
 
               <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-                <Spinner color="blue" />
+                <Spinner color="blue.700" size="lg" />
               </View>
             </View>
           </View>

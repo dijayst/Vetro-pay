@@ -13,11 +13,13 @@ import { getBank } from "../../containers/banks/action";
 const BankBackgroundImage = require("../../assets/rectangle.png");
 import { BankWalletSvgComponent, SuccessfulSvgComponent } from "../../resources/Svg";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Toast, Spinner } from "native-base";
+import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
 
 import { userBankWithdraw } from "../../containers/banks/action";
+import { toastColorObject } from "../../resources/rStyledComponent";
 
 export default function Withdraw({ navigation }) {
+  const toast = useToast();
   const dispatch = useDispatch();
 
   const usePrevious = (value) => {
@@ -49,10 +51,13 @@ export default function Withdraw({ navigation }) {
 
   const submitWithdrawalData = () => {
     if (withdrawalData.payload.amount == "" || Number(withdrawalData.payload.amount) < 500) {
-      Toast.show({
-        text: "Amount cannot be less than 500", //Look into Country difference
-        duration: 3000,
-        type: "danger",
+      //Look into Country difference
+      toast.show({
+        render: () => (
+          <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+            <NativeBaseText style={{ color: "#FFFFFF" }}>Amount cannot be less than 500</NativeBaseText>
+          </Box>
+        ),
       });
     } else {
       setDisplaySpinner(true);
@@ -85,10 +90,12 @@ export default function Withdraw({ navigation }) {
           setModalOpen(true);
         } else {
           setDisplaySpinner(false);
-          Toast.show({
-            text: `${withdrawToBankResponse[withdrawToBankResponse.length - 1]["message"]}`,
-            duration: 5000,
-            type: "danger",
+          toast.show({
+            render: () => (
+              <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+                <NativeBaseText style={{ color: "#FFFFFF" }}>{`${withdrawToBankResponse[withdrawToBankResponse.length - 1]["message"]}`}</NativeBaseText>
+              </Box>
+            ),
           });
         }
       }
@@ -226,7 +233,7 @@ export default function Withdraw({ navigation }) {
               </View>
 
               <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-                <Spinner color="blue" />
+                <Spinner color="blue.700" size="lg" />
               </View>
             </View>
           </View>

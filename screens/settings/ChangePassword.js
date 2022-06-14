@@ -5,10 +5,11 @@ import PropTypes from "prop-types";
 import { Dimensions, View, Text, StyleSheet, Picker, TextInput } from "react-native";
 import AppText from "../../resources/AppText";
 import { PrimaryButton } from "../../resources/AppButton";
-import { Toast, Spinner } from "native-base";
+import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import { changePassword } from "../../containers/authchange/action";
+import { toastColorObject } from "../../resources/rStyledComponent";
 
 export default function ChangePassword({ navigation }) {
   const [displaySpinner, setDisplaySpinner] = useState(false);
@@ -20,6 +21,7 @@ export default function ChangePassword({ navigation }) {
     },
   });
 
+  const toast = useToast();
   const dispatch = useDispatch();
 
   const usePrevious = (value) => {
@@ -40,16 +42,20 @@ export default function ChangePassword({ navigation }) {
       updateDetailsPayload.payload.newPassword !== updateDetailsPayload.payload.confirmNewPassword
     ) {
       if (updateDetailsPayload.payload.currentPassword.length < 8 || updateDetailsPayload.payload.newPassword.length < 8) {
-        Toast.show({
-          text: "Password cannot be less than 8 characters",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Password cannot be less than 8 characters</NativeBaseText>
+            </Box>
+          ),
         });
       } else if (updateDetailsPayload.payload.newPassword !== updateDetailsPayload.payload.confirmNewPassword) {
-        Toast.show({
-          text: '"Confirm password" not the same as "Password" ',
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>"Confirm password" not the same as "Password" </NativeBaseText>
+            </Box>
+          ),
         });
       }
     } else {
@@ -71,17 +77,22 @@ export default function ChangePassword({ navigation }) {
               confirmNewPassword: "",
             },
           }));
-          Toast.show({
-            text: `${updateDetailsResponse[updateDetailsResponse.length - 1]["message"]}`,
-            duration: 5000,
-            type: "success",
+
+          toast.show({
+            render: () => (
+              <Box bg={toastColorObject["success"]} px="2" py="2" rounded="sm" mb={5}>
+                <NativeBaseText style={{ color: "#FFFFFF" }}>{`${updateDetailsResponse[updateDetailsResponse.length - 1]["message"]}`}</NativeBaseText>
+              </Box>
+            ),
           });
         } else {
           setDisplaySpinner(false);
-          Toast.show({
-            text: `${updateDetailsResponse[updateDetailsResponse.length - 1]["message"]}`,
-            duration: 5000,
-            type: "danger",
+          toast.show({
+            render: () => (
+              <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+                <NativeBaseText style={{ color: "#FFFFFF" }}>{`${updateDetailsResponse[updateDetailsResponse.length - 1]["message"]}`}</NativeBaseText>
+              </Box>
+            ),
           });
         }
       }
@@ -183,7 +194,7 @@ export default function ChangePassword({ navigation }) {
               </View>
 
               <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-                <Spinner color="blue" />
+                <Spinner color="blue.700" size="lg" />
               </View>
             </View>
           </View>

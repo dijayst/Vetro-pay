@@ -2,13 +2,15 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 
-import { Dimensions, View, Text, StyleSheet, Picker, TextInput } from "react-native";
+import { Dimensions, View, Text, StyleSheet, TextInput } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import AppText from "../../resources/AppText";
 import { PrimaryButton } from "../../resources/AppButton";
-import { Toast, Spinner } from "native-base";
+import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import { resolveBank, updateBank } from "../../containers/banks/action";
+import { toastColorObject } from "../../resources/rStyledComponent";
 
 export default function LinkBank({ navigation }) {
   const userAuthentication = useSelector((state) => state.authentication.user);
@@ -65,6 +67,7 @@ export default function LinkBank({ navigation }) {
   });
 
   const dispatch = useDispatch();
+  const toast = useToast();
 
   const usePrevious = (value) => {
     const ref = useRef();
@@ -83,16 +86,20 @@ export default function LinkBank({ navigation }) {
   const submitData = () => {
     if (linkBankData.payload.bankName == "" || linkBankData.payload.accountNo == "") {
       if (linkBankData.payload.bankName == "") {
-        Toast.show({
-          text: "Select Bank name",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Select Bank name</NativeBaseText>
+            </Box>
+          ),
         });
       } else if (linkBankData.payload.accountNo == "") {
-        Toast.show({
-          text: "Input Bank account number",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Input Bank account number</NativeBaseText>
+            </Box>
+          ),
         });
       }
     } else {
@@ -121,10 +128,12 @@ export default function LinkBank({ navigation }) {
           setDisplaySpinner(false);
         } else {
           setDisplaySpinner(false);
-          Toast.show({
-            text: "Unable to resolve bank account details",
-            duration: 5000,
-            type: "danger",
+          toast.show({
+            render: () => (
+              <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+                <NativeBaseText style={{ color: "#FFFFFF" }}>Unable to resolve bank account details</NativeBaseText>
+              </Box>
+            ),
           });
         }
       }
@@ -137,10 +146,12 @@ export default function LinkBank({ navigation }) {
           navigation.navigate("Withdraw");
         } else {
           setDisplaySpinner(false);
-          Toast.show({
-            text: "Registered user details and Bank Account name does not match",
-            duration: 5000,
-            type: "danger",
+          toast.show({
+            render: () => (
+              <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+                <NativeBaseText style={{ color: "#FFFFFF" }}>Registered user details and Bank Account name does not match</NativeBaseText>
+              </Box>
+            ),
           });
         }
       }
@@ -240,7 +251,7 @@ export default function LinkBank({ navigation }) {
               </View>
 
               <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-                <Spinner color="blue" />
+                <Spinner color="blue.700" size="lg" />
               </View>
             </View>
           </View>

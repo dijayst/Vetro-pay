@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Text, View, StyleSheet, Button, Modal, Picker, TextInput, Switch } from "react-native";
+import { Text, View, StyleSheet, Button, Modal, TextInput, Switch } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import AppText from "../../resources/AppText";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -308,7 +309,7 @@ export default function App() {
             </View>
 
             <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-              <Spinner color="blue" />
+              <Spinner color="blue.700" size="lg" />
             </View>
           </View>
         );
@@ -407,7 +408,7 @@ export default function App() {
             </View>
 
             <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-              <Spinner color="blue" />
+              <Spinner color="blue.700" size="lg" />
             </View>
           </View>
         );

@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 
-import { View, StyleSheet, Picker, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import { Text as RNtext } from "react-native";
 import { PieChart } from "react-native-svg-charts";
 import { Text } from "react-native-svg";
@@ -228,7 +229,7 @@ export default function FinanceVisualizer() {
       ) : (
         <View>
           <View style={{ marginTop: 100 }}>
-            <Spinner color="blue" />
+            <Spinner color="blue.700" size="lg" />
           </View>
           <AppText styles={{ textAlign: "center", marginTop: 50 }}>Retreiving data...</AppText>
           <View style={{ marginTop: 50 }}>

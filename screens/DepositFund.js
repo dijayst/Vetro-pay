@@ -5,14 +5,16 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, Clipboard, Text
 import AppText from "../resources/AppText";
 import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
 import { loadUser } from "../containers/authentication/action";
-import { Toast, Spinner } from "native-base";
+import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
 import FLW_LOGO from "../assets/FLW-logo.png";
 import { cardDeposit, tokenDeposit } from "../containers/deposit/action";
 import { getUserTransaction } from "../containers/transactions/action";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { getCards } from "../containers/cards/action";
+import { toastColorObject } from "../resources/rStyledComponent";
 
 export default function DepositFund({ navigation }) {
+  const toast = useToast();
   const usePrevious = (value) => {
     const ref = useRef();
     useEffect(() => {
@@ -50,10 +52,12 @@ export default function DepositFund({ navigation }) {
         dispatch(getUserTransaction(""));
       } else {
         // SHOW ERROR
-        Toast.show({
-          text: cardDepositResponse[cardDepositResponse.length - 1]["message"],
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>{cardDepositResponse[cardDepositResponse.length - 1]["message"]}</NativeBaseText>
+            </Box>
+          ),
         });
       }
     }
@@ -78,10 +82,12 @@ export default function DepositFund({ navigation }) {
         setDisplaySpinner(false);
       } else {
         // SHOW ERROR
-        Toast.show({
-          text: tokenDepositResponse[tokenDepositResponse.length - 1]["message"],
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>{tokenDepositResponse[tokenDepositResponse.length - 1]["message"]}</NativeBaseText>
+            </Box>
+          ),
         });
 
         setDisplaySpinner(false);
@@ -101,10 +107,12 @@ export default function DepositFund({ navigation }) {
       ]);
     } else {
       Clipboard.setString(`${userAuthentication.nuban}`);
-      Toast.show({
-        text: "Copied to clipboard",
-        duration: 3000,
-        type: "success",
+      toast.show({
+        render: () => (
+          <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+            <NativeBaseText style={{ color: "#FFFFFF" }}>Copied to clipboard</NativeBaseText>
+          </Box>
+        ),
       });
     }
   };

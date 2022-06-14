@@ -2,17 +2,20 @@ import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { Dimensions, View, Text, StyleSheet, TextInput, Picker } from "react-native";
+import { Dimensions, View, Text, StyleSheet, TextInput } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import AppText from "../resources/AppText";
 import { AppButton, PrimaryButton } from "../resources/AppButton";
 import { AntDesign } from "@expo/vector-icons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Toast, Spinner } from "native-base";
+import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
 
 import { postTransaction } from "../containers/transactions/action";
 import { convertUTCDateToLocalDate } from "../resources/MetaFunctions";
+import { toastColorObject } from "../resources/rStyledComponent";
 
 export default function AddRecord({ navigation }) {
+  const toast = useToast();
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [displaySpinner, setDisplaySpinner] = useState(false);
   const [transactionData, setTransactionData] = useState({
@@ -93,38 +96,48 @@ export default function AddRecord({ navigation }) {
       transactionData.payload.paymentCategory == ""
     ) {
       if (transactionData.payload.transactionDate == "") {
-        Toast.show({
-          text: "Select transaction date",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Select transaction date</NativeBaseText>
+            </Box>
+          ),
         });
       }
       if (transactionData.payload.transactionClass == "") {
-        Toast.show({
-          text: "Select transaction type",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Select transaction type</NativeBaseText>
+            </Box>
+          ),
         });
       }
       if (transactionData.payload.paymentMethod == "") {
-        Toast.show({
-          text: "Select payment method",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Select payment method</NativeBaseText>
+            </Box>
+          ),
         });
       }
       if (transactionData.payload.amount == "" || Number(transactionData.payload.amount) == NaN || Number(transactionData.payload.amount) < 0) {
-        Toast.show({
-          text: "Amount Invalid",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Amount Invalid</NativeBaseText>
+            </Box>
+          ),
         });
       }
       if (transactionData.payload.paymentCategory == "") {
-        Toast.show({
-          text: "Select payment category",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Select payment category</NativeBaseText>
+            </Box>
+          ),
         });
       }
     } else {
@@ -339,7 +352,7 @@ export default function AddRecord({ navigation }) {
               </View>
 
               <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-                <Spinner color="blue" />
+                <Spinner color="blue.700" size="lg" />
               </View>
             </View>
           </View>

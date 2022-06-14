@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { View, StyleSheet, TextInput, Text, Picker, Alert, Image, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TextInput, Text, Alert, Image, TouchableOpacity } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import AppText from "../../resources/AppText";
 import { AppButton } from "../../resources/AppButton";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import * as SecureStore from "expo-secure-store";
-import { Toast, Spinner } from "native-base";
+import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
 import { useNetInfo } from "@react-native-community/netinfo";
 import OfflineNotice from "../../resources/OfflineNotice";
 import * as LocalAuthentication from "expo-local-authentication";
 import { login } from "../../containers/authentication/action";
 import * as Linking from "expo-linking";
+import { toastColorObject } from "../../resources/rStyledComponent";
 
 export default function Login({ navigation }) {
+  const toast = useToast();
   const [storedFirstName, setStoredFirstName] = useState("");
   const [storedPhoneNumberData, setStoredPhoneNumberData] = useState("");
   const [storedPassData, setStoredPassData] = useState("");
@@ -68,16 +71,20 @@ export default function Login({ navigation }) {
   const loginUserFunction = () => {
     if (!(loginData.payload.phoneNumber.length >= 7 && 12 > loginData.payload.phoneNumber.length) || loginData.payload.password.length < 8) {
       if (!(loginData.payload.phoneNumber.length >= 7 && 12 > loginData.payload.phoneNumber.length)) {
-        Toast.show({
-          text: "Invalid Phone number",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Invalid Phone number</NativeBaseText>
+            </Box>
+          ),
         });
       } else if (loginData.payload.password.length < 8) {
-        Toast.show({
-          text: "Incorrect password",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Incorrect password</NativeBaseText>
+            </Box>
+          ),
         });
       }
     } else {
@@ -89,10 +96,12 @@ export default function Login({ navigation }) {
 
   const loginUserFunctionII = () => {
     if (loginData.payload.password.length < 8) {
-      Toast.show({
-        text: "Incorrect password",
-        duration: 3000,
-        type: "danger",
+      toast.show({
+        render: () => (
+          <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+            <NativeBaseText style={{ color: "#FFFFFF" }}>Incorrect password</NativeBaseText>
+          </Box>
+        ),
       });
     } else {
       SecureStore.setItemAsync("pass", loginData.payload.password, SecureStore.WHEN_UNLOCKED);
@@ -201,7 +210,7 @@ export default function Login({ navigation }) {
         </View>
 
         <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-          <Spinner color="blue" />
+          <Spinner color="blue.700" size="lg" />
         </View>
 
         <AppText bold="true" styles={{ ...styles.loginIntro, marginTop: 20, textAlign: "center", color: "#266ddc" }}>
@@ -274,7 +283,7 @@ export default function Login({ navigation }) {
             <AppText styles={styles.buttonText}>Sign in</AppText>
           </AppButton>
           <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-            <Spinner color="blue" />
+            <Spinner color="blue.700" size="lg" />
           </View>
         </View>
       </View>

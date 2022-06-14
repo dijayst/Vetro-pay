@@ -11,6 +11,7 @@ export default function (state = initialState, action) {
       return {
         msg: action.payload.msg,
         status: action.payload.status,
+        dateTime: new Date(),
       };
     default:
       return state;

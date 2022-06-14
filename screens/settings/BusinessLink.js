@@ -5,9 +5,10 @@ import PropTypes from "prop-types";
 import { Dimensions, View, Text, StyleSheet, Picker, TextInput } from "react-native";
 import AppText from "../../resources/AppText";
 import { PrimaryButton } from "../../resources/AppButton";
-import { Toast, Spinner } from "native-base";
+import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { verifyBusinessUID, linkMobileBusiness } from "../../containers/business/action";
+import { toastColorObject } from "../../resources/rStyledComponent";
 
 export default function BusinessLink({ navigation }) {
   const [businessValid, setBusinessValid] = useState(false);
@@ -16,6 +17,7 @@ export default function BusinessLink({ navigation }) {
   const [displaySpinner, setDisplaySpinner] = useState(false);
 
   const dispatch = useDispatch();
+  const toast = useToast();
 
   const usePrevious = (value) => {
     const ref = useRef();
@@ -33,10 +35,12 @@ export default function BusinessLink({ navigation }) {
 
   const submitData = () => {
     if (businessUID == "" || businessUID.length < 4) {
-      Toast.show({
-        text: "Enter Valid Business UID",
-        duration: 3000,
-        type: "danger",
+      toast.show({
+        render: () => (
+          <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+            <NativeBaseText style={{ color: "#FFFFFF" }}>Enter Valid Business UID</NativeBaseText>
+          </Box>
+        ),
       });
     } else {
       setBusinessUID(businessUID.toUpperCase());
@@ -59,10 +63,12 @@ export default function BusinessLink({ navigation }) {
           setDisplaySpinner(false);
         } else {
           setDisplaySpinner(false);
-          Toast.show({
-            text: `${verifyBusinessResponse[verifyBusinessResponse.length - 1]["message"]}`,
-            duration: 5000,
-            type: "danger",
+          toast.show({
+            render: () => (
+              <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+                <NativeBaseText style={{ color: "#FFFFFF" }}>{`${verifyBusinessResponse[verifyBusinessResponse.length - 1]["message"]}`}</NativeBaseText>
+              </Box>
+            ),
           });
         }
       }
@@ -74,10 +80,12 @@ export default function BusinessLink({ navigation }) {
           navigation.navigate("Account");
         } else {
           setDisplaySpinner(false);
-          Toast.show({
-            text: `${linkMobileBusinessResponse[linkMobileBusinessResponse.length - 1]["message"]}`,
-            duration: 5000,
-            type: "danger",
+          toast.show({
+            render: () => (
+              <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+                <NativeBaseText style={{ color: "#FFFFFF" }}>{`${linkMobileBusinessResponse[linkMobileBusinessResponse.length - 1]["message"]}`}</NativeBaseText>
+              </Box>
+            ),
           });
         }
       }
@@ -131,7 +139,7 @@ export default function BusinessLink({ navigation }) {
               </View>
 
               <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-                <Spinner color="blue" />
+                <Spinner color="blue.700" size="lg" />
               </View>
             </View>
           </View>

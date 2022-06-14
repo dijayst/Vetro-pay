@@ -6,6 +6,7 @@ const initialState = {
   isAuthenticated: null,
   isLoading: false,
   user: null,
+  dateTime: new Date(),
 };
 
 export default function (state = initialState, action) {
@@ -14,6 +15,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         isLoading: true,
+        dateTime: new Date(),
       };
 
     case USER_LOADED:
@@ -22,6 +24,7 @@ export default function (state = initialState, action) {
         isAuthenticated: true,
         isLoading: false,
         user: action.payload,
+        dateTime: new Date(),
       };
 
     case LOGIN_SUCCESS:
@@ -31,6 +34,7 @@ export default function (state = initialState, action) {
         ...action.payload,
         isAuthenticated: true,
         isLoading: false,
+        dateTime: new Date(),
       };
 
     case AUTH_ERROR:
@@ -42,6 +46,7 @@ export default function (state = initialState, action) {
         user: null,
         isAuthenticated: false,
         isLoading: false,
+        dateTime: new Date(),
       };
 
     default:

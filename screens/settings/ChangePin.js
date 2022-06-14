@@ -5,10 +5,11 @@ import PropTypes from "prop-types";
 import { Dimensions, View, Text, StyleSheet, Picker, TextInput } from "react-native";
 import AppText from "../../resources/AppText";
 import { PrimaryButton } from "../../resources/AppButton";
-import { Toast, Spinner } from "native-base";
+import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import { changeTransactionPin } from "../../containers/authchange/action";
+import { toastColorObject } from "../../resources/rStyledComponent";
 
 export default function ChangePin({ navigation }) {
   const [displaySpinner, setDisplaySpinner] = useState(false);
@@ -21,6 +22,7 @@ export default function ChangePin({ navigation }) {
     },
   });
 
+  const toast = useToast();
   const dispatch = useDispatch();
 
   const usePrevious = (value) => {
@@ -44,28 +46,36 @@ export default function ChangePin({ navigation }) {
       updateDetailsPayload.payload.currentPassword.length < 8
     ) {
       if (updateDetailsPayload.payload.currentPin.length < 6) {
-        Toast.show({
-          text: "Transaction pin incorrect, your account maybe suspended after 3 more invalid tries",
-          duration: 5000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Transaction pin incorrect, your account maybe suspended after 3 more invalid tries</NativeBaseText>
+            </Box>
+          ),
         });
       } else if (updateDetailsPayload.payload.newPin.length < 6 || updateDetailsPayload.payload.newPin.length > 6 || Number(updateDetailsPayload.payload.currentPin) == NaN) {
-        Toast.show({
-          text: "Transaction Pin must be 6 digit (numbers only)",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Transaction Pin must be 6 digit (numbers only)</NativeBaseText>
+            </Box>
+          ),
         });
       } else if (updateDetailsPayload.payload.newPin !== updateDetailsPayload.payload.confirmNewPin) {
-        Toast.show({
-          text: '"New Pin" and "Confirm pin" must be the same',
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>"New Pin" and "Confirm pin" must be the same</NativeBaseText>
+            </Box>
+          ),
         });
       } else if (updateDetailsPayload.payload.currentPassword.length < 8) {
-        Toast.show({
-          text: "Password incorrect",
-          duration: 5000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Password incorrect</NativeBaseText>
+            </Box>
+          ),
         });
       }
     } else {
@@ -95,17 +105,21 @@ export default function ChangePin({ navigation }) {
               currentPassword: "",
             },
           }));
-          Toast.show({
-            text: `${updateDetailsResponse[updateDetailsResponse.length - 1]["message"]}`,
-            duration: 5000,
-            type: "success",
+          toast.show({
+            render: () => (
+              <Box bg={toastColorObject["success"]} px="2" py="2" rounded="sm" mb={5}>
+                <NativeBaseText style={{ color: "#FFFFFF" }}>{`${updateDetailsResponse[updateDetailsResponse.length - 1]["message"]}`}</NativeBaseText>
+              </Box>
+            ),
           });
         } else {
           setDisplaySpinner(false);
-          Toast.show({
-            text: `${updateDetailsResponse[updateDetailsResponse.length - 1]["message"]}`,
-            duration: 5000,
-            type: "danger",
+          toast.show({
+            render: () => (
+              <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+                <NativeBaseText style={{ color: "#FFFFFF" }}>{`${updateDetailsResponse[updateDetailsResponse.length - 1]["message"]}`}</NativeBaseText>
+              </Box>
+            ),
           });
         }
       }
@@ -229,7 +243,7 @@ export default function ChangePin({ navigation }) {
               </View>
 
               <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-                <Spinner color="blue" />
+                <Spinner color="blue.700" size="lg" />
               </View>
             </View>
           </View>

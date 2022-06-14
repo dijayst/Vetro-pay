@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { View, StyleSheet, Picker, Button, TextInput } from "react-native";
+import { View, StyleSheet, Button, TextInput } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import AppText from "../../resources/AppText";
 import { PrimaryButton } from "../../resources/AppButton";
 import { getTvBouquets, getCustomer } from "../../containers/utility/action";
@@ -351,7 +352,7 @@ export default function TvDstv() {
               </View>
 
               <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-                <Spinner color="blue" />
+                <Spinner color="blue.700" size="lg" />
               </View>
             </View>
           </View>

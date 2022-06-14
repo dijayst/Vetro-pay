@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { View, Text, StyleSheet, Image, Button, TouchableOpacity, Alert, Modal, TextInput, Picker, Switch } from "react-native";
+import { View, Text, StyleSheet, Image, Button, TouchableOpacity, Alert, Modal, TextInput, Switch } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import AppText from "../../resources/AppText";
 import { PrimaryButton } from "../../resources/AppButton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -387,7 +388,7 @@ export default function PayBusiness({ route, navigation }) {
             </View>
 
             <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-              <Spinner color="blue" />
+              <Spinner color="blue.700" size="lg" />
             </View>
           </View>
         );

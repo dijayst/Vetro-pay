@@ -310,7 +310,7 @@ export default function Airtime() {
             </AppButton>
 
             <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-              <Spinner color="blue" />
+              <Spinner color="blue.700" size="lg" />
             </View>
           </View>
         );

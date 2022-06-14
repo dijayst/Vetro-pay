@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { View, StyleSheet, TouchableOpacity, Image, ScrollView, Modal, Picker, Button, TextInput } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Image, ScrollView, Modal, Button, TextInput } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import AppText from "../../resources/AppText";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Spinner } from "native-base";
@@ -263,7 +264,7 @@ export default function Electricity() {
               </View>
 
               <View style={{ marginTop: 10, justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-                <Spinner color="blue" />
+                <Spinner color="blue.700" size="lg" />
               </View>
             </View>
           </View>
@@ -350,7 +351,7 @@ export default function Electricity() {
             </View>
 
             <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-              <Spinner color="blue" />
+              <Spinner color="blue.700" size="lg" />
             </View>
           </View>
         );

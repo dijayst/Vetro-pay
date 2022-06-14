@@ -368,7 +368,7 @@ export default function UserTransactions({ navigation }) {
           ) : (
             <View style={{ marginTop: 40 }}>
               <AppText styles={{ textAlign: "center" }}>Loading transactions...</AppText>
-              <Spinner color="blue" />
+              <Spinner color="blue.700" size="lg" />
             </View>
           )}
         </View>

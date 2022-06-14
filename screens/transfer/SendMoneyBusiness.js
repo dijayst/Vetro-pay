@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
-import { Dimensions, View, Text, StyleSheet, Picker, TextInput } from "react-native";
+import { Dimensions, View, Text, StyleSheet, TextInput } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import { Modal, Switch } from "react-native";
 
 import AppText from "../../resources/AppText";
@@ -9,10 +10,11 @@ import { PrimaryButton } from "../../resources/AppButton";
 import { MaterialIcons } from "@expo/vector-icons";
 import { SuccessfulSvgComponent } from "../../resources/Svg";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Toast, Spinner } from "native-base";
+import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
 
 import { postSendMoneyPreVerify, postSendMoney } from "../../containers/transactions/action";
 import { shortenNames } from "../../resources/MetaFunctions";
+import { toastColorObject } from "../../resources/rStyledComponent";
 
 export default function SendMoney({ navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -41,6 +43,7 @@ export default function SendMoney({ navigation }) {
     },
   });
 
+  const toast = useToast();
   const dispatch = useDispatch();
 
   const usePrevious = (value) => {
@@ -62,10 +65,12 @@ export default function SendMoney({ navigation }) {
       if (prevSendMoneyPreVerify.length !== sendMoneyPreVerify.length) {
         if (sendMoneyPreVerify[sendMoneyPreVerify.length - 1]["status"] == "failed") {
           setDisplaySpinner(false);
-          Toast.show({
-            text: `${sendMoneyPreVerify[sendMoneyPreVerify.length - 1].message}`,
-            duration: 5000,
-            type: "danger",
+          toast.show({
+            render: () => (
+              <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+                <NativeBaseText style={{ color: "#FFFFFF" }}>{`${sendMoneyPreVerify[sendMoneyPreVerify.length - 1].message}`}</NativeBaseText>
+              </Box>
+            ),
           });
         } else if (sendMoneyPreVerify[sendMoneyPreVerify.length - 1]["status"] == "success") {
           setDisplaySpinner(false);
@@ -133,16 +138,20 @@ export default function SendMoney({ navigation }) {
       Number(sendMoneyData.payload.amount) <= 0
     ) {
       if (sendMoneyData.payload.phoneNumberUID == "" || sendMoneyData.payload.phoneNumberUID.replace(/\s\s+/g, " ") == " ") {
-        Toast.show({
-          text: "Invalid recipient details",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Invalid recipient details</NativeBaseText>
+            </Box>
+          ),
         });
       } else if (Number(sendMoneyData.payload.amount) == NaN || Number(sendMoneyData.payload.amount) <= 0) {
-        Toast.show({
-          text: "Invalid amount",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Invalid amount</NativeBaseText>
+            </Box>
+          ),
         });
       }
     } else {
@@ -274,7 +283,7 @@ export default function SendMoney({ navigation }) {
             </View>
 
             <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-              <Spinner color="blue" />
+              <Spinner color="blue.700" size="lg" />
             </View>
           </View>
         );
@@ -488,7 +497,7 @@ export default function SendMoney({ navigation }) {
               </View>
 
               <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-                <Spinner color="blue" />
+                <Spinner color="blue.700" size="lg" />
               </View>
             </View>
           </View>

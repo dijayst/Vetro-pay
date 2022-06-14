@@ -8,8 +8,9 @@ import { PrimaryButton } from "../../resources/AppButton";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
 import BottomSheet, { BottomSheetModal, BottomSheetModalProvider, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import { numberWithCommas } from "../../resources/MetaFunctions";
-import { Toast, Spinner } from "native-base";
+import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
 import { getFxRates } from "../../containers/transactions/action";
+import { toastColorObject } from "../../resources/rStyledComponent";
 const INTERNATIONAL = "international";
 const LOCAL = "local";
 
@@ -18,6 +19,7 @@ function Separator() {
 }
 
 export default function Transfer({ navigation }) {
+  const toast = useToast();
   const dispatch = useDispatch();
   const userAuthentication = useSelector((state) => state.authentication.user);
   const availableCountries = useSelector((state) => state.transactions.fxrates);
@@ -49,19 +51,25 @@ export default function Transfer({ navigation }) {
 
   const handleProcessTransaction = () => {
     if (Number(amount) < beneficiaryCurrency.minimum) {
-      Toast.show({
-        text: `${beneficiaryCurrency.short} transactions cannot be less than ₦${numberWithCommas(beneficiaryCurrency.minimum)}`,
-        duration: 3000,
-        type: "danger",
+      toast.show({
+        render: () => (
+          <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+            <NativeBaseText style={{ color: "#FFFFFF" }}>{`${beneficiaryCurrency.short} transactions cannot be less than ₦${numberWithCommas(
+              beneficiaryCurrency.minimum
+            )}`}</NativeBaseText>
+          </Box>
+        ),
       });
     } else {
       setDisplaySpinner(true);
       setTimeout(() => {
         setDisplaySpinner(false);
-        Toast.show({
-          text: `Incomplete KYC. Kindly contact support`,
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>{`Incomplete KYC. Kindly contact support`}</NativeBaseText>
+            </Box>
+          ),
         });
       }, 2500);
     }

@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Dimensions, Modal, View, Text, StyleSheet, Image, TextInput, ScrollView } from "react-native";
-import { Picker } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import AppText from "../../resources/AppText";
 import { AppButton, PrimaryButton } from "../../resources/AppButton";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 
-import { Toast, Spinner } from "native-base";
+import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
 import { postPreReg, postRegAuth, registerUser } from "../../containers/regvalidate/action";
+import { toastColorObject } from "../../resources/rStyledComponent";
 
 const DoneIcon = require("../../assets/done.png");
 
 export default function Register({ navigation }) {
+  const toast = useToast();
   const [stage, setStage] = useState(1);
   const [registerData, setRegisterData] = useState({
     payload: {
@@ -60,10 +62,12 @@ export default function Register({ navigation }) {
           setStage(2); //Proceeds to Authentication Code Stage
         } else {
           setDisplaySpinner(false);
-          Toast.show({
-            text: preRegResponse[preRegResponse.length - 1]["message"],
-            duration: 5000,
-            type: "danger",
+          toast.show({
+            render: () => (
+              <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+                <NativeBaseText style={{ color: "#FFFFFF" }}>{preRegResponse[preRegResponse.length - 1]["message"]}</NativeBaseText>
+              </Box>
+            ),
           });
         }
       }
@@ -78,10 +82,12 @@ export default function Register({ navigation }) {
           setStage(3); //Proceeds to Security & Transaction PIN Stage
         } else {
           setDisplaySpinner(false);
-          Toast.show({
-            text: regAuthResponse[regAuthResponse.length - 1]["message"],
-            duration: 5000,
-            type: "danger",
+          toast.show({
+            render: () => (
+              <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+                <NativeBaseText style={{ color: "#FFFFFF" }}>{regAuthResponse[regAuthResponse.length - 1]["message"]}</NativeBaseText>
+              </Box>
+            ),
           });
         }
       }
@@ -112,34 +118,44 @@ export default function Register({ navigation }) {
       registerData.payload.password !== registerData.payload.confirmPassword
     ) {
       if (!registerData.payload.fullName.replace(/\s\s+/g, " ").includes(" ")) {
-        Toast.show({
-          text: "First name and Last name must be added",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>First name and Last name must be added</NativeBaseText>
+            </Box>
+          ),
         });
       } else if (registerData.payload.fullName.length < 6) {
-        Toast.show({
-          text: "Name cannot be less than 6 Characters",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Name cannot be less than 6 Characters</NativeBaseText>
+            </Box>
+          ),
         });
       } else if (!(registerData.payload.phoneNumber.length >= 7 && 12 > registerData.payload.phoneNumber.length)) {
-        Toast.show({
-          text: "Invalid Phone number",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Invalid Phone number</NativeBaseText>
+            </Box>
+          ),
         });
       } else if (registerData.payload.password.length < 8) {
-        Toast.show({
-          text: "Password cannot be less than 8 characters",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Password cannot be less than 8 characters</NativeBaseText>
+            </Box>
+          ),
         });
       } else if (registerData.payload.password !== registerData.payload.confirmPassword) {
-        Toast.show({
-          text: '"Confirm password" not the same as "Password" ',
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>"Confirm password" not the same as "Password"</NativeBaseText>
+            </Box>
+          ),
         });
       }
     } else {
@@ -150,10 +166,12 @@ export default function Register({ navigation }) {
 
   const goToSecurityPin = () => {
     if (Number(registerData.payload.authCode) == NaN || registerData.payload.authCode == "") {
-      Toast.show({
-        text: "Auth code incorrect",
-        duration: 3000,
-        type: "danger",
+      toast.show({
+        render: () => (
+          <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+            <NativeBaseText style={{ color: "#FFFFFF" }}>Auth code incorrect</NativeBaseText>
+          </Box>
+        ),
       });
     } else {
       setDisplaySpinner(true);
@@ -172,28 +190,36 @@ export default function Register({ navigation }) {
       registerData.payload.transactionPin !== registerData.payload.confirmTransactionPin
     ) {
       if (registerData.payload.securityQuestion == "") {
-        Toast.show({
-          text: "Select security question",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Select security question</NativeBaseText>
+            </Box>
+          ),
         });
       } else if (registerData.payload.securityAnswer == "" || registerData.payload.securityAnswer.replace(/\s\s+/g, " ") == " ") {
-        Toast.show({
-          text: "Input Security Answer",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Input Security Answer</NativeBaseText>
+            </Box>
+          ),
         });
       } else if (registerData.payload.transactionPin.length < 6 || Number(registerData.payload.transactionPin) == NaN || registerData.payload.transactionPin.length > 6) {
-        Toast.show({
-          text: "Transaction Pin must be 6 digit (numbers only)",
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Transaction Pin must be 6 digit (numbers only)</NativeBaseText>
+            </Box>
+          ),
         });
       } else if (registerData.payload.transactionPin !== registerData.payload.confirmTransactionPin) {
-        Toast.show({
-          text: '"Transaction Pin" and "Confirm transaction pin" must be the same',
-          duration: 3000,
-          type: "danger",
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>"Transaction Pin" and "Confirm transaction pin" must be the same</NativeBaseText>
+            </Box>
+          ),
         });
       }
     } else {
@@ -361,7 +387,7 @@ export default function Register({ navigation }) {
                   </AppText>
                 </AppButton>
                 <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-                  <Spinner color="blue" />
+                  <Spinner color="blue.700" size="lg" />
                 </View>
 
                 <AppText styles={{ marginTop: 10 }}>
@@ -411,7 +437,7 @@ export default function Register({ navigation }) {
                 <AntDesign color="#FFFFFF" name="arrowright" size={16} />
               </AppButton>
               <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-                <Spinner color="blue" />
+                <Spinner color="blue.700" size="lg" />
               </View>
             </View>
           </View>
@@ -493,7 +519,7 @@ export default function Register({ navigation }) {
                   </AppText>
                 </AppButton>
                 <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-                  <Spinner color="blue" />
+                  <Spinner color="blue.700" size="lg" />
                 </View>
 
                 <AppText styles={{ marginTop: 30, marginBottom: 10, fontSize: 16, textAlign: "center" }}>
