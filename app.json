@@ -22,7 +22,7 @@
     "android": {
       "googleServicesFile": "./google-services.json",
       "package": "com.anclatechs.vetropaymobile",
-      "versionCode": 11,
+      "versionCode": 12,
       "useNextNotificationsApi": true,
       "permissions": ["USE_BIOMETRIC", "USE_FINGERPRINT", "READ_CONTACTS", "CAMERA"]
     },
