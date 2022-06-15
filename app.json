@@ -17,12 +17,20 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera to scan barcodes of for faster payment.",
+        "NSMicrophoneUsageDescription": "This app does not require access to the microphone.",
+        "NSFaceIDUsageDescription": "This app uses the Face ID as an alt method to authenticate user berfore logging user in",
+        "NSContactsUsageDescription": "This app uses contact list to make purchase airtime faster"
+      },
+      "bundleIdentifier": "com.anclatechs.vetropaymobile",
+      "buildNumber": "1.0.4.7"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
       "package": "com.anclatechs.vetropaymobile",
-      "versionCode": 12,
+      "versionCode": 13,
       "useNextNotificationsApi": true,
       "permissions": ["USE_BIOMETRIC", "USE_FINGERPRINT", "READ_CONTACTS", "CAMERA"]
     },
