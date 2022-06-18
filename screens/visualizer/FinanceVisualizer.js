@@ -131,7 +131,7 @@ export default function FinanceVisualizer() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.windowBox}>
         {/** User-Periods */}
         <View style={{ flexDirection: "row" }}>
@@ -237,7 +237,7 @@ export default function FinanceVisualizer() {
           </View>
         </View>
       )}
-    </View>
+    </ScrollView>
   );
 }
 

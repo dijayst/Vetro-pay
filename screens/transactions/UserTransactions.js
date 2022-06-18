@@ -8,7 +8,8 @@ import { Modal, TouchableOpacity } from "react-native";
 import { MaterialIcons, Ionicons, AntDesign } from "@expo/vector-icons";
 import TransactionHistory from "../../resources/TransactionHistory";
 import { getSysPeriod, getUserTransaction } from "../../containers/transactions/action";
-import { Spinner, Picker } from "native-base";
+import { Spinner } from "native-base";
+import { Picker } from "@react-native-picker/picker";
 //import { convertUTCDateToLocalDate } from "../resource/MetaFunctions";
 import moment from "moment";
 import * as Linking from "expo-linking";
@@ -261,7 +262,8 @@ export default function UserTransactions({ navigation }) {
           </Picker>
           <Pressable
             onPress={() => {
-              pickerRef.current.wrappedInstance.focus();
+              //pickerRef.current.wrappedInstance.focus();
+              pickerRef.current.focus();
             }}
             style={{
               position: "absolute",
