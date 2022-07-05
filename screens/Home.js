@@ -376,7 +376,13 @@ export default function Home({ navigation }) {
 
       <View style={{ display: "flex", marginTop: 10, alignItems: "center", justifyContent: "center" }}>
         <View style={{ width: "80%" }}>
-          <Pressable style={{ width: "100%", backgroundColor: "#266ddc", padding: 10, alignItems: "center", borderRadius: 5 }} onPress={() => navigation.navigate("Savings")}>
+          <Pressable
+            style={{ width: "100%", backgroundColor: "#266ddc", padding: 10, alignItems: "center", borderRadius: 5 }}
+            onPress={() => {
+              //  navigation.navigate("Savings")
+              Alert.alert("Coming soon", "Our savings features will be available from the 1st of August, 2022.");
+            }}
+          >
             <AppText styles={{ color: "#FFFFFF" }} bold>
               Grow your savings
             </AppText>
