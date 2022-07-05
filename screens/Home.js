@@ -10,11 +10,27 @@ import { logout } from "../containers/authentication/action";
 import { getUserTransaction } from "../containers/transactions/action";
 import { updateNotificationToken } from "../containers/regvalidate/action";
 import NairaLog from "../assets/naira.png";
+import { Asset, useAssets } from "expo-asset";
+// import SavingsHomeImage from "../assets/savingsHome2.png";
+// import SavingsImage2 from "../assets/Savings-bro.png";
+// import SavingsImage3 from "../assets/Savings-cuate.png";
+// import SavingsImage4 from "../assets/Savings-amico.png";
+// import SavingsImage5 from "../assets/Savings-pana.png";
+// import SavingsImage6 from "../assets/Savings-rafiki.png";
 
 export default function Home({ navigation }) {
   const userAuthentication = useSelector((state) => state.authentication.user);
   const currencySymbol = `${userAuthentication.country == "NIGERIA" ? "₦" : "K"}`;
   const [accountBalance, setAccountBalance] = useState("0.00");
+  const [savingsImagePosition, setSavingsImagePosition] = useState(Math.floor(Math.random() * 6));
+  const [SAVINGS_IMAGE_ARRAY, setSavingsImage] = useAssets([
+    require("../assets/savingsHome2.png"),
+    require("../assets/Savings-bro.png"),
+    require("../assets/Savings-cuate.png"),
+    require("../assets/Savings-amico.png"),
+    require("../assets/Savings-pana.png"),
+    require("../assets/Savings-rafiki.png"),
+  ]);
 
   const dispatch = useDispatch();
 
@@ -75,6 +91,14 @@ export default function Home({ navigation }) {
         lightColor: "#FF231F7C",
       });
     }
+
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false,
+      }),
+    });
 
     notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
       setNotification(notification);
@@ -200,7 +224,7 @@ export default function Home({ navigation }) {
               <FontAwesome name="bank" size={24} color="rgb(196, 87, 87)" />
             </View>
             <AppText bold styles={styles.activityButtonIIText}>
-              Pay Hub
+              Merchants
             </AppText>
           </View>
         );
@@ -340,23 +364,26 @@ export default function Home({ navigation }) {
         </View>
       </View>
 
-      <AppText styles={{ marginTop: 20, marginHorizontal: 10, fontSize: 16, textAlign: "center" }}>
-        Did you spend outside Vetropay today? Keep track of your everyday expenses
-      </AppText>
+      {/* <AppText styles={{ marginTop: 20, marginHorizontal: 10, fontSize: 16, textAlign: "center" }}> • • •</AppText> */}
+      <View style={{ flexDirection: "row", marginTop: 30, marginHorizontal: 10 }}>
+        <MaterialIcons name="graphic-eq" size={24} color="red" />
+        <AppText bold="true" styles={{ fontSize: 16 }}>
+          Earn Interest on your savings every month
+        </AppText>
+      </View>
+
+      {SAVINGS_IMAGE_ARRAY && <Image source={SAVINGS_IMAGE_ARRAY[savingsImagePosition]} style={{ width: 170, marginTop: 10, height: 170, alignSelf: "center" }} />}
 
       <View style={{ display: "flex", marginTop: 10, alignItems: "center", justifyContent: "center" }}>
         <View style={{ width: "80%" }}>
-          <Pressable style={{ width: "100%", backgroundColor: "#266ddc", padding: 10, alignItems: "center", borderRadius: 5 }} onPress={() => navigation.navigate("AddRecord")}>
+          <Pressable style={{ width: "100%", backgroundColor: "#266ddc", padding: 10, alignItems: "center", borderRadius: 5 }} onPress={() => navigation.navigate("Savings")}>
             <AppText styles={{ color: "#FFFFFF" }} bold>
-              Record Off-App Transaction
+              Grow your savings
             </AppText>
           </Pressable>
         </View>
       </View>
 
-      <AppText bold="true" styles={{ marginTop: 15, fontSize: 16, marginHorizontal: 10 }}>
-        Promos {"&"} Offers
-      </AppText>
       <StatusBar style="light" translucent={true} backgroundColor="#00000066" />
     </View>
   );

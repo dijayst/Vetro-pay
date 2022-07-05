@@ -17,6 +17,8 @@ import SendMoneyBusiness from "../screens/transfer/SendMoneyBusiness";
 import Withdraw from "../screens/transfer/Withdraw";
 import LinkBank from "../screens/transfer/LinkBank";
 import AddRecord from "../screens/AddRecord";
+import Savings from "../screens/savings/Savings";
+import NewSavingsPlan from "../screens/savings/NewSavingsPlan";
 import ReceiveFund from "../screens/ReceiveFund";
 import DepositFund from "../screens/DepositFund";
 import Credit from "../screens/Credit";
@@ -208,6 +210,28 @@ export default function HomeStack() {
           headerTintColor: "#fff",
         }}
         component={AddRecord}
+      />
+
+      <Stack.Screen
+        name="Savings"
+        options={{
+          title: "Savings",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={Savings}
+      />
+
+      <Stack.Screen
+        name="NewSavingsPlan"
+        options={{
+          title: "New Savings Plan",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={NewSavingsPlan}
       />
 
       <Stack.Screen
