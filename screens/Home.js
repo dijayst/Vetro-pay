@@ -11,6 +11,7 @@ import { getUserTransaction } from "../containers/transactions/action";
 import { updateNotificationToken } from "../containers/regvalidate/action";
 import NairaLog from "../assets/naira.png";
 import { Asset, useAssets } from "expo-asset";
+import { numberWithCommas } from "../resources/utils";
 // import SavingsHomeImage from "../assets/savingsHome2.png";
 // import SavingsImage2 from "../assets/Savings-bro.png";
 // import SavingsImage3 from "../assets/Savings-cuate.png";
@@ -311,7 +312,7 @@ export default function Home({ navigation }) {
               <MaterialIcons name="account-balance-wallet" size={24} color="#f2f2f2" />
               <AppText bold="true" styles={{ fontSize: 18, color: "#f2f2f2", marginLeft: 5 }}>
                 {currencySymbol}
-                {accountBalance}
+                {numberWithCommas(accountBalance)}
               </AppText>
             </View>
           </View>
