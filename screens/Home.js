@@ -380,8 +380,8 @@ export default function Home({ navigation }) {
           <Pressable
             style={{ width: "100%", backgroundColor: "#266ddc", padding: 10, alignItems: "center", borderRadius: 5 }}
             onPress={() => {
-              //  navigation.navigate("Savings")
-              Alert.alert("Coming soon", "Our savings features will be available from the 1st of August, 2022.");
+              navigation.navigate("Savings");
+              //Alert.alert("Coming soon", "Our savings features will be available from the 1st of August, 2022.");
             }}
           >
             <AppText styles={{ color: "#FFFFFF" }} bold>

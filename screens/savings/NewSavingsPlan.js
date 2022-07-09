@@ -1,5 +1,6 @@
-import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, Alert } from "react-native";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import SavingsImage2 from "../../assets/Savings-bro.png";
 import CuriousImage from "../../assets/Curious-rafiki.png";
 import ThinkingImage from "../../assets/Thinking-face-bro.png";
@@ -8,27 +9,80 @@ import { Picker } from "@react-native-picker/picker";
 import Slider from "@react-native-community/slider";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import moment from "moment";
-import { numberWithCommas } from "../../resources/utils";
+import { numberWithCommas, usePrevious } from "../../resources/utils";
 import { AntDesign, Octicons } from "@expo/vector-icons";
+import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
+import { toastColorObject } from "../../resources/rStyledComponent";
+import { createNewSavingsPlan, getSavingsData } from "../../containers/savings/action";
+import { getUserTransaction } from "../../containers/transactions/action";
 
 const VETROPAY_SAVINGS_INTEREST_RATE = [0, 1.3, 1.3, 1.5, 2, 3, 3.5, 5, 7, 8.5, 10, 10, 10];
 
-export default function NewSavingsPlan() {
+export default function NewSavingsPlan({ navigation }) {
+  const dispatch = useDispatch();
+  const toast = useToast();
   const [savingsFormStage, setSavingsFormStage] = useState(0);
   const [savingsType, setSavingsType] = useState("");
   const [savingsTitle, setSavingsTitle] = useState("");
   const [savingsAmount, setSavingsAmount] = useState("");
   const [refinedSavingsAmount, setRefinedSavingsAmount] = useState("");
+  const [displaySpinner, setDisplaySpinner] = useState(false);
   const [savingsDuration, setSavingsDuration] = useState(3);
 
+  const userAuthentication = useSelector((state) => state.authentication.user);
+  const createNewSavingsResponse = useSelector((state) => state.savings.create);
+  const prevCreateNewSavingsResponse = usePrevious(createNewSavingsResponse);
+
+  useEffect(() => {
+    if (displaySpinner && createNewSavingsResponse.length && createNewSavingsResponse.length !== prevCreateNewSavingsResponse?.length) {
+      if (createNewSavingsResponse[createNewSavingsResponse.length - 1]["status"] == "success") {
+        setDisplaySpinner(false);
+        newSavingsSuccessAlert();
+      } else {
+        setDisplaySpinner(false);
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>{createNewSavingsResponse[createNewSavingsResponse.length - 1]["message"]}</NativeBaseText>
+            </Box>
+          ),
+        });
+      }
+    }
+  }, [createNewSavingsResponse]);
+
   const showInterestRate = () => {
-    setSavingsAmount(Number(savingsAmount.replace(/,/g, "")));
+    //setSavingsAmount(savingsAmount.replace(/,/g, ""));
     if (savingsType == "MONTHLY") {
       setRefinedSavingsAmount(Number(savingsAmount.replace(/,/g, "")) * savingsDuration);
     } else {
-      setRefinedSavingsAmount(savingsAmount);
+      setRefinedSavingsAmount(Number(savingsAmount.replace(/,/g, "")));
     }
-    setSavingsFormStage(2);
+
+    //CHECK USER INPUT
+    if (savingsTitle.length < 3 || Number(savingsAmount.replace(/,/g, "")) < 100) {
+      if (savingsTitle.length < 3) {
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>{`Title should be at least 3 Characters`}</NativeBaseText>
+            </Box>
+          ),
+        });
+      } else {
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>
+                {savingsType == "MONTHLY" ? `Save ₦500 or more per month for best earnings` : "Save ₦500 or more for best earnings"}
+              </NativeBaseText>
+            </Box>
+          ),
+        });
+      }
+    } else {
+      setSavingsFormStage(2);
+    }
   };
 
   const setUserSavingsTypeFunction = (type) => {
@@ -37,11 +91,53 @@ export default function NewSavingsPlan() {
   };
 
   const calulateInterestAmount = (deposit, duration) => {
-    let calc = Number(deposit) * (VETROPAY_SAVINGS_INTEREST_RATE[Number(duration - 1)] / 100);
+    let calc = Number(deposit) * (VETROPAY_SAVINGS_INTEREST_RATE[duration] / 100);
     calc = calc.toFixed(2);
     return numberWithCommas(calc);
   };
 
+  const saveNowAlertPrompt = () => {
+    Alert.alert(
+      "Almost there",
+      `Enjoy your earnings after every deposit \n\nYour withdrawal date is: ${moment(new Date())
+        .add(savingsDuration, "months")
+        .format("DD MMM, YYYY")}. \n\nEarly withdrawal will attract a forfeiture of interest + 1.5% penalty fee`,
+      [
+        {
+          text: "Cancel",
+          onPress: () => {
+            return null;
+          },
+        },
+        {
+          text: "Confirm",
+          onPress: () => {
+            setDisplaySpinner(true);
+            dispatch(createNewSavingsPlan(savingsTitle, Number(savingsAmount.replace(/,/g, "")), savingsType, savingsDuration));
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  const newSavingsSuccessAlert = () => {
+    Alert.alert(
+      "Congratulations",
+      `Your new savings plan has been recorded`,
+      [
+        {
+          text: "Proceed",
+          onPress: () => {
+            dispatch(getSavingsData());
+            dispatch(getUserTransaction(""));
+            navigation.goBack();
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
   const savingsFormRender = () => {
     switch (savingsFormStage) {
       case 0:
@@ -49,7 +145,7 @@ export default function NewSavingsPlan() {
           <View style={{ paddingHorizontal: 10 }}>
             <Image source={ThinkingImage} style={{ width: 150, height: 150, alignSelf: "center", marginTop: 20 }} />
             <AppText bold styles={{ fontSize: 20 }}>
-              Hii Olamigoke,
+              Hii {userAuthentication.fullname.split(" ")[0]},
             </AppText>
             <AppText>Select Savings type</AppText>
 
@@ -72,21 +168,21 @@ export default function NewSavingsPlan() {
               </AppText>
             </TouchableOpacity>
 
-            <View style={{ marginTop: 100 }}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Octicons name="zap" size={20} color="red" style={{ marginRight: 5 }} />
+            <View style={{ marginTop: 90 }}>
+              <View style={styles.didYouKnowTextContainer}>
+                <Octicons name="zap" size={20} color="#dc3545" style={{ marginRight: 5 }} />
                 <AppText bold styles={styles.didYouKnowText}>
                   Earn up to 10% interest on your deposit Today.
                 </AppText>
               </View>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Octicons name="zap" size={20} color="red" style={{ marginRight: 5 }} />
+              <View style={styles.didYouKnowTextContainer}>
+                <Octicons name="zap" size={20} color="#dc3545" style={{ marginRight: 5 }} />
                 <AppText bold styles={styles.didYouKnowText}>
-                  Savings ROI are paid upfront.
+                  Interest earnings on savings are paid upfront.
                 </AppText>
               </View>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Octicons name="zap" size={20} color="red" style={{ marginRight: 5 }} />
+              <View style={styles.didYouKnowTextContainer}>
+                <Octicons name="zap" size={20} color="#dc3545" style={{ marginRight: 5 }} />
                 <AppText bold styles={styles.didYouKnowText}>
                   Deposits are automatically paid to your account after tenure.
                 </AppText>
@@ -112,6 +208,7 @@ export default function NewSavingsPlan() {
               <TextInput
                 style={{ ...styles.textInput, borderColor: "#266ddc" }}
                 placeholder="e.g House Rent, Eunice, Baby essentials etc."
+                value={savingsTitle}
                 onChangeText={(text) => setSavingsTitle(text)}
               />
             </View>
@@ -194,7 +291,7 @@ export default function NewSavingsPlan() {
             <Image source={CuriousImage} style={{ width: 150, height: 150, alignSelf: "center", marginTop: 20 }} />
             <View style={styles.savingsBreakdown}>
               <AppText>Savings Title:</AppText>
-              <AppText>My House Rent</AppText>
+              <AppText>{savingsTitle}</AppText>
             </View>
             <View style={styles.savingsBreakdown}>
               <AppText>Savings Type:</AppText>
@@ -202,11 +299,15 @@ export default function NewSavingsPlan() {
             </View>
             <View style={styles.savingsBreakdown}>
               <AppText>Target Amount:</AppText>
-              <AppText>{numberWithCommas(refinedSavingsAmount)}</AppText>
+              <AppText>₦{numberWithCommas(refinedSavingsAmount)}</AppText>
             </View>
             <View style={styles.savingsBreakdown}>
               <AppText>Duration:</AppText>
               <AppText>{savingsDuration} Month</AppText>
+            </View>
+            <View style={styles.savingsBreakdown}>
+              <AppText>Withdrawal Date:</AppText>
+              <AppText>{moment(new Date()).add(savingsDuration, "months").format("DD MMM, YYYY")}</AppText>
             </View>
             <View style={styles.savingsBreakdown}>
               <AppText>Earnings/Breakdown:</AppText>
@@ -230,7 +331,7 @@ export default function NewSavingsPlan() {
               {savingsType == "MONTHLY" &&
                 Array.apply(null, { length: savingsDuration }).map((data, index) => {
                   return (
-                    <View style={{ flexDirection: "row" }}>
+                    <View key={index} style={{ flexDirection: "row" }}>
                       <AppText bold styles={styles.breakdownCell}>
                         {moment(new Date()).add(index, "months").format("MMM, YYYY")}
                       </AppText>
@@ -238,7 +339,7 @@ export default function NewSavingsPlan() {
                         ₦{numberWithCommas(Number(refinedSavingsAmount / savingsDuration).toFixed(2))}
                       </AppText>
                       <AppText bold styles={styles.breakdownCell}>
-                        ₦{calulateInterestAmount(Number(refinedSavingsAmount / savingsDuration).toFixed(2), VETROPAY_SAVINGS_INTEREST_RATE[savingsDuration - index])} (
+                        ₦{calulateInterestAmount(Number(refinedSavingsAmount / savingsDuration).toFixed(2), savingsDuration - index)} (
                         {VETROPAY_SAVINGS_INTEREST_RATE[savingsDuration - index]}%)
                       </AppText>
                     </View>
@@ -260,31 +361,47 @@ export default function NewSavingsPlan() {
               )}
             </View>
 
-            <TouchableOpacity style={{ width: "100%", height: 45, backgroundColor: "#266ddc", padding: 10, marginTop: 30, alignItems: "center", borderRadius: 5 }}>
-              <AppText styles={{ color: "#FFFFFF" }} bold>
-                Save Now
-              </AppText>
-            </TouchableOpacity>
+            {!displaySpinner ? (
+              <View>
+                <TouchableOpacity
+                  style={{ width: "100%", height: 45, backgroundColor: "#266ddc", padding: 10, marginTop: 30, alignItems: "center", borderRadius: 5 }}
+                  onPress={() => {
+                    saveNowAlertPrompt();
+                  }}
+                >
+                  <AppText styles={{ color: "#FFFFFF" }} bold>
+                    Save Now
+                  </AppText>
+                </TouchableOpacity>
 
-            <TouchableOpacity
-              style={{
-                width: "100%",
-                backgroundColor: "transparent",
-                borderColor: "red",
-                borderWidth: 1,
-                padding: 10,
-                marginTop: 15,
-                marginBottom: 30,
-                alignItems: "center",
-                borderRadius: 5,
-                flexDirection: "row",
-                justifyContent: "center",
-              }}
-              onPress={() => setSavingsFormStage(savingsFormStage - 1)}
-            >
-              <AntDesign name="arrowleft" size={24} color="black" style={{ marginRight: 10 }} />
-              <AppText bold>Go Back</AppText>
-            </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    width: "100%",
+                    backgroundColor: "transparent",
+                    borderColor: "red",
+                    borderWidth: 1,
+                    padding: 10,
+                    marginTop: 15,
+                    marginBottom: 30,
+                    alignItems: "center",
+                    borderRadius: 5,
+                    flexDirection: "row",
+                    justifyContent: "center",
+                  }}
+                  onPress={() => {
+                    console.log({ savingsAmount });
+                    setSavingsFormStage(savingsFormStage - 1);
+                  }}
+                >
+                  <AntDesign name="arrowleft" size={24} color="black" style={{ marginRight: 10 }} />
+                  <AppText bold>Go Back</AppText>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={{ marginTop: 30 }}>
+                <Spinner color="blue.700" size="lg" />
+              </View>
+            )}
           </View>
         );
     }
@@ -326,6 +443,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    marginBottom: 3,
   },
   breakdownCell: {
     width: "33.3%",
@@ -338,8 +456,14 @@ const styles = StyleSheet.create({
 
   didYouKnowText: {
     fontSize: 15,
-    marginBottom: 4,
-    color: "grey",
+    color: "#5C5C5C",
     width: "95%",
+  },
+
+  didYouKnowTextContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 8,
   },
 });
