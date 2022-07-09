@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
-import { Dimensions, View, Text, StyleSheet, TextInput } from "react-native";
+import { Dimensions, View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Modal, Switch } from "react-native";
-
+import * as Contacts from "expo-contacts";
 import AppText from "../../resources/AppText";
 import { PrimaryButton } from "../../resources/AppButton";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, Feather } from "@expo/vector-icons";
 import { SuccessfulSvgComponent } from "../../resources/Svg";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
@@ -18,7 +18,58 @@ import { toastColorObject } from "../../resources/rStyledComponent";
 
 //import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
+function Separator() {
+  return <View style={styles.separator} />;
+}
+
 export default function SendMoney({ navigation }) {
+  class UserContactListItem extends React.PureComponent {
+    render() {
+      return (
+        <View style={{ marginTop: 5 }}>
+          {this.props.contact.phoneNumbers &&
+            this.props.contact.phoneNumbers.map((numbers, index) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    let newValue = numbers.number.replace(/\s/g, "");
+                    if (newValue.includes("+234") || newValue.slice(0, 3) == "234") {
+                      if (newValue.includes("+234")) {
+                        newValue = newValue.replace("+234", "0");
+                      } else {
+                        newValue = `0${newValue.slice(3)}`;
+                      }
+                    }
+                    onValueChange("phoneNumberUID", newValue);
+                    setModalPhoneBookOpen(false);
+                  }}
+                  key={index}
+                >
+                  <View>
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                      <View style={{ height: 40, width: 40, borderRadius: 20, backgroundColor: "#266ddc", marginRight: 10, justifyContent: "center", alignItems: "center" }}>
+                        <AppText bold styles={{ fontSize: 18, color: "#FFFFFF" }}>
+                          {isNaN(this.props.contact.firstName[0]) ? `${this.props.contact.firstName[0]}${this.props.contact.lastName?.[0] || ""}` : "#"}
+                        </AppText>
+                      </View>
+                      <View>
+                        <AppText bold>
+                          {this.props.contact.firstName} {this.props.contact.lastName}
+                        </AppText>
+                        <Text style={{ marginTop: 4 }}>{numbers.number}</Text>
+                      </View>
+                    </View>
+                    <Separator />
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+        </View>
+      );
+    }
+  }
+
+  const _renderItem = (item) => <UserContactListItem contact={item} />;
   const [modalOpen, setModalOpen] = useState(false);
   const [sendMoneyStage, setSendMoneyStage] = useState(1);
   const [showOptionalFields, setShowOptionalFields] = useState(false);
@@ -43,6 +94,13 @@ export default function SendMoney({ navigation }) {
       note: "",
       transactionPin: "",
     },
+  });
+  const [phoneContacts, setPhoneContacts] = useState([]);
+  const [modalPhoneBookOpen, setModalPhoneBookOpen] = useState(false);
+
+  const [filteredContacts, setFilteredContacts] = useState({
+    noData: true,
+    data: [],
   });
 
   const toast = useToast();
@@ -100,6 +158,25 @@ export default function SendMoney({ navigation }) {
       }
     }
   });
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Contacts.requestPermissionsAsync();
+      if (status === "granted") {
+        const { data } = await Contacts.getContactsAsync({
+          fields: [Contacts.Fields.PhoneNumbers],
+        });
+
+        if (data.length > 0) {
+          setPhoneContacts(data);
+          setFilteredContacts({
+            noData: false,
+            data: data,
+          });
+        }
+      }
+    })();
+  }, []);
 
   const changeRecipientCountry = (itemValue, itemIndex) => {
     setSendMoneyData((prevState) => ({
@@ -248,6 +325,32 @@ export default function SendMoney({ navigation }) {
         )
       );
       //setSendMoneyStage(2)
+    }
+  };
+
+  //Search Contacts Listener
+  const searchContact = (searchText) => {
+    let text = searchText.toLowerCase();
+    let fullContactList = phoneContacts;
+    let filteredContactsSearched = fullContactList.filter((item) => {
+      if (item.name.toLowerCase().match(text)) return item;
+    });
+
+    if (!text || text === "") {
+      setFilteredContacts({
+        noData: false,
+        data: fullContactList,
+      });
+    } else if (!filteredContactsSearched.length) {
+      setFilteredContacts({
+        noData: true,
+        data: [],
+      });
+    } else if (Array.isArray(filteredContactsSearched)) {
+      setFilteredContacts({
+        noData: false,
+        data: filteredContactsSearched,
+      });
     }
   };
 
@@ -442,6 +545,30 @@ export default function SendMoney({ navigation }) {
         </Modal>
 
         {/** End Recipient Information Modal */}
+
+        {/** PHONE NUMBER MODAL */}
+        <Modal transparent visible={modalPhoneBookOpen} animationType="slide">
+          <View style={styles.phoneBookModalContent}>
+            <MaterialIcons name="close" size={24} onPress={() => setModalPhoneBookOpen(false)} style={styles.contactsModalClose} />
+
+            <View style={{ paddingHorizontal: 10 }}>
+              <AppText bold="true" styles={{ fontSize: 16 }}>
+                Select Phone Number
+              </AppText>
+
+              <View style={styles.formGroup}>
+                <TextInput style={{ ...styles.textInput, backgroundColor: "#F8F8F8" }} onChangeText={(text) => searchContact(text)} placeholder="Search Phone Book" />
+              </View>
+
+              {filteredContacts.noData ? (
+                <Text>No data</Text>
+              ) : (
+                <FlatList data={filteredContacts.data} renderItem={({ item }) => _renderItem(item)} keyExtractor={(item, index) => index.toString()} />
+              )}
+            </View>
+          </View>
+        </Modal>
+        {/**END PHONE NUMBER MODAL */}
         <View style={styles.upperBackGround}></View>
 
         <View style={styles.balanceUpBackGround}>
@@ -481,13 +608,25 @@ export default function SendMoney({ navigation }) {
                 <AppText>
                   <Text style={{ fontWeight: "700" }}>Recipient Phone Number/Vetropay UID</Text>
                 </AppText>
-                <TextInput
-                  style={{ ...styles.textInput, borderColor: "#266ddc" }}
-                  placeholder="Enter Phone Number or Vetropay UID"
-                  keyboardType="numeric"
-                  onChangeText={(text) => onValueChange("phoneNumberUID", text)}
-                  value={sendMoneyData.payload.phoneNumberUID}
-                />
+                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                  <TextInput
+                    style={{ ...styles.textInput, borderColor: "#266ddc", width: Dimensions.get("window").width - 85 }}
+                    placeholder="Enter Phone Number or Vetropay UID"
+                    keyboardType="numeric"
+                    onChangeText={(text) => onValueChange("phoneNumberUID", text)}
+                    value={sendMoneyData.payload.phoneNumberUID}
+                  />
+                  <TouchableOpacity
+                    onPress={() => {
+                      setModalPhoneBookOpen(true);
+                    }}
+                    style={styles.openContactsButton}
+                  >
+                    <View style={{ width: 35, height: 35, borderRadius: 17, backgroundColor: "#E6EAFE", justifyContent: "center", alignItems: "center" }}>
+                      <Feather name="user" size={24} color="#266ddc" />
+                    </View>
+                  </TouchableOpacity>
+                </View>
               </View>
 
               <View style={styles.formGroup}>
@@ -656,6 +795,17 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     marginTop: 8,
   },
+  phoneBookModalContent: {
+    flex: 1,
+    backgroundColor: "#f2f2f2",
+  },
+
+  separator: {
+    marginVertical: 8,
+    borderBottomColor: "#737373",
+    borderBottomWidth: StyleSheet.hairlineWidth + 0.4,
+  },
+
   modalContent: {
     flex: 1,
     marginTop: 80,
@@ -665,5 +815,29 @@ const styles = StyleSheet.create({
     marginRight: 20,
     paddingHorizontal: 10,
     backgroundColor: "#F0F0F8",
+  },
+
+  contactsModalClose: {
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: "#f2f2f2",
+    padding: 10,
+    borderRadius: 4,
+    alignSelf: "center",
+    elevation: 4,
+    backgroundColor: "#FFFFFF",
+  },
+
+  openContactsButton: {
+    height: 45,
+    width: 50,
+    paddingHorizontal: 10,
+    marginTop: 10,
+    marginBottom: 10,
+    borderColor: "#266ddc",
+    borderWidth: 1,
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

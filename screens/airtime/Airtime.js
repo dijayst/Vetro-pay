@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { View, StyleSheet, ScrollView, TextInput, Text, Image, TouchableOpacity, Modal, FlatList, Button } from "react-native";
+import { View, StyleSheet, ScrollView, TextInput, Text, Image, TouchableOpacity, Modal, FlatList, Button, Dimensions } from "react-native";
 import AppText from "../../resources/AppText";
 import * as Contacts from "expo-contacts";
 const MTNlogo = require("../../assets/logos/MTN.png");
@@ -9,13 +9,14 @@ const AirtelLogo = require("../../assets/logos/Airtel.png");
 const etisalatLogo = require("../../assets/logos/9mobile.png");
 const spectranetLogo = require("../../assets/logos/spectranet2.png");
 import { AppButton, PrimaryButton } from "../../resources/AppButton";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, Feather } from "@expo/vector-icons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Spinner } from "native-base";
 import { buyUtility } from "../../containers/utility/action";
 import { SuccessfulSvgComponent } from "../../resources/Svg";
 import BottomSheet, { BottomSheetModal, BottomSheetModalProvider, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import DataPlans from "./DataPlans";
+import { getUserTransaction } from "../../containers/transactions/action";
 
 const INTERNET = "internet";
 const AIRTIME = "airtime";
@@ -31,7 +32,7 @@ function Separator() {
   return <View style={styles.separator} />;
 }
 
-export default function Airtime() {
+export default function Airtime({ navigation }) {
   class UserContactListItem extends React.PureComponent {
     render() {
       return (
@@ -41,16 +42,33 @@ export default function Airtime() {
               return (
                 <TouchableOpacity
                   onPress={() => {
-                    setPhoneNumber(numbers.number.replace(/\s/g, ""));
+                    let newValue = numbers.number.replace(/\s/g, "");
+                    if (newValue.includes("+234") || newValue.slice(0, 3) == "234") {
+                      if (newValue.includes("+234")) {
+                        newValue = newValue.replace("+234", "0");
+                      } else {
+                        newValue = `0${newValue.slice(3)}`;
+                      }
+                    }
+                    setPhoneNumber(newValue);
                     setModalPhoneBookOpen(false);
                   }}
                   key={index}
                 >
                   <View>
-                    <Text>
-                      {this.props.contact.firstName} {this.props.contact.lastName}
-                    </Text>
-                    <Text>{numbers.number}</Text>
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                      <View style={{ height: 40, width: 40, borderRadius: 20, backgroundColor: "#266ddc", marginRight: 10, justifyContent: "center", alignItems: "center" }}>
+                        <AppText bold styles={{ fontSize: 18, color: "#FFFFFF" }}>
+                          {isNaN(this.props.contact.firstName[0]) ? `${this.props.contact.firstName[0]}${this.props.contact.lastName?.[0] || ""}` : "#"}
+                        </AppText>
+                      </View>
+                      <View>
+                        <AppText bold>
+                          {this.props.contact.firstName} {this.props.contact.lastName}
+                        </AppText>
+                        <Text style={{ marginTop: 4 }}>{numbers.number}</Text>
+                      </View>
+                    </View>
                     <Separator />
                   </View>
                 </TouchableOpacity>
@@ -346,6 +364,7 @@ export default function Airtime() {
             <View style={{ marginTop: 24, alignItems: "center" }}>
               <PrimaryButton
                 onPress={() => {
+                  dispatch(getUserTransaction(""));
                   closeTransactionModal();
                 }}
               >
@@ -354,13 +373,19 @@ export default function Airtime() {
                 </AppText>
               </PrimaryButton>
 
-              <View style={{ marginTop: 16, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+              <TouchableOpacity
+                onPress={() => {
+                  dispatch(getUserTransaction(""));
+                  navigation.goBack();
+                }}
+                style={{ marginTop: 16, flexDirection: "row", justifyContent: "center", alignItems: "center" }}
+              >
                 <MaterialIcons name="home" size={18} color="#266ddc" />
                 <AppText bold="true" styles={{ fontSize: 18, color: "#266ddc" }}>
                   {" "}
                   Go home
                 </AppText>
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
         );
@@ -405,33 +430,25 @@ export default function Airtime() {
               </TouchableOpacity>
             </View>
 
-            <View style={{ flexDirection: "row", justifyContent: "space-evenly", marginTop: 10 }}>
-              <TouchableOpacity
-                onPress={() => {
-                  setModalPhoneBookOpen(true);
-                }}
-                style={styles.choiceBox}
-              >
-                <AppText styles={styles.choiceBoxText}>
-                  <Text style={{ fontWeight: "700" }}>Open PhoneBook</Text>
-                </AppText>
-              </TouchableOpacity>
-
-              <View style={styles.choiceBox}>
-                <AppText styles={styles.choiceBoxText}>
-                  <Text style={{ fontWeight: "700" }}>Find Beneficiary</Text>
-                </AppText>
-              </View>
-            </View>
-
-            <View style={styles.formGroup}>
+            <View style={{ ...styles.formGroup, flexDirection: "row", justifyContent: "space-between" }}>
               <TextInput
-                style={{ ...styles.textInput, borderColor: "#266ddc" }}
+                style={{ ...styles.textInput, borderColor: "#266ddc", width: Dimensions.get("window").width - 85 }}
                 placeholder="Enter Phone Number"
                 value={phoneNumber}
                 keyboardType="numeric"
                 onChangeText={(text) => setPhoneNumber(text.replace(/\s/g, ""))}
               />
+
+              <TouchableOpacity
+                onPress={() => {
+                  setModalPhoneBookOpen(true);
+                }}
+                style={styles.openContactsButton}
+              >
+                <View style={{ width: 35, height: 35, borderRadius: 17, backgroundColor: "#E6EAFE", justifyContent: "center", alignItems: "center" }}>
+                  <Feather name="user" size={24} color="#266ddc" />
+                </View>
+              </TouchableOpacity>
             </View>
 
             <AppText>
@@ -548,33 +565,25 @@ export default function Airtime() {
               </View>
             )}
 
-            <View style={{ flexDirection: "row", justifyContent: "space-evenly", marginTop: 10 }}>
-              <TouchableOpacity
-                onPress={() => {
-                  setModalPhoneBookOpen(true);
-                }}
-                style={styles.choiceBox}
-              >
-                <AppText styles={styles.choiceBoxText}>
-                  <Text style={{ fontWeight: "700" }}>Open PhoneBook</Text>
-                </AppText>
-              </TouchableOpacity>
-
-              <View style={styles.choiceBox}>
-                <AppText styles={styles.choiceBoxText}>
-                  <Text style={{ fontWeight: "700" }}>Find Beneficiary</Text>
-                </AppText>
-              </View>
-            </View>
-
-            <View style={styles.formGroup}>
+            <View style={{ ...styles.formGroup, flexDirection: "row", justifyContent: "space-between" }}>
               <TextInput
-                style={{ ...styles.textInput, borderColor: "#266ddc" }}
+                style={{ ...styles.textInput, borderColor: "#266ddc", width: Dimensions.get("window").width - 85 }}
                 placeholder="Enter Phone Number"
                 value={phoneNumber}
                 keyboardType="numeric"
                 onChangeText={(text) => setPhoneNumber(text.replace(/\s/g, ""))}
               />
+
+              <TouchableOpacity
+                onPress={() => {
+                  setModalPhoneBookOpen(true);
+                }}
+                style={styles.openContactsButton}
+              >
+                <View style={{ width: 35, height: 35, borderRadius: 17, backgroundColor: "#E6EAFE", justifyContent: "center", alignItems: "center" }}>
+                  <Feather name="user" size={24} color="#266ddc" />
+                </View>
+              </TouchableOpacity>
             </View>
 
             <AppText bold styles={{ marginTop: 10 }}>
@@ -619,7 +628,7 @@ export default function Airtime() {
               </AppText>
 
               <View style={styles.formGroup}>
-                <TextInput style={{ ...styles.textInput }} onChangeText={(text) => searchContact(text)} placeholder="Search Phone Book" />
+                <TextInput style={{ ...styles.textInput, backgroundColor: "#F8F8F8" }} onChangeText={(text) => searchContact(text)} placeholder="Search Phone Book" />
               </View>
 
               {filteredContacts.noData ? (
@@ -777,5 +786,17 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     elevation: 4,
     backgroundColor: "#FFFFFF",
+  },
+  openContactsButton: {
+    height: 45,
+    width: 50,
+    paddingHorizontal: 10,
+    marginTop: 10,
+    marginBottom: 10,
+    borderColor: "#266ddc",
+    borderWidth: 1,
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
