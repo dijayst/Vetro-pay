@@ -18,3 +18,16 @@ export const getBusinessNotifications = () => (dispatch, getState) => {
       dispatch(returnErrors(err.response.data, err.response.status));
     });
 };
+
+// GET NOTIFICATIONS SENT FROM BUSINESSES
+export const setRecentNotificationsAsRead = () => (dispatch, getState) => {
+  axios
+    .post(`${BASE_URL}/api/notifications-all`, {}, tokenConfig(getState))
+    .then((res) => {
+      //
+    })
+    .catch((err) => {
+      console.log(err.response.data);
+      dispatch(returnErrors(err.response.data, err.response.status));
+    });
+};
