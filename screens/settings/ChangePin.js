@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 
-import { Dimensions, View, Text, StyleSheet, Picker, TextInput } from "react-native";
+import { Dimensions, View, Text, StyleSheet, Picker, TextInput, TouchableOpacity } from "react-native";
 import AppText from "../../resources/AppText";
 import { PrimaryButton } from "../../resources/AppButton";
 import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
@@ -10,9 +10,13 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 
 import { changeTransactionPin } from "../../containers/authchange/action";
 import { toastColorObject } from "../../resources/rStyledComponent";
+import { pushActivityVerificationToken } from "../../containers/authentication/action";
 
 export default function ChangePin({ navigation }) {
   const [displaySpinner, setDisplaySpinner] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [otpReceivingDevice, setOtpReceivingDevice] = useState("");
+  const [forgotPin, setForgotPin] = useState(false);
   const [updateDetailsPayload, setUpdateDetailsPayload] = useState({
     payload: {
       currentPin: "",
@@ -33,23 +37,28 @@ export default function ChangePin({ navigation }) {
     return ref.current;
   };
 
+  const userAuthentication = useSelector((state) => state.authentication.user);
   const updateDetailsResponse = useSelector((state) => state.authchange.changepin);
   const prevUpdateDetailsResponse = usePrevious(updateDetailsResponse);
 
   const submitPayload = () => {
     if (
-      updateDetailsPayload.payload.currentPin.length < 6 ||
+      (updateDetailsPayload.payload.currentPin.length < 6 && otp.length < 4) ||
       updateDetailsPayload.payload.newPin.length < 6 ||
       updateDetailsPayload.payload.newPin.length > 6 ||
       Number(updateDetailsPayload.payload.currentPin) == NaN ||
       updateDetailsPayload.payload.newPin !== updateDetailsPayload.payload.confirmNewPin ||
       updateDetailsPayload.payload.currentPassword.length < 8
     ) {
-      if (updateDetailsPayload.payload.currentPin.length < 6) {
+      if (updateDetailsPayload.payload.currentPin.length < 6 && otp.length < 4) {
         toast.show({
           render: () => (
             <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>Transaction pin incorrect, your account maybe suspended after 3 more invalid tries</NativeBaseText>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>
+                {forgotPin
+                  ? "Invalid OTP your account maybe suspended after 3 more invalid tries"
+                  : "Transaction pin incorrect, your account maybe suspended after 3 more invalid tries"}
+              </NativeBaseText>
             </Box>
           ),
         });
@@ -85,11 +94,33 @@ export default function ChangePin({ navigation }) {
           updateDetailsPayload.payload.currentPin,
           updateDetailsPayload.payload.newPin,
           updateDetailsPayload.payload.confirmNewPin,
-          updateDetailsPayload.payload.currentPassword
+          updateDetailsPayload.payload.currentPassword,
+          otp,
+          otpReceivingDevice
         )
       );
     }
   };
+
+  const sendPinResetOTP = () => {
+    dispatch(pushActivityVerificationToken());
+    setForgotPin(true);
+    toast.show({
+      render: () => (
+        <Box bg={toastColorObject["success"]} px="2" py="2" rounded="sm" mb={5}>
+          <NativeBaseText style={{ color: "#FFFFFF" }}>OTP sent to your registered device</NativeBaseText>
+        </Box>
+      ),
+    });
+  };
+
+  useEffect(() => {
+    if (userAuthentication.email == "") {
+      setOtpReceivingDevice(userAuthentication.phone_number);
+    } else {
+      setOtpReceivingDevice(userAuthentication.email);
+    }
+  }, [userAuthentication]);
 
   useEffect(() => {
     if (prevUpdateDetailsResponse) {
@@ -105,6 +136,8 @@ export default function ChangePin({ navigation }) {
               currentPassword: "",
             },
           }));
+          setForgotPin(false);
+          setOtp("");
           toast.show({
             render: () => (
               <Box bg={toastColorObject["success"]} px="2" py="2" rounded="sm" mb={5}>
@@ -138,27 +171,53 @@ export default function ChangePin({ navigation }) {
 
           <View style={styles.recordForm}>
             <View style={{ marginTop: 8, paddingLeft: 4, paddingRight: 4 }}>
-              <View style={styles.formGroup}>
-                <AppText>
-                  <Text style={{ fontWeight: "700" }}>Current Pin</Text>
-                </AppText>
-                <TextInput
-                  style={{ ...styles.textInput, borderColor: "#266ddc" }}
-                  placeholder="Enter current transaction pin"
-                  textContentType="password"
-                  secureTextEntry
-                  onChangeText={(text) => {
-                    setUpdateDetailsPayload((prevState) => ({
-                      ...prevState,
-                      payload: {
-                        ...prevState.payload,
-                        currentPin: text,
-                      },
-                    }));
-                  }}
-                  value={updateDetailsPayload.payload.currentPin}
-                />
-              </View>
+              {forgotPin ? (
+                <View style={styles.formGroup}>
+                  <AppText bold styles={{ color: "#198754" }}>
+                    <Text style={{ fontWeight: "900" }}>
+                      OTP sent to <Text style={{ fontWeight: "bold" }}>{otpReceivingDevice}</Text>
+                    </Text>
+                  </AppText>
+                  <TextInput
+                    style={{ ...styles.textInput, borderColor: "#266ddc" }}
+                    placeholder="Enter OTP sent to your device"
+                    textContentType="none"
+                    onChangeText={(text) => {
+                      setOtp(text);
+                    }}
+                    value={otp}
+                  />
+                </View>
+              ) : (
+                <View style={styles.formGroup}>
+                  <AppText>
+                    <Text style={{ fontWeight: "700" }}>Current Pin</Text>
+                  </AppText>
+                  <TextInput
+                    style={{ ...styles.textInput, borderColor: "#266ddc" }}
+                    placeholder="Enter current transaction pin"
+                    textContentType="password"
+                    keyboardType="number-pad"
+                    secureTextEntry
+                    onChangeText={(text) => {
+                      setUpdateDetailsPayload((prevState) => ({
+                        ...prevState,
+                        payload: {
+                          ...prevState.payload,
+                          currentPin: text,
+                        },
+                      }));
+                    }}
+                    value={updateDetailsPayload.payload.currentPin}
+                  />
+
+                  <TouchableOpacity onPress={() => sendPinResetOTP()}>
+                    <AppText bold styles={{ alignSelf: "flex-end", color: "#266ddc", marginRight: 10 }}>
+                      Can't remember your Pin?
+                    </AppText>
+                  </TouchableOpacity>
+                </View>
+              )}
 
               <View style={styles.formGroup}>
                 <AppText>
@@ -168,6 +227,7 @@ export default function ChangePin({ navigation }) {
                   style={{ ...styles.textInput, borderColor: "#266ddc" }}
                   placeholder="Enter new transaction pin"
                   textContentType="password"
+                  keyboardType="number-pad"
                   secureTextEntry
                   onChangeText={(text) => {
                     setUpdateDetailsPayload((prevState) => ({
@@ -190,6 +250,7 @@ export default function ChangePin({ navigation }) {
                   style={{ ...styles.textInput, borderColor: "#266ddc" }}
                   placeholder="Confirm new transaction pin"
                   textContentType="password"
+                  keyboardType="number-pad"
                   secureTextEntry
                   onChangeText={(text) => {
                     setUpdateDetailsPayload((prevState) => ({

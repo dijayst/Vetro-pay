@@ -28,7 +28,7 @@ export const changePassword = (currentPassword, newPassword, confirmPassword) =>
 };
 
 // CHANGE PIN
-export const changeTransactionPin = (currentPin, newPin, confirmPin, currentPassword) => (dispatch, getState) => {
+export const changeTransactionPin = (currentPin, newPin, confirmPin, currentPassword, otp, otpDevice) => (dispatch, getState) => {
   axios
     .post(
       `${BASE_URL}/api/auth/changepin`,
@@ -37,6 +37,8 @@ export const changeTransactionPin = (currentPin, newPin, confirmPin, currentPass
         new_pin: newPin,
         confirm_pin: confirmPin,
         current_password: currentPassword,
+        auth_type: otpDevice.includes("@") ? "email" : "sms",
+        auth_code: otp,
       },
       tokenConfig(getState)
     )

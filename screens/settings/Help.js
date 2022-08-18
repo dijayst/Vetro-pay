@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, StyleSheet, TouchableNativeFeedback } from "react-native";
+import { Text, View, StyleSheet, TouchableNativeFeedback, TouchableOpacity } from "react-native";
 import AppText from "../../resources/AppText";
 import { HelpSvgComponent, PrivacyPoilicySvgComponent } from "../../resources/Svg";
 import * as Linking from "expo-linking";
@@ -54,9 +54,11 @@ export default function Help() {
         <AppText styles={{ textAlign: "center", textTransform: "uppercase", marginTop: 5 }}>
           Email: <Text style={{ fontWeight: "700", textTransform: "lowercase" }}>customercare@vetropay.com</Text>
         </AppText>
-        <AppText styles={{ textAlign: "center", textTransform: "uppercase", marginTop: 5 }}>
-          Customer care line: <Text style={{ fontWeight: "700" }}> +2348162357100</Text>
-        </AppText>
+        <TouchableOpacity style={{ marginTop: 5 }} onPress={() => Linking.openURL("tel:+2348162357100")}>
+          <AppText styles={{ textAlign: "center", textTransform: "uppercase" }}>
+            Customer care line: <Text style={{ fontWeight: "700", color: "#266ddc" }}> +2348162357100</Text>
+          </AppText>
+        </TouchableOpacity>
       </View>
     </View>
   );

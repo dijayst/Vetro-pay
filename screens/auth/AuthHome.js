@@ -1,17 +1,22 @@
 import React from "react";
-import { StyleSheet, Text, View, ImageBackground } from "react-native";
+import { StyleSheet, Text, View, ImageBackground, TouchableWithoutFeedbackBase, Pressable } from "react-native";
 import AppText from "../../resources/AppText";
 import { AppButton } from "../../resources/AppButton";
 import * as Facebook from "expo-facebook";
-const BackgroundImage = require("../../assets/authHome.png");
+import { useAssets } from "expo-asset";
+import AppLoading from "expo-app-loading";
+//const BackgroundImage = require("../../assets/authHome.png");
 
 export default function AuthHome({ navigation }) {
   Facebook.initializeAsync({ appId: "713268446200988", appName: "VetroPay Mobile", autoLogAppEvents: true });
-  return (
-    <ImageBackground source={BackgroundImage} style={{ flex: 1 }} imageStyle={{ resizeMode: "cover" }}>
-      <View style={styles.container}>
-        <View style={styles.overlay}>
-          <View style={{ flex: 1 }}>
+  const [BackgroundImage, error] = useAssets(require("../../assets/authHome.png"));
+
+  if (BackgroundImage) {
+    return (
+      <Pressable onPress={() => navigation.navigate("Login")} style={{ flex: 1 }}>
+        <ImageBackground source={BackgroundImage} style={{ flex: 1 }} imageStyle={{ resizeMode: "cover" }}>
+          <View style={styles.overlay}>
+            {/* <View style={{ flex: 1 }}>
             <AppText bold="true" styles={styles.title}>
               {"<<<"} VetroPay {">>>"}
             </AppText>
@@ -25,11 +30,14 @@ export default function AuthHome({ navigation }) {
                 <Text style={styles.buttonText}>Continue</Text>
               </AppButton>
             </View>
+          </View> */}
           </View>
-        </View>
-      </View>
-    </ImageBackground>
-  );
+        </ImageBackground>
+      </Pressable>
+    );
+  } else {
+    return <AppLoading />;
+  }
 }
 
 const styles = StyleSheet.create({
@@ -41,7 +49,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.4)",
+    //backgroundColor: "rgba(0,0,0,0.3)",
   },
   title: {
     color: "white",

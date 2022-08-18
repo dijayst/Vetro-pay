@@ -31,6 +31,7 @@ export default function Withdraw({ navigation }) {
   };
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [accountBalance, setAccountBalance] = useState(0);
   const [userBankInfo, setUserBankInfo] = useState({ status: "unknown" });
   const [userBankError, setUserBankError] = useState(true);
   const [displaySpinner, setDisplaySpinner] = useState(false);
@@ -41,6 +42,7 @@ export default function Withdraw({ navigation }) {
     },
   });
 
+  const userTransactions = useSelector((state) => state.transactions.usertransactions);
   const userBank = useSelector((state) => state.banks.banks);
   const prevUserBank = usePrevious(userBank);
   const userAuthentication = useSelector((state) => state.authentication.user);
@@ -71,6 +73,10 @@ export default function Withdraw({ navigation }) {
       dispatch(getBank());
     });
   }, [navigation]);
+
+  useEffect(() => {
+    setAccountBalance(userTransactions[userTransactions.length - 1]["data"].wallet_info.current_balance);
+  }, [userTransactions]);
 
   useEffect(() => {
     if (prevUserBank) {
@@ -219,7 +225,7 @@ export default function Withdraw({ navigation }) {
                 </AppText>
                 <TextInput
                   style={{ ...styles.textInput, borderColor: "#266ddc", backgroundColor: "#F0F0F8" }}
-                  defaultValue={`${currency} ${withdrawalData.payload.transactionCharge}`}
+                  defaultValue={`${currency} ${accountBalance > 0 ? "50" : withdrawalData.payload.transactionCharge}`}
                   editable={false}
                 />
               </View>

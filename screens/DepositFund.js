@@ -175,7 +175,7 @@ export default function DepositFund({ navigation }) {
               </AppText>
               <TouchableOpacity onPress={() => copyToClipBoard()}>
                 <View>
-                  <MaterialCommunityIcons name="content-copy" style={{ marginLeft: 5 }} size={30} color="#266ddc" />
+                  <MaterialCommunityIcons name={userAuthentication.nuban[0] == "*" ? "eye-off-outline" : "content-copy"} style={{ marginLeft: 5 }} size={30} color="#266ddc" />
                 </View>
               </TouchableOpacity>
             </View>
