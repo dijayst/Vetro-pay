@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
-import { Dimensions, View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity } from "react-native";
-import { Picker } from "@react-native-picker/picker";
+import { Dimensions, View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity, Platform } from "react-native";
 import { Modal, Switch } from "react-native";
 import * as Contacts from "expo-contacts";
 import AppText from "../../resources/AppText";
@@ -15,7 +14,8 @@ import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
 import { postSendMoneyPreVerify, postSendMoney } from "../../containers/transactions/action";
 import { shortenNames } from "../../resources/MetaFunctions";
 import { toastColorObject } from "../../resources/rStyledComponent";
-
+import { Picker as RNPicker } from "@react-native-picker/picker";
+import { Select } from "native-base";
 //import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 function Separator() {
@@ -23,6 +23,7 @@ function Separator() {
 }
 
 export default function SendMoney({ navigation }) {
+  const Picker = Platform.OS == "android" ? RNPicker : Select
   class UserContactListItem extends React.PureComponent {
     render() {
       return (
@@ -594,9 +595,11 @@ export default function SendMoney({ navigation }) {
                   }}
                 >
                   <Picker
-                    style={{ height: 40 }}
+                    style={{ height: 45 }}
                     onValueChange={(itemValue, itemIndex) => changeRecipientCountry(itemValue, itemIndex)}
                     selectedValue={sendMoneyData.payload.country}
+                    itemStyle={{height:45}}
+                    borderColor={"transparent"}
                   >
                     <Picker.Item label="🇳🇬  Nigeria" value="NIGERIA" />
                     <Picker.Item label="🇰🇪  Kenya" value="KENYA" />
@@ -683,7 +686,7 @@ export default function SendMoney({ navigation }) {
                     }}
                   >
                     <Picker
-                      style={{ height: 40 }}
+                      style={{ height: 45 }}
                       onValueChange={(itemValue, itemIndex) => {
                         setSendMoneyData((prevState) => ({
                           ...prevState,
@@ -694,6 +697,7 @@ export default function SendMoney({ navigation }) {
                         }));
                       }}
                       selectedValue={sendMoneyData.payload.paymentCategory}
+                      borderColor={"transparent"}
                     >
                       <Picker.Item label="--- Select Category ---" value="" />
                       <Picker.Item label="Gift/Shopping" value="GIFT/SHOPPING" />

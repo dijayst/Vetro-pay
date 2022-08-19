@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { View, StyleSheet, TextInput, Text, Alert, Image, TouchableOpacity } from "react-native";
-import { Picker } from "@react-native-picker/picker";
+import { View, StyleSheet, TextInput, Text, Alert, Image, TouchableOpacity, Platform } from "react-native";
 import AppText from "../../resources/AppText";
 import { AppButton } from "../../resources/AppButton";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import * as SecureStore from "expo-secure-store";
-import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
+import { Spinner, useToast, Box, Text as NativeBaseText} from "native-base";
 import { useNetInfo } from "@react-native-community/netinfo";
 import OfflineNotice from "../../resources/OfflineNotice";
 import * as LocalAuthentication from "expo-local-authentication";
 import { login } from "../../containers/authentication/action";
 import * as Linking from "expo-linking";
 import { toastColorObject } from "../../resources/rStyledComponent";
+import { Picker as RNPicker } from "@react-native-picker/picker";
+import { Select } from "native-base";
+
 
 export default function Login({ navigation }) {
   const toast = useToast();
+  const Picker = Platform.OS == "android" ? RNPicker : Select
   const [storedFirstName, setStoredFirstName] = useState("");
   const [storedPhoneNumberData, setStoredPhoneNumberData] = useState("");
   const [storedPassData, setStoredPassData] = useState("");
@@ -32,9 +35,16 @@ export default function Login({ navigation }) {
   });
   const [displaySpinner, setDisplaySpinner] = useState(false);
 
-  SecureStore.getItemAsync("firstName", SecureStore.WHEN_UNLOCKED).then((data) => setStoredFirstName(data));
-  SecureStore.getItemAsync("phoneNumber", SecureStore.WHEN_UNLOCKED).then((data) => setStoredPhoneNumberData(data));
-  SecureStore.getItemAsync("pass", SecureStore.WHEN_UNLOCKED).then((data) => setStoredPassData(data));
+  if(Platform.OS == "android"){
+    SecureStore.getItemAsync("firstName", SecureStore.WHEN_UNLOCKED).then((data) => setStoredFirstName(data));
+    SecureStore.getItemAsync("phoneNumber", SecureStore.WHEN_UNLOCKED).then((data) => setStoredPhoneNumberData(data));
+    SecureStore.getItemAsync("pass", SecureStore.WHEN_UNLOCKED).then((data) => setStoredPassData(data));
+  }else{
+    SecureStore.getItemAsync("firstName").then((data) => setStoredFirstName(data));
+    SecureStore.getItemAsync("phoneNumber").then((data) => setStoredPhoneNumberData(data));
+    SecureStore.getItemAsync("pass").then((data) => setStoredPassData(data));
+
+  }
 
   const netInfo = useNetInfo();
   const dispatch = useDispatch();
@@ -88,7 +98,11 @@ export default function Login({ navigation }) {
         });
       }
     } else {
-      SecureStore.setItemAsync("pass", loginData.payload.password, SecureStore.WHEN_UNLOCKED);
+      if(Platform.OS == "android"){
+        SecureStore.setItemAsync("pass", loginData.payload.password, SecureStore.WHEN_UNLOCKED);
+      }else{
+        SecureStore.setItemAsync("pass", loginData.payload.password);
+      }
       setDisplaySpinner(true);
       dispatch(login(getMobileNumberCountryCode(loginData.payload.country, loginData.payload.phoneNumber), loginData.payload.password));
     }
@@ -104,7 +118,11 @@ export default function Login({ navigation }) {
         ),
       });
     } else {
-      SecureStore.setItemAsync("pass", loginData.payload.password, SecureStore.WHEN_UNLOCKED);
+      if(Platform.OS == "android"){
+        SecureStore.setItemAsync("pass", loginData.payload.password, SecureStore.WHEN_UNLOCKED);
+      }else{
+        SecureStore.setItemAsync("pass", loginData.payload.password);
+      }
       setDisplaySpinner(true);
       dispatch(login(storedPhoneNumberData, loginData.payload.password));
     }
@@ -158,9 +176,15 @@ export default function Login({ navigation }) {
   };
 
   const clearUserDeviceDetails = () => {
-    SecureStore.deleteItemAsync("firstName", SecureStore.WHEN_UNLOCKED).then((data) => setStoredFirstName(null));
-    SecureStore.deleteItemAsync("phoneNumber", SecureStore.WHEN_UNLOCKED).then((data) => setStoredPhoneNumberData(null));
-    SecureStore.deleteItemAsync("pass", SecureStore.WHEN_UNLOCKED).then((data) => setStoredPassData(null));
+    if(Platform.OS == "android"){
+      SecureStore.deleteItemAsync("firstName", SecureStore.WHEN_UNLOCKED).then((data) => setStoredFirstName(null));
+      SecureStore.deleteItemAsync("phoneNumber", SecureStore.WHEN_UNLOCKED).then((data) => setStoredPhoneNumberData(null));
+      SecureStore.deleteItemAsync("pass", SecureStore.WHEN_UNLOCKED).then((data) => setStoredPassData(null));
+    }else{
+      SecureStore.deleteItemAsync("firstName").then((data) => setStoredFirstName(null));
+      SecureStore.deleteItemAsync("phoneNumber").then((data) => setStoredPhoneNumberData(null));
+      SecureStore.deleteItemAsync("pass").then((data) => setStoredPassData(null));
+    }
   };
 
   const serveWithSavedData = () => {
@@ -237,10 +261,11 @@ export default function Login({ navigation }) {
               borderWidth: 0.5,
               borderColor: "#266ddc",
               borderRadius: 15,
+              overflow: "hidden"
             }}
           >
             <Picker
-              style={{ height: 45 }}
+              style={{ height: 45, }}
               onValueChange={(itemValue, itemIndex) => {
                 setLoginData((prevState) => ({
                   ...prevState,
@@ -250,6 +275,8 @@ export default function Login({ navigation }) {
                   },
                 }));
               }}
+              accessibilityLabel="Choose Country"
+              borderColor={"transparent"}
               selectedValue={loginData.payload.country}
             >
               <Picker.Item label="🇳🇬  Nigeria" value="NIGERIA" />

@@ -27,7 +27,11 @@ const Stack = createStackNavigator();
 
 export default function HomeStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerBackTitleVisible: false
+      }}
+    >
       <Stack.Screen
         name="HomeHome"
         options={{

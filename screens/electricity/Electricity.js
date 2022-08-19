@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { View, StyleSheet, TouchableOpacity, Image, ScrollView, Modal, Button, TextInput } from "react-native";
-import { Picker } from "@react-native-picker/picker";
+import { View, StyleSheet, TouchableOpacity, Image, ScrollView, Button, TextInput, Dimensions } from "react-native";
+import { Picker as RNPicker } from "@react-native-picker/picker";
+import { Select } from "native-base";
 import AppText from "../../resources/AppText";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Spinner } from "native-base";
@@ -9,6 +10,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { PrimaryButton } from "../../resources/AppButton";
 import { validateElectricityData, buyUtility } from "../../containers/utility/action";
 import { SuccessfulSvgComponent } from "../../resources/Svg";
+import { Modal as AndroidModal } from "react-native";
+import { Modal as IOSmodal } from 'native-base';
 
 const Ekologo = require("../../assets/logos/eko.jpg");
 const IBEDClogo = require("../../assets/logos/ibedc.png");
@@ -33,6 +36,9 @@ const discosPlatformName = {
 };
 
 export default function Electricity() {
+  const Modal = Platform.OS == "android" ?  AndroidModal : IOSmodal
+  const Picker = Platform.OS == "android" ? RNPicker : Select
+
   const [modalOpen, setModalOpen] = useState(false);
   const [provider, setProvider] = useState("");
   const [product, setProduct] = useState("");
@@ -190,7 +196,7 @@ export default function Electricity() {
                 }}
               >
                 <Picker
-                  style={{ height: 40 }}
+                  style={{ height: 45 }}
                   onValueChange={(itemValue, itemIndex) => {
                     setProduct(itemValue);
                   }}
@@ -410,9 +416,9 @@ export default function Electricity() {
 
   return (
     <View style={styles.container}>
-      <Modal transparent visible={modalOpen} animationType="slide">
+      <Modal transparent visible={modalOpen} isOpen={modalOpen} animationType="slide" animationPreset="slide">
         <KeyboardAwareScrollView enableAutomaticScroll extraScrollHeight={10} enableOnAndroid={true} extraHeight={Platform.select({ android: 150 })} style={{ flexGrow: 1 }}>
-          <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.6)", height: 1000 }}>{renderModal()}</View>
+          <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.6)", height: 1000, width: Dimensions.get("window").width }}>{renderModal()}</View>
         </KeyboardAwareScrollView>
       </Modal>
       <View style={styles.innerContainer}>

@@ -12,6 +12,7 @@ import { updateNotificationToken } from "../containers/regvalidate/action";
 import NairaLog from "../assets/naira.png";
 import { Asset, useAssets } from "expo-asset";
 import { numberWithCommas } from "../resources/utils";
+import { SafeAreaView } from "../resources/rStyledComponent";
 // import SavingsHomeImage from "../assets/savingsHome2.png";
 // import SavingsImage2 from "../assets/Savings-bro.png";
 // import SavingsImage3 from "../assets/Savings-cuate.png";
@@ -303,6 +304,7 @@ export default function Home({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={{ backgroundColor: "#266ddc", borderBottomLeftRadius: 15, borderBottomRightRadius: 15, paddingBottom: 30 }}>
+        <SafeAreaView/>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <View>
             <AppText bold="true" styles={{ fontSize: 14, color: "#f2f2f2", marginTop: StatusBar.currentHeight + 10, marginHorizontal: 15 }}>
