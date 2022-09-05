@@ -1,6 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Home from "../screens/Home";
+import HomeII from "../screens/HomeII";
 import Subscriptions from "../screens/subscription/Subscriptions";
 import Airtime from "../screens/airtime/Airtime";
 import Tv from "../screens/tv/Tv";
@@ -33,7 +34,7 @@ export default function HomeStack() {
         options={{
           headerShown: false,
         }}
-        component={Home}
+        component={HomeII}
       />
       <Stack.Screen
         name="Subscriptions"
