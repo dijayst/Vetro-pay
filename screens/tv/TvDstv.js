@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { View, StyleSheet, Button, TextInput } from "react-native";
-import { Picker } from "@react-native-picker/picker";
+import { Picker as RNPicker } from "@react-native-picker/picker";
+import { Select } from "native-base";
 import AppText from "../../resources/AppText";
 import { PrimaryButton } from "../../resources/AppButton";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -11,6 +12,7 @@ import { buyUtility } from "../../containers/utility/action";
 import { SuccessfulSvgComponent } from "../../resources/Svg";
 
 export default function TvDstv() {
+  const Picker = Platform.OS == "android" ? RNPicker : Select
   const provider = "Multichoice";
   const product = "DSTV";
   const [productCode, setProductCode] = useState("");

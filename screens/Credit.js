@@ -7,6 +7,7 @@ import { AnimatedCircularProgress } from "react-native-circular-progress";
 import { Circle } from "react-native-svg";
 import { Entypo } from "@expo/vector-icons";
 import WalletImage from "../assets/wallet.png";
+import { SafeAreaView } from "../resources/rStyledComponent";
 
 export default function ReceiveFund() {
   const userAuthentication = useSelector((state) => state.authentication.user);
@@ -15,6 +16,7 @@ export default function ReceiveFund() {
   return (
     <View style={styles.container}>
       <Modal animationType="slide" transparent={false} visible={modalVisible}>
+        <SafeAreaView/>
         <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
           <AppText bold>CREDIT SCORE</AppText>
 

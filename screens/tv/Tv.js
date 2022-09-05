@@ -1,17 +1,20 @@
 import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity, Image, Modal } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Image, Dimensions } from "react-native";
 import AppText from "../../resources/AppText";
-
+import { SafeAreaView } from "../../resources/rStyledComponent";
 const DSTVlogo = require("../../assets/logos/dstv.png");
 const GOTVLogo = require("../../assets/logos/gotv.jpg");
 const StartimesLogo = require("../../assets/logos/startimes.png");
 import { MaterialIcons } from "@expo/vector-icons";
+import { Modal as AndroidModal } from "react-native";
+import { Modal as IOSmodal } from 'native-base';
 
 import TvDstv from "./TvDstv";
 import TvGotv from "./TvGotv";
 import TvStartimes from "./TvStartimes";
 
 export default function Tv() {
+  const Modal = Platform.OS == "android" ?  AndroidModal : IOSmodal
   const [modalOpen, setModalOpen] = useState(false);
   const [tvProvider, setTvProvider] = useState("");
 
@@ -32,8 +35,9 @@ export default function Tv() {
 
   return (
     <View style={styles.container}>
-      <Modal transparent visible={modalOpen} animationType="slide">
-        <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.6)", height: 1000 }}>
+      <Modal transparent visible={modalOpen} isOpen={modalOpen} animationType="slide" animationPreset="slide">
+        <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.6)", height: 1000, width: Dimensions.get("window").width }}>
+          <SafeAreaView/>
           <MaterialIcons name="close" size={24} onPress={() => setModalOpen(false)} style={styles.modalClose} />
 
           {renderModalContent()}

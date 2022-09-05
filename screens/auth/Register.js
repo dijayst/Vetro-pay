@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Dimensions, Modal, View, Text, StyleSheet, Image, TextInput, ScrollView } from "react-native";
-import { Picker } from "@react-native-picker/picker";
 import AppText from "../../resources/AppText";
 import { AppButton, PrimaryButton } from "../../resources/AppButton";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
@@ -9,11 +8,14 @@ import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
 import { postPreReg, postRegAuth, registerUser } from "../../containers/regvalidate/action";
 import { toastColorObject } from "../../resources/rStyledComponent";
+import { Picker as RNPicker } from "@react-native-picker/picker";
+import { Select } from "native-base";
 
 const DoneIcon = require("../../assets/done.png");
 
 export default function Register({ navigation }) {
   const toast = useToast();
+  const Picker = Platform.OS == "android" ? RNPicker : Select
   const [stage, setStage] = useState(1);
   const [registerData, setRegisterData] = useState({
     payload: {
@@ -342,6 +344,7 @@ export default function Register({ navigation }) {
                       }));
                     }}
                     selectedValue={registerData.payload.country}
+                    borderColor={"transparent"}
                   >
                     <Picker.Item label="🇳🇬  Nigeria" value="NIGERIA" />
                     <Picker.Item label="🇰🇪  Kenya" value="KENYA" />
@@ -477,6 +480,7 @@ export default function Register({ navigation }) {
                       }));
                     }}
                     selectedValue={registerData.payload.securityQuestion}
+                    borderColor={"transparent"}
                   >
                     <Picker.Item label="--- Select Security Question ---" value="" />
                     <Picker.Item label="Your oldest sibling's middle name?" value="1" />

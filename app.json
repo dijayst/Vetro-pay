@@ -8,7 +8,7 @@
       "android",
       "web"
     ],
-    "version": "1.0.4.8",
+    "version": "1.0.6",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -31,7 +31,7 @@
         "NSContactsUsageDescription": "This app uses contact list to make purchase airtime faster"
       },
       "bundleIdentifier": "com.anclatechs.vetropaymobile",
-      "buildNumber": "1.0.4.7"
+      "buildNumber": "1.0.6"
     },
     "android": {
       "googleServicesFile": "./google-services.json",

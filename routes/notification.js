@@ -7,7 +7,11 @@ const Stack = createStackNavigator();
 
 export default function NotificationStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerBackTitleVisible: false
+      }}
+    >
       <Stack.Screen
         name="NotificationsHome"
         options={{

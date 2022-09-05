@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Platform } from "react-native";
 import Navigator from "./routes/main";
 import AuthNavigator from "./routes/auth";
 import AppLoading from "expo-app-loading";
@@ -31,7 +31,11 @@ export default function AppRoot() {
     }).then(() => setFontsLoaded(true));
 
     //Get user details is on mobile device
-    SecureStore.getItemAsync("firstName", SecureStore.WHEN_UNLOCKED).then((data) => setStoredFirstName(data));
+    if(Platform.OS == "android"){
+      SecureStore.getItemAsync("firstName", SecureStore.WHEN_UNLOCKED).then((data) => setStoredFirstName(data));
+    }else{
+      SecureStore.getItemAsync("firstName").then((data) => setStoredFirstName(data));
+    }
     dispatch(loadUser());
   }, []);
 
@@ -39,8 +43,13 @@ export default function AppRoot() {
     if (auth.isAuthenticated && auth.token !== null) {
       if (storedFirstName == null) {
         // Store User detail if not available
-        SecureStore.setItemAsync("firstName", auth.user.fullname.split(" ")[0], SecureStore.WHEN_UNLOCKED);
-        SecureStore.setItemAsync("phoneNumber", auth.user.phone_number, SecureStore.WHEN_UNLOCKED);
+        if(Platform.OS == "android"){
+          SecureStore.setItemAsync("firstName", auth.user.fullname.split(" ")[0], SecureStore.WHEN_UNLOCKED);
+          SecureStore.setItemAsync("phoneNumber", auth.user.phone_number, SecureStore.WHEN_UNLOCKED);
+        }else{
+          SecureStore.setItemAsync("firstName", auth.user.fullname.split(" ")[0]);
+          SecureStore.setItemAsync("phoneNumber", auth.user.phone_number);
+        }
       }
     }
 
