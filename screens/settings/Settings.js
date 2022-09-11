@@ -3,6 +3,8 @@ import { Text, View, StyleSheet, TouchableNativeFeedback, Share, Alert } from "r
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import AppText from "../../resources/AppText";
 import { AccountProfileSvgComponent, HelpSvgComponent, InviteFriendSvgComponent } from "../../resources/Svg";
+import { logout } from "../../containers/authentication/action";
+import { useDispatch } from "react-redux";
 
 const onShare = async () => {
   try {
@@ -21,6 +23,29 @@ function Separator() {
 
 export default function Settings({ navigation }) {
   const refRBSheet = useRef();
+  const dispatch = useDispatch();
+
+  const alertLogout = () => {
+    Alert.alert(
+      "Log out",
+      "Do you want to logout?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => {
+            return null;
+          },
+        },
+        {
+          text: "Confirm",
+          onPress: () => {
+            dispatch(logout());
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
   return (
     <View style={styles.container}>
       <View style={styles.listContainer}>
@@ -115,6 +140,28 @@ export default function Settings({ navigation }) {
           </View>
         </TouchableNativeFeedback>
         {/** End Invite a friend */}
+
+        <Separator />
+
+        {/** Sign Out */}
+        <TouchableNativeFeedback onPress={() => alertLogout()}>
+          <View style={styles.listItem}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+              <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
+                <View style={{ backgroundColor: "#DC3545", height: 26, width: 26, borderRadius: 13, justifyContent: "center", alignItems: "center" }}>
+                  <FontAwesome name="power-off" size={13} color="#FFFFFF" />
+                </View>
+                <View style={{ flexDirection: "column" }}>
+                  <AppText bold="true" styles={{ paddingLeft: 10, fontSize: 15 }}>
+                    Sign Out
+                  </AppText>
+                  {/* <AppText styles={{ fontSize: 12, marginLeft: 10 }}>See you soon</AppText> */}
+                </View>
+              </View>
+            </View>
+          </View>
+        </TouchableNativeFeedback>
+        {/** End Sign Out */}
       </View>
       <View style={{ marginTop: 80 }}>
         <AppText styles={{ textAlign: "center" }}>Láti ọwọ</AppText>

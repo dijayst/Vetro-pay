@@ -16,7 +16,7 @@ export default function ReceiveFund() {
   return (
     <View style={styles.container}>
       <Modal animationType="slide" transparent={false} visible={modalVisible}>
-        <SafeAreaView/>
+        <SafeAreaView />
         <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
           <AppText bold>CREDIT SCORE</AppText>
 
@@ -108,7 +108,7 @@ export default function ReceiveFund() {
 
         <View style={{ marginTop: 30, justifyContent: "center", alignItems: "center" }}>
           <Image
-            source={{ uri: "https://cdn.iconscout.com/icon/free/png-256/google-docs-2038784-1721674.png" }}
+            source={{ uri: "https://res.cloudinary.com/ancla8techs4/image/upload/v1662574256/vetropay/google-docs-2038784-1721674_mnfrfa.png" }}
             style={{ opacity: 0.5, height: 100, width: 100, resizeMode: "contain" }}
           />
           <AppText styles={{ textAlign: "center", fontWeight: "400", marginTop: 10 }}>You don't have any credit transaction yet. Keep enjoying VetroPay.</AppText>

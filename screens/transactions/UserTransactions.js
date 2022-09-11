@@ -217,7 +217,7 @@ export default function UserTransactions({ navigation }) {
             })}
 
             {/** Add Verify Button */}
-            {!modalData.paid_merchant && modalData.transaction_insight[0]?.substring(0, 5) == "Smart" && (
+            {modalData.paid_merchant && modalData.transaction_insight[0]?.includes("Smart Web") && (
               <AppButton
                 onPress={() => {
                   Linking.openURL(

@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { View, ScrollView, StyleSheet, TouchableNativeFeedback, TouchableOpacity, TextInput, Text } from "react-native";
+import { View, ScrollView, StyleSheet, TouchableNativeFeedback, TouchableOpacity, TextInput, Text, Image } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import AppText from "../../resources/AppText";
 import { SendMoneySvgComponent, WithdrawToBankComponent, ScanQRComponent } from "../../resources/Svg";
@@ -31,9 +31,9 @@ export default function Transfer({ navigation }) {
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["1%", "55%"], []);
 
-  useEffect(() => {
-    dispatch(getFxRates());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getFxRates());
+  // }, []);
 
   useEffect(() => {
     setBeneficiaryCurrency(availableCountries[0]);
@@ -147,109 +147,135 @@ export default function Transfer({ navigation }) {
       );
     } else {
       return (
+        // <View style={styles.internationalContainer}>
+        //   {/**Amount To Send */}
+        //   <View style={styles.internationalAmountContainer}>
+        //     <AppText styles={styles.internationalText}>Amount to Send</AppText>
+        //     <View
+        //       style={{
+        //         flexDirection: "row",
+        //         justifyContent: "space-between",
+        //       }}
+        //     >
+        //       <TextInput
+        //         keyboardType="number-pad"
+        //         style={{ height: "100%", width: "50%", fontSize: 20, fontWeight: "bold" }}
+        //         selectionColor="#000000"
+        //         placeholder="0.00"
+        //         value={amount}
+        //         onChangeText={(text) => {
+        //           setAmount(text.replace(/\s/g, ""));
+        //           setBeneficiaryAmount(numberWithCommas(Number(text) / beneficiaryCurrency.rate));
+        //         }}
+        //       />
+        //       <View>
+        //         <Text style={{ fontSize: 18, fontWeight: "bold", color: "#2b2b2b" }} bold>
+        //           🇳🇬 NGN
+        //         </Text>
+        //       </View>
+        //     </View>
+        //   </View>
+        //   <View style={{ marginLeft: 10 }}>
+        //     <Entypo name="flow-line" size={24} color="grey" />
+        //     <Entypo name="flow-line" size={24} color="grey" style={{ marginTop: -9.8 }} />
+
+        //     <AppText>
+        //       Fx Rate ={" "}
+        //       <AppText styles={{ color: "#266ddc" }} bold>
+        //         {beneficiaryCurrency.short} {Number(beneficiaryCurrency.rate).toFixed(2)}
+        //       </AppText>
+        //       /NGN
+        //     </AppText>
+
+        //     <Entypo name="flow-line" size={24} color="grey" style={{ marginTop: 2 }} />
+        //     <Entypo name="flow-line" size={24} color="grey" style={{ marginTop: -9.8 }} />
+
+        //     <AppText>
+        //       Processing Fee ={" "}
+        //       <AppText styles={{ color: "#266ddc" }} bold>
+        //         ₦{numberWithCommas(beneficiaryCurrency.fee)}
+        //       </AppText>
+        //     </AppText>
+
+        //     <Entypo name="flow-line" size={24} color="grey" style={{ marginTop: 2 }} />
+        //     <Entypo name="flow-line" size={24} color="grey" style={{ marginTop: -9.8 }} />
+
+        //     <AppText>
+        //       Total ={" "}
+        //       <AppText styles={{ color: "#266ddc" }} bold>
+        //         ₦{numberWithCommas(Number(amount) + Number(beneficiaryCurrency.fee))}
+        //       </AppText>
+        //     </AppText>
+
+        //     <Entypo name="flow-line" size={24} color="grey" style={{ marginTop: 2 }} />
+        //     <Entypo name="flow-line" size={24} color="grey" style={{ marginTop: -9.8 }} />
+
+        //     {/**Amount Receiver */}
+        //     <View style={styles.internationalAmountContainer}>
+        //       <AppText styles={styles.internationalText}>Beneficiary will get</AppText>
+        //       <View
+        //         style={{
+        //           flexDirection: "row",
+        //           justifyContent: "space-between",
+        //         }}
+        //       >
+        //         <View pointerEvents="none" style={{ width: "50%" }}>
+        //           <TextInput
+        //             keyboardType="number-pad"
+        //             style={{ height: "100%", width: "100%", fontSize: 20, fontWeight: "bold" }}
+        //             selectionColor="#000000"
+        //             placeholder="0.00"
+        //             value={beneficiaryAmount}
+        //           />
+        //         </View>
+        //         <TouchableOpacity onPress={() => bottomSheetRef.current?.expand()} style={{ flexDirection: "row" }}>
+        //           <Text style={{ fontSize: 18, fontWeight: "bold", color: "#2b2b2b" }} bold>
+        //             {beneficiaryCurrency.emoji} {beneficiaryCurrency.short}
+        //           </Text>
+
+        //           <MaterialIcons name="keyboard-arrow-down" size={24} color="grey" />
+        //         </TouchableOpacity>
+        //       </View>
+        //     </View>
+
+        //     {!displaySpinner ? (
+        //       <PrimaryButton onPress={() => handleProcessTransaction()} on styles={{ width: "100%", marginTop: 20, height: 50 }}>
+        //         <AppText bold styles={{ color: "#FFFFFF", fontSize: 16 }}>
+        //           Continue
+        //         </AppText>
+        //       </PrimaryButton>
+        //     ) : (
+        //       <View>
+        //         <Spinner color="#266ddc" size="large" />
+        //       </View>
+        //     )}
+        //   </View>
+        // </View>
+
         <View style={styles.internationalContainer}>
-          {/**Amount To Send */}
-          <View style={styles.internationalAmountContainer}>
-            <AppText styles={styles.internationalText}>Amount to Send</AppText>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <TextInput
-                keyboardType="number-pad"
-                style={{ height: "100%", width: "50%", fontSize: 20, fontWeight: "bold" }}
-                selectionColor="#000000"
-                placeholder="0.00"
-                value={amount}
-                onChangeText={(text) => {
-                  setAmount(text.replace(/\s/g, ""));
-                  setBeneficiaryAmount(numberWithCommas(Number(text) / beneficiaryCurrency.rate));
-                }}
-              />
-              <View>
-                <Text style={{ fontSize: 18, fontWeight: "bold", color: "#2b2b2b" }} bold>
-                  🇳🇬 NGN
-                </Text>
-              </View>
-            </View>
+          <Image
+            source={{ uri: "https://res.cloudinary.com/ancla8techs4/image/upload/v1662781930/vetropay/blockchain-globe_pfuzuv.png" }}
+            style={{ height: 200, width: 200, alignSelf: "center" }}
+          />
+
+          <View style={{ paddingHorizontal: 10 }}>
+            <AppText styles={{ fontSize: 14.5 }}>
+              <AppText bold>VetroPay Cross-Border payments</AppText> has been upgraded to run as a Blockchain-based Remittance Service.
+            </AppText>
+            <AppText styles={{ marginTop: 5, fontSize: 14.5 }}>
+              Your VetroPay account now directly offers you multi-currency wallet; allowing you to accept and send funds around the world faster, cheaper and much more seamless.
+            </AppText>
+            <AppText styles={{ marginTop: 5, fontSize: 14.5 }}>Switch directly between available currencies on your dashboard. Go Vetro!!</AppText>
           </View>
-          <View style={{ marginLeft: 10 }}>
-            <Entypo name="flow-line" size={24} color="grey" />
-            <Entypo name="flow-line" size={24} color="grey" style={{ marginTop: -9.8 }} />
 
-            <AppText>
-              Fx Rate ={" "}
-              <AppText styles={{ color: "#266ddc" }} bold>
-                {beneficiaryCurrency.short} {Number(beneficiaryCurrency.rate).toFixed(2)}
-              </AppText>
-              /NGN
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={{ width: "100%", backgroundColor: "#266ddc", marginTop: 20, justifyContent: "center", height: 45, borderRadius: 5, alignItems: "center" }}
+          >
+            <AppText styles={{ color: "#ffffff", fontSize: 16 }} bold>
+              Go to Dashboard 🎉
             </AppText>
-
-            <Entypo name="flow-line" size={24} color="grey" style={{ marginTop: 2 }} />
-            <Entypo name="flow-line" size={24} color="grey" style={{ marginTop: -9.8 }} />
-
-            <AppText>
-              Processing Fee ={" "}
-              <AppText styles={{ color: "#266ddc" }} bold>
-                ₦{numberWithCommas(beneficiaryCurrency.fee)}
-              </AppText>
-            </AppText>
-
-            <Entypo name="flow-line" size={24} color="grey" style={{ marginTop: 2 }} />
-            <Entypo name="flow-line" size={24} color="grey" style={{ marginTop: -9.8 }} />
-
-            <AppText>
-              Total ={" "}
-              <AppText styles={{ color: "#266ddc" }} bold>
-                ₦{numberWithCommas(Number(amount) + Number(beneficiaryCurrency.fee))}
-              </AppText>
-            </AppText>
-
-            <Entypo name="flow-line" size={24} color="grey" style={{ marginTop: 2 }} />
-            <Entypo name="flow-line" size={24} color="grey" style={{ marginTop: -9.8 }} />
-
-            {/**Amount Receiver */}
-            <View style={styles.internationalAmountContainer}>
-              <AppText styles={styles.internationalText}>Beneficiary will get</AppText>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <View pointerEvents="none" style={{ width: "50%" }}>
-                  <TextInput
-                    keyboardType="number-pad"
-                    style={{ height: "100%", width: "100%", fontSize: 20, fontWeight: "bold" }}
-                    selectionColor="#000000"
-                    placeholder="0.00"
-                    value={beneficiaryAmount}
-                  />
-                </View>
-                <TouchableOpacity onPress={() => bottomSheetRef.current?.expand()} style={{ flexDirection: "row" }}>
-                  <Text style={{ fontSize: 18, fontWeight: "bold", color: "#2b2b2b" }} bold>
-                    {beneficiaryCurrency.emoji} {beneficiaryCurrency.short}
-                  </Text>
-
-                  <MaterialIcons name="keyboard-arrow-down" size={24} color="grey" />
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            {!displaySpinner ? (
-              <PrimaryButton onPress={() => handleProcessTransaction()} on styles={{ width: "100%", marginTop: 20, height: 50 }}>
-                <AppText bold styles={{ color: "#FFFFFF", fontSize: 16 }}>
-                  Continue
-                </AppText>
-              </PrimaryButton>
-            ) : (
-              <View>
-                <Spinner color="#266ddc" size="large" />
-              </View>
-            )}
-          </View>
+          </TouchableOpacity>
         </View>
       );
     }
@@ -293,7 +319,7 @@ export default function Transfer({ navigation }) {
         </View>
         {renderTransferState()}
       </ScrollView>
-      <BottomSheet ref={bottomSheetRef} index={0} enablePanDownToClose={true} snapPoints={snapPoints} backdropComponent={renderBackdrop} onChange={handleSheetChanges}>
+      {/* <BottomSheet ref={bottomSheetRef} index={0} enablePanDownToClose={true} snapPoints={snapPoints} backdropComponent={renderBackdrop} onChange={handleSheetChanges}>
         <View style={{ paddingHorizontal: 20 }}>
           {availableCountries.map((data, index) => {
             return (
@@ -309,7 +335,7 @@ export default function Transfer({ navigation }) {
             );
           })}
         </View>
-      </BottomSheet>
+      </BottomSheet> */}
     </BottomSheetModalProvider>
   );
 }

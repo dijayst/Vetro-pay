@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
-import { Dimensions, View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity, Platform } from "react-native";
+import { Dimensions, View, Text, StyleSheet, TextInput, Alert, FlatList, TouchableOpacity, Platform } from "react-native";
 import { Modal, Switch } from "react-native";
 import * as Contacts from "expo-contacts";
 import AppText from "../../resources/AppText";
@@ -23,7 +23,7 @@ function Separator() {
 }
 
 export default function SendMoney({ navigation }) {
-  const Picker = Platform.OS == "android" ? RNPicker : Select
+  const Picker = Platform.OS == "android" ? RNPicker : Select;
   class UserContactListItem extends React.PureComponent {
     render() {
       return (
@@ -294,18 +294,34 @@ export default function SendMoney({ navigation }) {
         });
       }
     } else {
-      setDisplaySpinner(true);
-      dispatch(
-        postSendMoneyPreVerify(
-          sendMoneyData.payload.international,
-          sendMoneyData.payload.country,
-          sendMoneyData.payload.phoneNumberUID,
-          sendMoneyData.payload.amount,
-          sendMoneyData.payload.paymentCategory,
-          sendMoneyData.payload.note,
-          sendMoneyData.payload.transactionPin
-        )
-      );
+      if (userAuthentication.kyc_verified == "VERIFIED") {
+        setDisplaySpinner(true);
+        dispatch(
+          postSendMoneyPreVerify(
+            sendMoneyData.payload.international,
+            sendMoneyData.payload.country,
+            sendMoneyData.payload.phoneNumberUID,
+            sendMoneyData.payload.amount,
+            sendMoneyData.payload.paymentCategory,
+            sendMoneyData.payload.note,
+            sendMoneyData.payload.transactionPin
+          )
+        );
+      } else {
+        Alert.alert(
+          "🚨 KYC Verification required",
+          `Ensure your email & KYC verification is complete.`,
+          [
+            {
+              text: "Go to Settings",
+              onPress: () => {
+                navigation.navigate("Settings");
+              },
+            },
+          ],
+          { cancelable: false }
+        );
+      }
     }
   };
 
@@ -598,7 +614,7 @@ export default function SendMoney({ navigation }) {
                     style={{ height: 45 }}
                     onValueChange={(itemValue, itemIndex) => changeRecipientCountry(itemValue, itemIndex)}
                     selectedValue={sendMoneyData.payload.country}
-                    itemStyle={{height:45}}
+                    itemStyle={{ height: 45 }}
                     borderColor={"transparent"}
                   >
                     <Picker.Item label="🇳🇬  Nigeria" value="NIGERIA" />

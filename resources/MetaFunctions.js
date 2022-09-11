@@ -16,3 +16,7 @@ export const numberWithCommas = (x) => {
 export const shortenNames = (text, max) => {
   return text && text.length > max ? text.slice(0, max).split(" ").slice(0, -1).join(" ") : text;
 };
+
+export const convertEpochToLocalDate = (time) => {
+  return `${new Date(time).toDateString().substr(4)} ${new Date(time).toLocaleTimeString().substr(0, 5)}`;
+};

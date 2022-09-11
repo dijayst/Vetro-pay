@@ -1,7 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Home from "../screens/Home";
-import HomeII from "../screens/HomeII";
 import Subscriptions from "../screens/subscription/Subscriptions";
 import Airtime from "../screens/airtime/Airtime";
 import Tv from "../screens/tv/Tv";
@@ -23,6 +22,11 @@ import NewSavingsPlan from "../screens/savings/NewSavingsPlan";
 import ReceiveFund from "../screens/ReceiveFund";
 import DepositFund from "../screens/DepositFund";
 import Credit from "../screens/Credit";
+import ReceiveUsdt from "../screens/Usdt/Receive";
+import SendUsdt from "../screens/Usdt/Send";
+import WithdrawUsdt from "../screens/Usdt/Withdraw";
+import ReceiveTrx from "../screens/Tron/Receive";
+import SendTrx from "../screens/Tron/Send";
 
 const Stack = createStackNavigator();
 
@@ -30,7 +34,7 @@ export default function HomeStack() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerBackTitleVisible: false
+        headerBackTitleVisible: false,
       }}
     >
       <Stack.Screen
@@ -38,7 +42,7 @@ export default function HomeStack() {
         options={{
           headerShown: false,
         }}
-        component={HomeII}
+        component={Home}
       />
       <Stack.Screen
         name="Subscriptions"
@@ -270,6 +274,61 @@ export default function HomeStack() {
           headerTintColor: "#fff",
         }}
         component={Credit}
+      />
+
+      <Stack.Screen
+        name="ReceiveUsdt"
+        options={{
+          title: "Receive USDT",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={ReceiveUsdt}
+      />
+
+      <Stack.Screen
+        name="SendUsdt"
+        options={{
+          title: "Send USDT (TRC20)",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={SendUsdt}
+      />
+
+      <Stack.Screen
+        name="WithdrawUsdt"
+        options={{
+          title: "Withdraw USDT",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={WithdrawUsdt}
+      />
+
+      <Stack.Screen
+        name="ReceiveTrx"
+        options={{
+          title: "Receive TRX",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={ReceiveTrx}
+      />
+
+      <Stack.Screen
+        name="SendTrx"
+        options={{
+          title: "Send TRX",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={SendTrx}
       />
     </Stack.Navigator>
   );

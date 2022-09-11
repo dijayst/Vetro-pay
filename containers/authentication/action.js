@@ -1,5 +1,5 @@
 import axios from "axios";
-import { USER_LOADING, USER_LOADED, AUTH_ERROR, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT_SUCCESS, PUSH_ACTIVITY_VERIFICATION_TOKEN } from "../rootAction/types";
+import { USER_LOADING, USER_LOADED, AUTH_ERROR, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT_SUCCESS, PUSH_ACTIVITY_VERIFICATION_TOKEN, DOCUMENT_VERIFICATION } from "../rootAction/types";
 import { returnErrors } from "../messages/messages";
 import { BASE_URL } from "../rootAction/env";
 
@@ -69,6 +69,21 @@ export const pushActivityVerificationToken = () => (dispatch, getState) => {
     .then((res) => {
       dispatch({
         type: PUSH_ACTIVITY_VERIFICATION_TOKEN,
+      });
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+    });
+};
+
+// POST VERIFICATION ID
+export const postVerificationId = (verification_id) => (dispatch, getState) => {
+  axios
+    .post(`${BASE_URL}/api/user/post-verification-document`, { verification_id }, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: DOCUMENT_VERIFICATION,
+        payload: res.data,
       });
     })
     .catch((err) => {

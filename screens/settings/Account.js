@@ -119,7 +119,7 @@ export default function Account({ navigation }) {
                       fontSize: 12,
                       marginLeft: 10,
                       textTransform: "capitalize",
-                      color: `${userAuthentication.kyc_verified == "UNVERIFIED" ? "red" : `${userAuthentication.kyc_verified == "VERIFIED" ? "green" : "yellow"}`}`,
+                      color: `${userAuthentication.kyc_verified == "UNVERIFIED" ? "red" : `${userAuthentication.kyc_verified == "VERIFIED" ? "green" : "#B76E79"}`}`,
                     }}
                   >
                     {userAuthentication.kyc_verified}

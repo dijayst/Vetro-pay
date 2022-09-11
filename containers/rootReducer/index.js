@@ -12,6 +12,7 @@ import busnotifications from "../busnotifications/reducer";
 import deposit from "../deposit/reducer";
 import cards from "../cards/reducer";
 import savings from "../savings/reducer";
+import blockchain from "../blockchain/reducer";
 
 export default combineReducers({
   errors,
@@ -27,4 +28,5 @@ export default combineReducers({
   deposit,
   cards,
   savings,
+  blockchain,
 });

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Text, View, StyleSheet, Button, Modal, TextInput, Switch } from "react-native";
+import { Text, View, StyleSheet, Button, Modal, Alert, TextInput, Switch } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import AppText from "../../resources/AppText";
@@ -152,18 +152,34 @@ export default function App() {
         setDisplayModalFormError("Invalid amount");
       }
     } else {
-      setDisplaySpinner(true);
-      dispatch(
-        postSendMoneyPreVerify(
-          sendMoneyData.payload.international,
-          sendMoneyData.payload.country,
-          sendMoneyData.payload.phoneNumberUID,
-          sendMoneyData.payload.amount,
-          sendMoneyData.payload.paymentCategory,
-          sendMoneyData.payload.note,
-          sendMoneyData.payload.transactionPin
-        )
-      );
+      if (userAuthentication.kyc_verified == "VERIFIED") {
+        setDisplaySpinner(true);
+        dispatch(
+          postSendMoneyPreVerify(
+            sendMoneyData.payload.international,
+            sendMoneyData.payload.country,
+            sendMoneyData.payload.phoneNumberUID,
+            sendMoneyData.payload.amount,
+            sendMoneyData.payload.paymentCategory,
+            sendMoneyData.payload.note,
+            sendMoneyData.payload.transactionPin
+          )
+        );
+      } else {
+        Alert.alert(
+          "🚨 KYC Verification required",
+          `Ensure your email & KYC verification is complete.`,
+          [
+            {
+              text: "Go to Settings",
+              onPress: () => {
+                navigation.navigate("Settings");
+              },
+            },
+          ],
+          { cancelable: false }
+        );
+      }
     }
   };
 

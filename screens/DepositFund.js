@@ -109,7 +109,7 @@ export default function DepositFund({ navigation }) {
       Clipboard.setString(`${userAuthentication.nuban}`);
       toast.show({
         render: () => (
-          <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+          <Box bg={toastColorObject["success"]} px="2" py="2" rounded="sm" mb={5}>
             <NativeBaseText style={{ color: "#FFFFFF" }}>Copied to clipboard</NativeBaseText>
           </Box>
         ),
