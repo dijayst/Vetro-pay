@@ -15,12 +15,13 @@ const DoneIcon = require("../../assets/done.png");
 
 export default function Register({ navigation }) {
   const toast = useToast();
-  const Picker = Platform.OS == "android" ? RNPicker : Select
+  const Picker = Platform.OS == "android" ? RNPicker : Select;
   const [stage, setStage] = useState(1);
   const [registerData, setRegisterData] = useState({
     payload: {
       country: "NIGERIA",
-      fullName: "",
+      firstName: "",
+      lastName: "",
       phoneNumber: "",
       password: "",
       confirmPassword: "",
@@ -113,13 +114,13 @@ export default function Register({ navigation }) {
 
   const goToAuthCode = () => {
     if (
-      !registerData.payload.fullName.replace(/\s\s+/g, " ").includes(" ") ||
-      registerData.payload.fullName.length < 6 ||
+      registerData.payload.firstName.length < 2 ||
+      registerData.payload.lastName.length < 2 ||
       !(registerData.payload.phoneNumber.length >= 7 && 12 > registerData.payload.phoneNumber.length) ||
       registerData.payload.password.length < 8 ||
       registerData.payload.password !== registerData.payload.confirmPassword
     ) {
-      if (!registerData.payload.fullName.replace(/\s\s+/g, " ").includes(" ")) {
+      if (registerData.payload.firstName === "" || registerData.payload.lastName === "") {
         toast.show({
           render: () => (
             <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
@@ -127,11 +128,11 @@ export default function Register({ navigation }) {
             </Box>
           ),
         });
-      } else if (registerData.payload.fullName.length < 6) {
+      } else if (registerData.payload.firstName.length < 2 || registerData.payload.lastName.length < 2) {
         toast.show({
           render: () => (
             <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>Name cannot be less than 6 Characters</NativeBaseText>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Name cannot be less than 2 Characters</NativeBaseText>
             </Box>
           ),
         });
@@ -162,7 +163,7 @@ export default function Register({ navigation }) {
       }
     } else {
       setDisplaySpinner(true);
-      dispatch(postPreReg(registerData.payload.country, registerData.payload.phoneNumber, registerData.payload.fullName));
+      dispatch(postPreReg(registerData.payload.country, registerData.payload.phoneNumber, `${registerData.payload.firstName} ${registerData.payload.lastName}`));
     }
   };
 
@@ -230,7 +231,7 @@ export default function Register({ navigation }) {
         registerUser(
           registerData.payload.country,
           registerData.payload.phoneNumber,
-          registerData.payload.fullName,
+          `${registerData.payload.firstName} ${registerData.payload.lastName}`,
           registerData.payload.password,
           registerData.payload.securityQuestion,
           registerData.payload.securityAnswer,
@@ -241,12 +242,20 @@ export default function Register({ navigation }) {
   };
 
   const onValueChange = (fieldName, value) => {
-    if (fieldName == "fullName") {
+    if (fieldName == "firstName") {
       setRegisterData((prevState) => ({
         ...prevState,
         payload: {
           ...prevState.payload,
-          fullName: value,
+          firstName: value.replace(/\s\s+/g, " "),
+        },
+      }));
+    } else if (fieldName == "lastName") {
+      setRegisterData((prevState) => ({
+        ...prevState,
+        payload: {
+          ...prevState.payload,
+          lastName: value.replace(/\s/g, ""),
         },
       }));
     } else if (fieldName == "phoneNumber") {
@@ -352,9 +361,17 @@ export default function Register({ navigation }) {
                 </View>
                 <TextInput
                   style={{ ...styles.textInput, marginTop: 20 }}
-                  value={registerData.payload.fullName}
-                  onChangeText={(text) => onValueChange("fullName", text)}
-                  placeholder="Full Name"
+                  value={registerData.payload.firstName}
+                  onChangeText={(text) => onValueChange("firstName", text)}
+                  placeholder="First Name"
+                  placeholderTextColor="gray"
+                />
+
+                <TextInput
+                  style={{ ...styles.textInput }}
+                  value={registerData.payload.lastName}
+                  onChangeText={(text) => onValueChange("lastName", text)}
+                  placeholder="Surname / Last Name"
                   placeholderTextColor="gray"
                 />
 
