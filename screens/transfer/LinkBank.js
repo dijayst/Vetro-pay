@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 
-import { Dimensions, View, Text, StyleSheet, TextInput } from "react-native";
-import { Picker } from "@react-native-picker/picker";
+import { Dimensions, View, Text, StyleSheet, TextInput, Platform } from "react-native";
+import { Picker as RNPicker } from "@react-native-picker/picker";
+import { Select } from "native-base";
 import AppText from "../../resources/AppText";
 import { PrimaryButton } from "../../resources/AppButton";
 import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
@@ -13,6 +14,7 @@ import { resolveBank, updateBank } from "../../containers/banks/action";
 import { toastColorObject } from "../../resources/rStyledComponent";
 
 export default function LinkBank({ navigation }) {
+  const Picker = Platform.OS == "android" ? RNPicker : Select;
   const userAuthentication = useSelector((state) => state.authentication.user);
 
   const [bankValid, setBankValid] = useState(false);
@@ -186,7 +188,7 @@ export default function LinkBank({ navigation }) {
                   }}
                 >
                   <Picker
-                    style={{ height: 40 }}
+                    style={{ height: 45 }}
                     onValueChange={(itemValue, itemIndex) => {
                       setLinkBankData((prevState) => ({
                         ...prevState,
