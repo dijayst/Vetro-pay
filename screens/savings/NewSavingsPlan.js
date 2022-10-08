@@ -195,7 +195,7 @@ export default function NewSavingsPlan({ navigation }) {
           <View style={{ paddingHorizontal: 10 }}>
             <Image source={SavingsImage2} style={{ width: 150, height: 150, alignSelf: "center", marginTop: 20 }} />
             <AppText bold styles={{ fontSize: 20 }}>
-              Hii Olamigoke,
+              Hii {userAuthentication.fullname.split(" ")[0]},
             </AppText>
             <AppText>Tell us more about your Savings plan</AppText>
 

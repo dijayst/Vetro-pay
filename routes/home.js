@@ -21,7 +21,8 @@ import Savings from "../screens/savings/Savings";
 import NewSavingsPlan from "../screens/savings/NewSavingsPlan";
 import ReceiveFund from "../screens/ReceiveFund";
 import DepositFund from "../screens/DepositFund";
-import Credit from "../screens/Credit";
+import Credit from "../screens/creditloans/Credit";
+import Loans from "../screens/creditloans/Loans";
 import ReceiveUsdt from "../screens/Usdt/Receive";
 import SendUsdt from "../screens/Usdt/Send";
 import WithdrawUsdt from "../screens/Usdt/Withdraw";
@@ -274,6 +275,17 @@ export default function HomeStack() {
           headerTintColor: "#fff",
         }}
         component={Credit}
+      />
+
+      <Stack.Screen
+        name="Loans"
+        options={{
+          title: "Request Loan",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={Loans}
       />
 
       <Stack.Screen
