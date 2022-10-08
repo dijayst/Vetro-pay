@@ -236,7 +236,7 @@ export default function CreditLoansHome({ navigation }) {
                       source={{ uri: "https://res.cloudinary.com/ancla8techs4/image/upload/v1662574256/vetropay/google-docs-2038784-1721674_mnfrfa.png" }}
                       style={{ opacity: 0.5, height: 100, width: 100, resizeMode: "contain" }}
                     />
-                    <AppText styles={{ textAlign: "center", fontWeight: "400", marginTop: 10 }}>Youo don't have any credit transaction yet. Keep enjoying VetroPay.</AppText>
+                    <AppText styles={{ textAlign: "center", fontWeight: "400", marginTop: 10 }}>You don't have any credit transaction yet. Keep enjoying VetroPay.</AppText>
                   </View>
                 )}
 
