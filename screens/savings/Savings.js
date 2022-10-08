@@ -67,7 +67,7 @@ export default function Savings({ navigation }) {
         toast.show({
           render: () => (
             <Box bg={toastColorObject["success"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>{`Early savings withdrawal completedss`}</NativeBaseText>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>{`Early savings withdrawal completed`}</NativeBaseText>
             </Box>
           ),
         });
