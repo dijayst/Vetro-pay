@@ -15,6 +15,7 @@ import BottomSheet, { BottomSheetModalProvider, BottomSheetBackdrop } from "@gor
 import { getTrxTransactions, getUsdtTransactions } from "../containers/blockchain/action";
 import UsdtHome from "./Usdt";
 import TronHome from "./Tron";
+import { SafeAreaView } from "../resources/rStyledComponent";
 
 const SUPPORTED_CURRENCIES = [
   {
@@ -325,6 +326,7 @@ export default function Home({ navigation }) {
   ];
   return (
     <BottomSheetModalProvider style={styles.container}>
+      <SafeAreaView/>
       {selectedCurrency.code == "NGN" && (
         <Fragment>
           <View style={{ backgroundColor: "#266ddc", borderBottomLeftRadius: 15, borderBottomRightRadius: 15, paddingBottom: 30 }}>

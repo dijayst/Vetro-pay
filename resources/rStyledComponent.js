@@ -12,6 +12,7 @@ export const toastColorObject = {
 export const SafeAreaView = styled.SafeAreaView`
   padding-top: ${Platform.OS === "android" ? "25px" : "0px"};
   width: 100%;
+  background-color: #266ddc;
 `;
 
 export const HR = ({ style }) => {
