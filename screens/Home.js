@@ -4,7 +4,7 @@ import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 import AppText from "../resources/AppText";
-import { StyleSheet, Image, Text, View, StatusBar, FlatList, Button, TouchableOpacity, Alert, Dimensions, Pressable } from "react-native";
+import { StyleSheet, Image, Text, View, StatusBar, FlatList, Button, TouchableOpacity, Alert, Dimensions, Pressable, Platform } from "react-native";
 import { MaterialCommunityIcons, AntDesign, Feather, Octicons, SimpleLineIcons, FontAwesome, Foundation, Fontisto, MaterialIcons, Entypo } from "@expo/vector-icons";
 import { getUserTransaction } from "../containers/transactions/action";
 import { updateNotificationToken } from "../containers/regvalidate/action";
@@ -326,7 +326,7 @@ export default function Home({ navigation }) {
   ];
   return (
     <BottomSheetModalProvider style={styles.container}>
-      <SafeAreaView/>
+      {Platform.OS !== "android" && <SafeAreaView />}
       {selectedCurrency.code == "NGN" && (
         <Fragment>
           <View style={{ backgroundColor: "#266ddc", borderBottomLeftRadius: 15, borderBottomRightRadius: 15, paddingBottom: 30 }}>
