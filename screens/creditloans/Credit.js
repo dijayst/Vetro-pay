@@ -147,11 +147,11 @@ export default function CreditLoansHome({ navigation }) {
             </View>
 
             <View style={{ marginVertical: 20 }}>
-              <AppText>VetroPay Credit scores estimate your likelihood of repaying new debt. Scores of 690 or above are considered good credit.</AppText>
+              <AppText>VetroPay Credit score estimate your likelihood of repaying new debt. Scores of 690 or above are considered good credit.</AppText>
 
-              <AppText styles={{ marginTop: 7 }}>A higher score gives you access to more credit products — and at lower interest rates.</AppText>
+              <AppText styles={{ marginTop: 7 }}>A higher score gives you access to more loan and credit products — at lower interest rates.</AppText>
 
-              <AppText styles={{ marginTop: 7 }}>Borrowers with scores above 689 have many options, including the ability to qualify for 0% interest rate on our loans.</AppText>
+              <AppText styles={{ marginTop: 7 }}>Borrowers with scores above 689 have many options, including the ability to qualify for our interest free credit.</AppText>
 
               <AppText styles={{ marginTop: 7 }}>
                 VetroPay also partners with other businesses {"&"} lending companies to bring you their best loan offers at competitive interest rates.
