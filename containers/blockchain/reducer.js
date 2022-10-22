@@ -1,10 +1,14 @@
-import { GET_TRX_TRANSACTIONS, GET_USDT_TRANSACTIONS, GET_TRX_FEES, POST_TRX } from "../rootAction/types";
+import { GET_TRX_TRANSACTIONS, GET_USDT_TRANSACTIONS, GET_TRX_FEES, POST_TRX, GET_USD_TRANSACTIONS, DEPOSIT_USD, WITHDRAW_USD, USD_USDT_SWAP } from "../rootAction/types";
 
 const initialState = {
+  usd: { processing: true },
   usdt: { processing: true },
   trx: { processing: true },
   fees: [],
   posts: [],
+  depositusd: [],
+  withdrawusd: [],
+  usdusdtswap: [],
 };
 
 export default function (state = initialState, action) {
@@ -28,6 +32,26 @@ export default function (state = initialState, action) {
       return {
         ...state,
         posts: [...state.posts, action.payload],
+      };
+    case GET_USD_TRANSACTIONS:
+      return {
+        ...state,
+        usd: action.payload,
+      };
+    case DEPOSIT_USD:
+      return {
+        ...state,
+        depositusd: [...state.depositusd, action.payload],
+      };
+    case WITHDRAW_USD:
+      return {
+        ...state,
+        withdrawusd: [...state.withdrawusd, action.payload],
+      };
+    case USD_USDT_SWAP:
+      return {
+        ...state,
+        usdusdtswap: [...state.usdusdtswap, action.payload],
       };
     default:
       return state;

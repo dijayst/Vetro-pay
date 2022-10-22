@@ -20,3 +20,14 @@ export const shortenNames = (text, max) => {
 export const convertEpochToLocalDate = (time) => {
   return `${new Date(time).toDateString().substr(4)} ${new Date(time).toLocaleTimeString().substr(0, 5)}`;
 };
+
+/* An example function to generate a random transaction reference */
+export const generateTransactionRef = (length) => {
+  var result = "";
+  var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return `flw_tx_ref_${result}`;
+};

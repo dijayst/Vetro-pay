@@ -28,6 +28,9 @@ import SendUsdt from "../screens/Usdt/Send";
 import WithdrawUsdt from "../screens/Usdt/Withdraw";
 import ReceiveTrx from "../screens/Tron/Receive";
 import SendTrx from "../screens/Tron/Send";
+import WithdrawUsd from "../screens/Usd/Withdraw";
+import DepositUsd from "../screens/Usd/Deposit";
+import SwapUsd from "../screens/Usd/Swap";
 
 const Stack = createStackNavigator();
 
@@ -341,6 +344,39 @@ export default function HomeStack() {
           headerTintColor: "#fff",
         }}
         component={SendTrx}
+      />
+
+      <Stack.Screen
+        name="WithdrawUsd"
+        options={{
+          title: "Withdraw USD",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={WithdrawUsd}
+      />
+
+      <Stack.Screen
+        name="DepositUsd"
+        options={{
+          title: "Deposit USD",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={DepositUsd}
+      />
+
+      <Stack.Screen
+        name="SwapUsd"
+        options={{
+          title: "Convert to USDT",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={SwapUsd}
       />
     </Stack.Navigator>
   );
