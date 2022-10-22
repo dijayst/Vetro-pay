@@ -453,14 +453,15 @@ export default function PayBusiness({ route, navigation }) {
       </Modal>
       <View style={styles.containerWindow}>
         <View style={styles.organizationDetails}>
-          <Image source={{ uri: busLogo }} style={{ width: 100, height: 100, resizeMode: "contain" }} />
-          <AppText styles={{ fontSize: 18 }}>{busName}</AppText>
+          <Image source={{ uri: busLogo }} style={{ width: 80, height: 80, resizeMode: "contain" }} />
+          <AppText styles={{ fontSize: 18, marginLeft: 10 }}>{busName}</AppText>
         </View>
 
         <TouchableOpacity onPress={() => alertBusinessVerificationStatus()}>
           <AppText
             bold="true"
             styles={{
+              marginTop: 15,
               width: 100,
               paddingBottom: 2,
               textAlign: "center",
@@ -481,12 +482,12 @@ export default function PayBusiness({ route, navigation }) {
         <AppText bold="true" styles={{ fontSize: 16, marginTop: 5 }}>
           Address:
         </AppText>
-        <AppText styles={{ fontSize: 14 }}>n/a</AppText>
+        <AppText styles={{ fontSize: 14 }}>N?A</AppText>
 
         <AppText bold="true" styles={{ fontSize: 16, marginTop: 5 }}>
           Website:
         </AppText>
-        <AppText styles={{ fontSize: 14 }}>n/a</AppText>
+        <AppText styles={{ fontSize: 14 }}>N?A</AppText>
 
         <View style={{ display: "flex", marginTop: 10, alignItems: "center", justifyContent: "center" }}>
           <View style={{ width: "100%" }}>
@@ -507,10 +508,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   organizationDetails: {
-    marginTop: 5,
+    marginTop: 15,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "center",
   },
   modalContent: {
     flex: 1,

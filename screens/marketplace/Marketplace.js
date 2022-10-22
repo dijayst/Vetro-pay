@@ -65,7 +65,7 @@ export default function Marketplace({ navigation }) {
                   }
                 >
                   <View style={styles.businessList}>
-                    <Image source={{ uri: bus.logo }} style={{ width: 40 }} />
+                    <Image source={{ uri: bus.logo }} style={{ width: 40, resizeMode: "contain" }} />
                     <AppText styles={{ fontSize: 16, marginLeft: 10 }}>{bus.name}</AppText>
                   </View>
                 </TouchableNativeFeedback>
