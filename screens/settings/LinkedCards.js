@@ -40,7 +40,7 @@ export default function Help() {
               <AppText bold styles={{ fontSize: 16 }}>
                 NO CARD ADDED
               </AppText>
-              <AppText>NIGEIRA NG</AppText>
+              <AppText>NIGERIA NG</AppText>
             </View>
             <MaterialIcons name="cancel" size={24} color="#cf2e06" />
           </View>

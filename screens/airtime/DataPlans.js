@@ -28,15 +28,18 @@ export default function DataPlans({
 }) {
   const dispatch = useDispatch();
   const [subscriptionList, setSubscriptionList] = useState([]);
+  const [subscriptionListUnavailable, setSubscriptionListUnavailable] = useState(false);
 
   const getDataPlansResponse = useSelector((state) => state.utility.databundles);
   const preveGetDataPlansResponse = usePrevious(getDataPlansResponse);
 
   useEffect(() => {
+    setSubscriptionListUnavailable(false);
     setAmount("");
     setSelectedDataBundle(null);
     setSubscriptionList([]);
     if (internetProviderDataPlans[serviceProvider]) {
+      setSubscriptionListUnavailable(false);
       setSubscriptionList(internetProviderDataPlans[serviceProvider]);
     } else {
       dispatch(getDataBundleSubscription(serviceProvider.toLowerCase()));
@@ -45,11 +48,17 @@ export default function DataPlans({
 
   useEffect(() => {
     if (preveGetDataPlansResponse && getDataPlansResponse.length !== preveGetDataPlansResponse?.length) {
-      setSubscriptionList(getDataPlansResponse[getDataPlansResponse.length - 1]["data"]);
-      setInternetProviderDataPlans((prevState) => ({
-        ...prevState,
-        [serviceProvider]: getDataPlansResponse[getDataPlansResponse.length - 1]["data"],
-      }));
+      if (getDataPlansResponse[getDataPlansResponse.length - 1]["data"]) {
+        setSubscriptionListUnavailable(false);
+        setSubscriptionList(getDataPlansResponse[getDataPlansResponse.length - 1]["data"]);
+        setInternetProviderDataPlans((prevState) => ({
+          ...prevState,
+          [serviceProvider]: getDataPlansResponse[getDataPlansResponse.length - 1]["data"],
+        }));
+      } else {
+        setSubscriptionList([]);
+        setSubscriptionListUnavailable(true);
+      }
     }
   }, [getDataPlansResponse]);
 
@@ -96,8 +105,16 @@ export default function DataPlans({
 
       {subscriptionList.length < 1 && (
         <View style={{ height: 250, alignItems: "center", justifyContent: "center" }}>
-          <AppText bold>Searching Best deals for you...</AppText>
-          <Spinner size="large" color="#266ddc" />
+          {subscriptionListUnavailable ? (
+            <Fragment>
+              <AppText bold>DataBundle Service is currently unavailable.</AppText>
+            </Fragment>
+          ) : (
+            <Fragment>
+              <AppText bold>Searching Best deals for you...</AppText>
+              <Spinner size="large" color="#266ddc" />
+            </Fragment>
+          )}
         </View>
       )}
 

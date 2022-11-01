@@ -234,7 +234,7 @@ export default function Loans({ navigation }) {
                   <Picker.Item label="--- Select Employer ---" value="" />
                   <Picker.Item label="Ancla Technologies" value="1" />
                   <Picker.Item label="Charisol Inc" value="2" />
-                  <Picker.Item label="Ekist State Government" value="3" />
+                  <Picker.Item label="Ekiti State Government" value="3" />
                   <Picker.Item label="Prelate Travel Ltd" value="4" />
                   <Picker.Item label="RCCG Trinity Temple Parish" value="5" />
                 </Picker>
