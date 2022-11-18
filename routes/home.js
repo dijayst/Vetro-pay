@@ -27,6 +27,7 @@ import ReceiveUsdt from "../screens/Usdt/Receive";
 import SendUsdt from "../screens/Usdt/Send";
 import WithdrawUsdt from "../screens/Usdt/Withdraw";
 import ReceiveTrx from "../screens/Tron/Receive";
+import DepositTrx from "../screens/Tron/Deposit";
 import SendTrx from "../screens/Tron/Send";
 import WithdrawUsd from "../screens/Usd/Withdraw";
 import DepositUsd from "../screens/Usd/Deposit";
@@ -333,6 +334,17 @@ export default function HomeStack() {
           headerTintColor: "#fff",
         }}
         component={ReceiveTrx}
+      />
+
+      <Stack.Screen
+        name="DepositTrx"
+        options={{
+          title: "Deposit TRX",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={DepositTrx}
       />
 
       <Stack.Screen

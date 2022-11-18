@@ -91,6 +91,21 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
                 if (trxTransactions.processing) {
                   alertUserToAwaitLoading();
                 } else {
+                  navigation.navigate("DepositTrx");
+                }
+              }}
+            >
+              <View style={{ ...styles.activityButton, width: 60 }}>
+                <AntDesign name="pluscircleo" size={20} color="#f2f2f2" />
+                <AppText styles={styles.mainBoardIconText}>Deposit</AppText>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                if (trxTransactions.processing) {
+                  alertUserToAwaitLoading();
+                } else {
                   navigation.navigate("SendTrx");
                 }
               }}
@@ -116,7 +131,7 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => Alert.alert("TRX Stake", "Feature will be available soon. Delivery date: Oct. 24, 2022")}>
+            <TouchableOpacity onPress={() => Alert.alert("TRX Stake", "Feature will be available soon. Delivery date: Nov. 28, 2022")}>
               <View style={{ ...styles.activityButton, width: 60 }}>
                 <FontAwesome5 name="coins" size={24} color="#f2f2f2" />
                 <AppText styles={styles.mainBoardIconText}>Freeze</AppText>

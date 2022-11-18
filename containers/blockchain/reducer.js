@@ -1,4 +1,14 @@
-import { GET_TRX_TRANSACTIONS, GET_USDT_TRANSACTIONS, GET_TRX_FEES, POST_TRX, GET_USD_TRANSACTIONS, DEPOSIT_USD, WITHDRAW_USD, USD_USDT_SWAP } from "../rootAction/types";
+import {
+  GET_TRX_TRANSACTIONS,
+  GET_USDT_TRANSACTIONS,
+  GET_TRX_FEES,
+  POST_TRX,
+  GET_USD_TRANSACTIONS,
+  DEPOSIT_USD,
+  WITHDRAW_USD,
+  USD_USDT_SWAP,
+  DEPOSIT_TRX,
+} from "../rootAction/types";
 
 const initialState = {
   usd: { processing: true },
@@ -9,6 +19,7 @@ const initialState = {
   depositusd: [],
   withdrawusd: [],
   usdusdtswap: [],
+  deposittrx: [],
 };
 
 export default function (state = initialState, action) {
@@ -52,6 +63,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         usdusdtswap: [...state.usdusdtswap, action.payload],
+      };
+    case DEPOSIT_TRX:
+      return {
+        ...state,
+        deposittrx: [...state.deposittrx, action.payload],
       };
     default:
       return state;

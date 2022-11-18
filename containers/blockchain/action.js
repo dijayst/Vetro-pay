@@ -1,6 +1,16 @@
 import axios from "axios";
 import { tokenConfig } from "../authentication/action";
-import { GET_USDT_TRANSACTIONS, GET_TRX_TRANSACTIONS, GET_TRX_FEES, POST_TRX, GET_USD_TRANSACTIONS, DEPOSIT_USD, WITHDRAW_USD, USD_USDT_SWAP } from "../rootAction/types";
+import {
+  GET_USDT_TRANSACTIONS,
+  GET_TRX_TRANSACTIONS,
+  GET_TRX_FEES,
+  POST_TRX,
+  GET_USD_TRANSACTIONS,
+  DEPOSIT_USD,
+  WITHDRAW_USD,
+  USD_USDT_SWAP,
+  DEPOSIT_TRX,
+} from "../rootAction/types";
 import { returnErrors } from "../messages/messages";
 import { BASE_URL } from "../rootAction/env";
 
@@ -127,6 +137,21 @@ export const swapUsdForUsdt = (amount, transaction_pin) => (dispatch, getState) 
     .then((res) => {
       dispatch({
         type: USD_USDT_SWAP,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+    });
+};
+
+// DEPOSTI TRX
+export const depositTrxPrompt = (amount, source) => (dispatch, getState) => {
+  axios
+    .post(`${BASE_URL}/api/usd/buy-trx`, { amount, source }, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: DEPOSIT_TRX,
         payload: res.data,
       });
     })
