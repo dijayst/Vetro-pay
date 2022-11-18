@@ -1,5 +1,15 @@
 import localStorage from "react-native-sync-localstorage";
-import { USER_LOADING, USER_LOADED, AUTH_ERROR, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT_SUCCESS, PUSH_ACTIVITY_VERIFICATION_TOKEN, DOCUMENT_VERIFICATION } from "../rootAction/types";
+import {
+  USER_LOADING,
+  USER_LOADED,
+  AUTH_ERROR,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  LOGOUT_SUCCESS,
+  PUSH_ACTIVITY_VERIFICATION_TOKEN,
+  DOCUMENT_VERIFICATION,
+  DELETE_ACCOUNT_SUCCESS,
+} from "../rootAction/types";
 
 const initialState = {
   token: localStorage.getItem("token"),
@@ -42,6 +52,7 @@ export default function (state = initialState, action) {
     case AUTH_ERROR:
     case LOGIN_FAIL:
     case LOGOUT_SUCCESS:
+    case DELETE_ACCOUNT_SUCCESS:
       return {
         ...state,
         token: null,

@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Text, View, StyleSheet, TouchableNativeFeedback } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
+import { Text, View, StyleSheet, TouchableNativeFeedback, Alert } from "react-native";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import AppText from "../../resources/AppText";
 import { AccountProfileSvgComponent, EmailSvgComponent, KycSvgComponent, QrCodeSvgComponent, UserPinSvgComponent, BusinessSvgComponent } from "../../resources/Svg";
-import { loadUser } from "../../containers/authentication/action";
+import { loadUser, deleteUserAccountPrompt } from "../../containers/authentication/action";
 
 function Separator() {
   return <View style={styles.separator} />;
@@ -21,6 +21,44 @@ export default function Account({ navigation }) {
       dispatch(loadUser());
     });
   }, [navigation]);
+
+  const alertPreDelete = () => {
+    Alert.alert(
+      "We'd love to have you with us?",
+      "This action may be irredeemable. To proceed, hold the 'Request Account Deletion' Button for about 5 - 10 seconds.",
+      [
+        {
+          text: "Ok",
+          onPress: () => {
+            return null;
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  const alertDeleteUserAccount = () => {
+    Alert.alert(
+      "We'd love to have you with us",
+      "This action may be irredemable, to reverse this action within 30 days, kindly email us at: customercare@vetropay.com",
+      [
+        {
+          text: "Cancel",
+          onPress: () => {
+            return null;
+          },
+        },
+        {
+          text: "Delete Account",
+          onPress: () => {
+            dispatch(deleteUserAccountPrompt());
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -217,6 +255,33 @@ export default function Account({ navigation }) {
           </View>
         </TouchableNativeFeedback>
         {/** End QR code */}
+
+        <Separator />
+
+        {/** Delete User Account */}
+        <TouchableNativeFeedback
+          onPress={() => alertPreDelete()}
+          onLongPress={() => {
+            alertDeleteUserAccount();
+          }}
+        >
+          <View style={styles.listItem}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+              <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
+                <View style={{ backgroundColor: "#DC3545", height: 26, width: 26, borderRadius: 13, justifyContent: "center", alignItems: "center" }}>
+                  <MaterialIcons name="delete" size={15} color="#FFFFFF" />
+                </View>
+                <View style={{ flexDirection: "column" }}>
+                  <AppText bold="true" styles={{ paddingLeft: 10, fontSize: 15 }}>
+                    Request Account Deletion
+                  </AppText>
+                  {/* <AppText styles={{ fontSize: 12, marginLeft: 10 }}>See you soon</AppText> */}
+                </View>
+              </View>
+            </View>
+          </View>
+        </TouchableNativeFeedback>
+        {/** End Delete User Account */}
       </View>
     </View>
   );

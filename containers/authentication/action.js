@@ -1,5 +1,15 @@
 import axios from "axios";
-import { USER_LOADING, USER_LOADED, AUTH_ERROR, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT_SUCCESS, PUSH_ACTIVITY_VERIFICATION_TOKEN, DOCUMENT_VERIFICATION } from "../rootAction/types";
+import {
+  USER_LOADING,
+  USER_LOADED,
+  AUTH_ERROR,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  LOGOUT_SUCCESS,
+  PUSH_ACTIVITY_VERIFICATION_TOKEN,
+  DOCUMENT_VERIFICATION,
+  DELETE_ACCOUNT_SUCCESS,
+} from "../rootAction/types";
 import { returnErrors } from "../messages/messages";
 import { BASE_URL } from "../rootAction/env";
 
@@ -59,6 +69,21 @@ export const login = (phoneNumber, password) => (dispatch, getState) => {
       dispatch({
         type: LOGIN_FAIL,
       });
+    });
+};
+
+// USER DELETE ACCOUNT
+export const deleteUserAccountPrompt = () => (dispatch, getState) => {
+  axios
+    .post(`${BASE_URL}/api/auth/delete-account`, { action: "delete" }, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: DELETE_ACCOUNT_SUCCESS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
     });
 };
 
