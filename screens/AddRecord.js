@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Dimensions, View, Text, StyleSheet, TextInput } from "react-native";
-import { Picker } from "@react-native-picker/picker";
 import AppText from "../resources/AppText";
 import { AppButton, PrimaryButton } from "../resources/AppButton";
 import { AntDesign } from "@expo/vector-icons";
@@ -13,8 +12,11 @@ import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
 import { postTransaction } from "../containers/transactions/action";
 import { convertUTCDateToLocalDate } from "../resources/MetaFunctions";
 import { toastColorObject } from "../resources/rStyledComponent";
+import { Picker as RNPicker } from "@react-native-picker/picker";
+import { Select } from "native-base";
 
 export default function AddRecord({ navigation }) {
+  const Picker = Platform.OS == "android" ? RNPicker : Select;
   const toast = useToast();
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [displaySpinner, setDisplaySpinner] = useState(false);

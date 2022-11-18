@@ -2,18 +2,21 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 
-import { View, StyleSheet, ScrollView } from "react-native";
-import { Picker } from "@react-native-picker/picker";
+import { View, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { Text as RNtext } from "react-native";
 import { PieChart } from "react-native-svg-charts";
 import { Text } from "react-native-svg";
 import AppText from "../../resources/AppText";
-import { MaterialIcons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 
 import { getSysPeriod, getVisualizerData } from "../../containers/transactions/action";
 import { Spinner } from "native-base";
+import { Picker as RNPicker } from "@react-native-picker/picker";
+import { Select } from "native-base";
 
-export default function FinanceVisualizer() {
+export default function FinanceVisualizer({ navigation }) {
+  const Picker = Platform.OS == "android" ? RNPicker : Select;
+
   const [systemPeriod, setSystemPeriod] = useState([]);
   const [visualizerDataLoaded, setVisualizerDataLoaded] = useState(false);
   const [userSelectSystemPeriod, setUserSelectSystemPeriod] = useState("");
@@ -134,25 +137,31 @@ export default function FinanceVisualizer() {
     <ScrollView style={styles.container}>
       <View style={styles.windowBox}>
         {/** User-Periods */}
-        <View style={{ flexDirection: "row" }}>
-          <Picker
-            mode="dropdown"
-            style={{ height: 30, width: 130, backgroundColor: "#FFFFFF", marginTop: 8, borderRadius: 2, elevation: 5 }}
-            onValueChange={(itemValue, itemIndex) => {
-              setUserSelectSystemPeriod(itemValue);
-              userSystemPeriodUpdate(itemValue);
-            }}
-            selectedValue={userSelectSystemPeriod}
-          >
-            {systemPeriod.length > 0
-              ? systemPeriod.map((data, index) => {
-                  return <Picker.Item key={index} label={`${data.readable_date}`.toUpperCase()} value={data.raw_date} />;
-                })
-              : () => {
-                  return <Picker.Item label="Loading..." value="" />;
-                }}
-          </Picker>
-          <MaterialIcons name="arrow-drop-down" size={25} style={{ paddingVertical: 10 }} />
+        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+          <View style={{ width: 140 }}>
+            <Picker
+              style={{ height: 45 }}
+              itemStyle={{ height: 45 }}
+              onValueChange={(itemValue, itemIndex) => {
+                setUserSelectSystemPeriod(itemValue);
+                userSystemPeriodUpdate(itemValue);
+              }}
+              selectedValue={userSelectSystemPeriod}
+            >
+              {systemPeriod.length > 0
+                ? systemPeriod.map((data, index) => {
+                    return <Picker.Item key={index} label={`${data.readable_date}`.toUpperCase()} value={data.raw_date} />;
+                  })
+                : () => {
+                    return <Picker.Item label="Loading..." value="" />;
+                  }}
+            </Picker>
+          </View>
+          <TouchableOpacity onPress={() => navigation.navigate("AddRecord")} style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+            {/** Add More */}
+            <AntDesign name="pluscircleo" size={17} color="black" />
+            <AppText styles={{ marginLeft: 5 }}>Add Off-App Transactions</AppText>
+          </TouchableOpacity>
         </View>
       </View>
       {/** End User-Periods */}

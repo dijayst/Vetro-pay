@@ -24,7 +24,7 @@ export default function Account({ navigation }) {
 
   const alertPreDelete = () => {
     Alert.alert(
-      "We'd love to have you with us?",
+      "We'd love to have you with us",
       "This action may be irredeemable. To proceed, hold the 'Request Account Deletion' Button for about 5 - 10 seconds.",
       [
         {
