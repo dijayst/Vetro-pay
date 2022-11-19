@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { View, TextInput, StyleSheet, Pressable, TouchableOpacity } from "react-native";
+import { View, TextInput, StyleSheet, Pressable, TouchableOpacity, Alert } from "react-native";
 import AppText from "../../resources/AppText";
 import { numberWithCommas } from "../../resources/MetaFunctions";
 import { usePrevious } from "../../resources/utils";
@@ -8,7 +8,7 @@ import { HR, toastColorObject } from "../../resources/rStyledComponent";
 import { useToast, Box, Text as NativeBaseText, Spinner } from "native-base";
 import { getTrxFees, getUsdtTransactions, postTrxTransaction } from "../../containers/blockchain/action";
 
-export default function Withdraw() {
+export default function Withdraw({ navigation }) {
   const toast = useToast();
   const dispatch = useDispatch();
   const [userUsdtAmount, setUserUsdtAmount] = useState("");
@@ -58,7 +58,7 @@ export default function Withdraw() {
     if (userUsdtAmount != "" && postedTransactions.length && postedTransactions.length != prevPostedTransactions?.length) {
       if (postedTransactions[postedTransactions.length - 1]?.status == "success") {
         setDisplaySpinner(false);
-        Alert.alert("Transfer successful", `${amount} USDT withdraw 🎉\n\nCheck NGN Wallet 😉`, [
+        Alert.alert("Transfer successful", `${userUsdtAmount} USDT withdraw 🎉\n\nCheck NGN Wallet 😉`, [
           {
             text: "Go Home",
             onPress: () => {
