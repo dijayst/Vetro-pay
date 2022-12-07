@@ -116,7 +116,8 @@ export default function Swap({ navigation }) {
             <AntDesign name="infocirlce" size={20} color="#198754" style={{ marginTop: 5 }} />
             <View>
               <AppText bold styles={{ color: "#040404", lineHeight: 22, marginLeft: 10 }}>
-                $1 = ₮{usdTransactions.vetropay_usdt_from_usd_sale_value}
+                {/* $1 = ₮{usdTransactions.vetropay_usdt_from_usd_sale_value} */}
+                $1 = ₮1
               </AppText>
             </View>
           </View>
