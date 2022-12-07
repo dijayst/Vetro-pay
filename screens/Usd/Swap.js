@@ -133,7 +133,7 @@ export default function Swap({ navigation }) {
       ) : (
         <View style={{ margin: 10, justifyContent: "center", alignItems: "center" }}>
           <AppText bold styles={{ fontSize: 25, color: "grey", marginTop: 15 }}>
-            +{numberWithCommas(Number(amount * Number(usdTransactions.vetropay_usdt_from_usd_sale_value)).toFixed(2))} USDT
+            +{numberWithCommas(Number(amount).toFixed(2))} USDT
           </AppText>
           <AppText>≈ {numberWithCommas(amount)} USD</AppText>
 
