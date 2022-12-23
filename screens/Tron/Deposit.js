@@ -77,11 +77,11 @@ export default function Deposit({ navigation }) {
             </Box>
           ),
         });
-      } else if (trxAmount > 1000) {
+      } else if (trxAmount > 45000) {
         toast.show({
           render: () => (
             <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>TRX topup from VetroPay cannot be more than 1000 TRX per month</NativeBaseText>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>TRX topup from VetroPay cannot be more than 45,000 TRX per month</NativeBaseText>
             </Box>
           ),
         });
@@ -165,7 +165,7 @@ export default function Deposit({ navigation }) {
           <View>
             <AppText bold styles={{ color: "#040404", lineHeight: 22, marginLeft: 10, marginRight: 7 }}>
               Customers may only purchase limited TRX directly from our reserves per month. While there are no limits on how much TRX customers can hold in their TRX wallet, direct
-              Naira purchase is limited to 1,000 TRX per month. Thank you.
+              Naira purchase is limited to 45,000 TRX per month. Thank you.
             </AppText>
           </View>
         </View>
