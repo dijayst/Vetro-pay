@@ -199,9 +199,13 @@ export default function Send({ navigation }) {
               <AppText bold styles={{ color: "#36454F" }}>
                 Network Fee
               </AppText>
-              <AppText styles={{ fontSize: 12 }}>
-                {Number(fee.amount).toFixed(2)} TRX (${Number(fee.amount * TRON_VALUE_IN_USD).toFixed(2)})
-              </AppText>
+              {fee.amount > 0 ? (
+                <AppText styles={{ fontSize: 12 }}>
+                  {Number(fee.amount).toFixed(2)} TRX (${Number(fee.amount * TRON_VALUE_IN_USD).toFixed(2)})
+                </AppText>
+              ) : (
+                <AppText styles={{ fontSize: 12 }}>Free</AppText>
+              )}
             </View>
             <HR style={{ marginVertical: 10, borderBottomColor: "grey" }} />
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
