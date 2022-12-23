@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useSelector } from "react-redux";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../routes/home";
@@ -9,6 +10,8 @@ import Settings from "../routes/settings";
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+  const businessNotificationsData = useSelector((state) => state.busnotifications.notifications);
+
   return (
     <NavigationContainer>
       <Tab.Navigator
@@ -44,7 +47,7 @@ export default function App() {
               height: 7,
               borderRadius: 5,
             },
-            tabBarBadge: "",
+            tabBarBadge: businessNotificationsData?.[businessNotificationsData.length - 1]?.data?.[0]?.read == false ? "" : null,
           }}
           component={Notifications}
         />

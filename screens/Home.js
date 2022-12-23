@@ -4,7 +4,7 @@ import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 import AppText from "../resources/AppText";
-import { StyleSheet, Image, Text, View, StatusBar, FlatList, Button, TouchableOpacity, Alert, Dimensions, Pressable, Platform } from "react-native";
+import { StyleSheet, Image, Text, View, StatusBar, FlatList, Button, TouchableOpacity, Alert, Dimensions, Pressable, Platform, ScrollView } from "react-native";
 import { MaterialCommunityIcons, AntDesign, Feather, Octicons, SimpleLineIcons, FontAwesome, Foundation, Fontisto, MaterialIcons, Entypo } from "@expo/vector-icons";
 import { getUserTransaction } from "../containers/transactions/action";
 import { updateNotificationToken } from "../containers/regvalidate/action";
@@ -17,6 +17,7 @@ import UsdtHome from "./Usdt";
 import TronHome from "./Tron";
 import UsdHome from "./Usd";
 import { SafeAreaView } from "../resources/rStyledComponent";
+import { getBusinessNotifications } from "../containers/busnotifications/actions";
 
 const SUPPORTED_CURRENCIES = [
   {
@@ -83,8 +84,9 @@ export default function Home({ navigation }) {
 
   useEffect(() => {
     /**NAVIGATIOON */
-    navigation.addListener("didFocus", () => {
+    navigation.addListener("focus", () => {
       dispatch(getUserTransaction(""));
+      dispatch(getBusinessNotifications());
     });
   }, [navigation]);
 
@@ -421,31 +423,33 @@ export default function Home({ navigation }) {
             </View>
           </View>
 
-          {/* <AppText styles={{ marginTop: 20, marginHorizontal: 10, fontSize: 16, textAlign: "center" }}> • • •</AppText> */}
-          <View style={{ flexDirection: "row", marginTop: 30, marginHorizontal: 10 }}>
-            <MaterialIcons name="graphic-eq" size={24} color="red" />
-            <AppText bold="true" styles={{ fontSize: 16 }}>
-              Earn Interest on your savings every month
-            </AppText>
-          </View>
-
-          {SAVINGS_IMAGE_ARRAY && <Image source={SAVINGS_IMAGE_ARRAY[savingsImagePosition]} style={{ width: 170, marginTop: 10, height: 170, alignSelf: "center" }} />}
-
-          <View style={{ display: "flex", marginTop: 10, alignItems: "center", justifyContent: "center" }}>
-            <View style={{ width: "80%" }}>
-              <Pressable
-                style={{ width: "100%", backgroundColor: "#266ddc", padding: 10, alignItems: "center", borderRadius: 5 }}
-                onPress={() => {
-                  navigation.navigate("Savings");
-                  //Alert.alert("Coming soon", "Our savings features will be available from the 1st of August, 2022.");
-                }}
-              >
-                <AppText styles={{ color: "#FFFFFF" }} bold>
-                  Grow your savings
-                </AppText>
-              </Pressable>
+          <ScrollView>
+            {/* <AppText styles={{ marginTop: 20, marginHorizontal: 10, fontSize: 16, textAlign: "center" }}> • • •</AppText> */}
+            <View style={{ flexDirection: "row", marginTop: 30, marginHorizontal: 10 }}>
+              <MaterialIcons name="graphic-eq" size={24} color="red" />
+              <AppText bold="true" styles={{ fontSize: 16 }}>
+                Earn Interest on your savings every month
+              </AppText>
             </View>
-          </View>
+
+            {SAVINGS_IMAGE_ARRAY && <Image source={SAVINGS_IMAGE_ARRAY[savingsImagePosition]} style={{ width: 170, marginTop: 10, height: 170, alignSelf: "center" }} />}
+
+            <View style={{ display: "flex", marginTop: 10, alignItems: "center", justifyContent: "center" }}>
+              <View style={{ width: "80%" }}>
+                <Pressable
+                  style={{ width: "100%", backgroundColor: "#266ddc", padding: 10, alignItems: "center", borderRadius: 5 }}
+                  onPress={() => {
+                    navigation.navigate("Savings");
+                    //Alert.alert("Coming soon", "Our savings features will be available from the 1st of August, 2022.");
+                  }}
+                >
+                  <AppText styles={{ color: "#FFFFFF" }} bold>
+                    Grow your savings
+                  </AppText>
+                </Pressable>
+              </View>
+            </View>
+          </ScrollView>
         </Fragment>
       )}
 
