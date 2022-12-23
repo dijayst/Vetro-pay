@@ -7,6 +7,7 @@ import { convertEpochToLocalDate } from "../../resources/MetaFunctions";
 import { Spinner } from "native-base";
 import { toastColorObject } from "../../resources/rStyledComponent";
 import { useToast, Box, Text as NativeBaseText } from "native-base";
+import { calculateBandwithOrEnergy, customTrxWithCommas, numberWithCommas } from "../../resources/utils";
 
 export default function index({ navigation, selectedCurrency, bottomSheetRef }) {
   const toast = useToast();
@@ -49,6 +50,12 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
           message: `To ${transaction?.parameter?.value.owner_address}`,
         };
       }
+    } else if (transactionType == "FreezeBalanceContract") {
+      return {
+        type: "debit",
+        amount: data["raw_data"]["contract"][0]["parameter"]["value"]["frozen_balance"] / 1000000,
+        message: `To ${transaction?.parameter?.value.owner_address}`,
+      };
     }
   };
 
@@ -61,10 +68,15 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
               Balance
             </AppText>
             <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", width: "100%" }}>
-              <MaterialIcons name="account-balance-wallet" size={24} color="#f2f2f2" />
-              <AppText bold="true" styles={{ fontSize: 18, color: "#f2f2f2", marginLeft: 5 }}>
-                TRX {Number(trxTransactions?.balance?.balance).toFixed(6)}
-              </AppText>
+              <MaterialIcons name="account-balance-wallet" size={24} color="#f2f2f2" style={{ alignSelf: "flex-start" }} />
+              <View>
+                <AppText bold="true" styles={{ fontSize: 18, color: "#f2f2f2", marginLeft: 5 }}>
+                  TRX {customTrxWithCommas(Number(trxTransactions?.balance?.balance || 0.0).toFixed(6))}
+                </AppText>
+                <AppText bold="true" styles={{ fontSize: 13, color: "#f2f2f2", marginLeft: 5 }}>
+                  ≈ ${numberWithCommas(Number(trxTransactions?.balance?.balance * trxTransactions?.tron_value || 0).toFixed(2))}
+                </AppText>
+              </View>
             </View>
           </View>
           <TouchableOpacity
@@ -76,6 +88,7 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
               borderRadius: 10,
               flexDirection: "row",
               alignItems: "center",
+              maxHeight: 50,
             }}
             onPress={() => bottomSheetRef.current?.expand()}
           >
@@ -131,7 +144,15 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => Alert.alert("TRX Stake", "Feature will be available soon. Delivery date: Nov. 28, 2022")}>
+            <TouchableOpacity
+              onPress={() => {
+                if (trxTransactions.processing) {
+                  alertUserToAwaitLoading();
+                } else {
+                  navigation.navigate("StakeTrx");
+                }
+              }}
+            >
               <View style={{ ...styles.activityButton, width: 60 }}>
                 <FontAwesome5 name="coins" size={24} color="#f2f2f2" />
                 <AppText styles={styles.mainBoardIconText}>Freeze</AppText>
@@ -142,8 +163,41 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
       </View>
 
       {/** SHOW AVAILABLE, PENDING & FRONZEN */}
-      <View style={{ justifyContent: "center", alignItems: "center" }}></View>
-      <View style={{ marginTop: 30, paddingHorizontal: 10, flex: 1 }}>
+      <View style={{ justifyContent: "center", alignItems: "center" }}>
+        <View style={styles.menuBoard}>
+          <View style={{ width: "45%" }}>
+            <AppText bold styles={{ fontSize: 12, color: "#0D2241" }}>
+              Energy: N/A
+            </AppText>
+            {/** Energy Guauge */}
+            <View style={{ ...styles.metricGuage }}></View>
+          </View>
+
+          <View style={{ width: "45%" }}>
+            <AppText bold styles={{ fontSize: 12, color: "#0D2241" }}>
+              Bandwidth: {calculateBandwithOrEnergy(trxTransactions?.balance?.bandwidth, "bandwidth").available}
+              {" / "}
+              {calculateBandwithOrEnergy(trxTransactions?.balance?.bandwidth, "bandwidth").total}
+            </AppText>
+            {/** Bandwidth Guauge */}
+            <View>
+              <View style={{ ...styles.metricGuage }}></View>
+              <View
+                style={{
+                  ...styles.metricGuage,
+                  position: "absolute",
+                  backgroundColor: "#0D2241",
+                  width: `${
+                    (100 * calculateBandwithOrEnergy(trxTransactions?.balance?.bandwidth, "bandwidth").available) /
+                    calculateBandwithOrEnergy(trxTransactions?.balance?.bandwidth, "bandwidth").total
+                  }%`,
+                }}
+              ></View>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View style={{ marginTop: 15, paddingHorizontal: 10, flex: 1 }}>
         <AppText bold styles={{ fontSize: 18, marginBottom: 5 }}>
           Transactions
         </AppText>
@@ -164,28 +218,56 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
         ) : (
           <ScrollView style={{ marginBottom: 10 }}>
             {trxTransactions?.transactions.data
-              .filter((data) => data["raw_data"]["contract"][0]?.type == "TransferContract" || data["raw_data"]["contract"][0]?.type == "TriggerSmartContract")
+              .filter(
+                (data) =>
+                  data["raw_data"]["contract"][0]?.type == "TransferContract" ||
+                  data["raw_data"]["contract"][0]?.type == "TriggerSmartContract" ||
+                  data["raw_data"]["contract"][0]?.type == "FreezeBalanceContract"
+              )
               .map((data, index) => {
-                return (
-                  <View key={index} style={{ marginVertical: 10, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                    <View style={{ width: "100%" }}>
-                      <AppText styles={{ fontSize: 12 }}>{convertEpochToLocalDate(data.block_timestamp)}</AppText>
-                      <View style={{ marginTop: 2, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                        <View style={{ flexDirection: "row", alignItems: "center" }}>
-                          <MaterialCommunityIcons name={geTrxTransactionNote(data)["type"] == "credit" ? "arrow-collapse-down" : "arrow-collapse-up"} size={14} color="black" />
-                          <AppText styles={{ fontSize: 14 }}>Transfer</AppText>
+                if (data["raw_data"]["contract"][0]?.type == "FreezeBalanceContract") {
+                  return (
+                    <View key={index} style={{ marginVertical: 10, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                      <View style={{ width: "100%" }}>
+                        <AppText styles={{ fontSize: 12 }}>{convertEpochToLocalDate(data.block_timestamp)}</AppText>
+                        <View style={{ marginTop: 2, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                          <View style={{ flexDirection: "row", alignItems: "center" }}>
+                            <MaterialCommunityIcons name={"arrow-collapse-up"} size={14} color="black" />
+                            <AppText styles={{ fontSize: 14 }}>Freeze</AppText>
+                          </View>
+                          <View>
+                            <AppText styles={{ color: "red" }}>
+                              {" "}
+                              {"-"} {Number(geTrxTransactionNote(data)["amount"]).toFixed(6)} TRX
+                            </AppText>
+                          </View>
                         </View>
-                        <View>
-                          <AppText styles={{ color: `${geTrxTransactionNote(data)["type"] == "credit" ? "#0bc8a5" : "red"}` }}>
-                            {" "}
-                            {geTrxTransactionNote(data)["type"] == "credit" ? "+" : "-"} {Number(geTrxTransactionNote(data)["amount"]).toFixed(6)} TRX
-                          </AppText>
-                        </View>
+                        <AppText styles={{ fontSize: 12, color: "grey" }}>{geTrxTransactionNote(data)["message"]}</AppText>
                       </View>
-                      <AppText styles={{ fontSize: 12, color: "grey" }}>{geTrxTransactionNote(data)["message"]}</AppText>
                     </View>
-                  </View>
-                );
+                  );
+                } else {
+                  return (
+                    <View key={index} style={{ marginVertical: 10, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                      <View style={{ width: "100%" }}>
+                        <AppText styles={{ fontSize: 12 }}>{convertEpochToLocalDate(data.block_timestamp)}</AppText>
+                        <View style={{ marginTop: 2, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                          <View style={{ flexDirection: "row", alignItems: "center" }}>
+                            <MaterialCommunityIcons name={geTrxTransactionNote(data)["type"] == "credit" ? "arrow-collapse-down" : "arrow-collapse-up"} size={14} color="black" />
+                            <AppText styles={{ fontSize: 14 }}>Transfer</AppText>
+                          </View>
+                          <View>
+                            <AppText styles={{ color: `${geTrxTransactionNote(data)["type"] == "credit" ? "#0bc8a5" : "red"}` }}>
+                              {" "}
+                              {geTrxTransactionNote(data)["type"] == "credit" ? "+" : "-"} {Number(geTrxTransactionNote(data)["amount"]).toFixed(6)} TRX
+                            </AppText>
+                          </View>
+                        </View>
+                        <AppText styles={{ fontSize: 12, color: "grey" }}>{geTrxTransactionNote(data)["message"]}</AppText>
+                      </View>
+                    </View>
+                  );
+                }
               })}
           </ScrollView>
         )}
@@ -239,14 +321,15 @@ const styles = StyleSheet.create({
 
   menuBoard: {
     backgroundColor: "#ffffff",
-    height: 190,
+    height: 60,
     width: "90%",
     marginTop: -30,
     borderRadius: 5,
     elevation: 3,
-    flexWrap: "wrap",
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
+    paddingHorizontal: 15,
+    alignItems: "center",
   },
   activityButtonIIText: {
     fontSize: 10,
@@ -265,5 +348,12 @@ const styles = StyleSheet.create({
     marginTop: 100,
     justifyContent: "center",
     alignItems: "center",
+  },
+  metricGuage: {
+    marginTop: 2,
+    height: 5,
+    width: "100%",
+    backgroundColor: "rgba(167, 170, 173, 0.8)",
+    borderRadius: 2,
   },
 });

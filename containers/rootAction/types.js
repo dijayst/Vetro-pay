@@ -71,6 +71,7 @@ export const GET_TRX_TRANSACTIONS = "GET_TRX_TRANSACTIONS";
 export const GET_TRX_FEES = "GET_TRX_FEES";
 export const POST_TRX = "POST_TRX";
 export const DEPOSIT_TRX = "DEPOSIT_TRX";
+export const FREEZE_TRX = "FREEZE_TRX";
 
 export const GET_LOAN_HISTORY = "GET_LOAN_HISTORY";
 export const VERIFY_EMPLOYMENT = "VERIFY_EMPLOYMENT";

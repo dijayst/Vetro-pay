@@ -16,6 +16,32 @@ export const numberWithCommas = (value) => {
   }
 };
 
+export const customTrxWithCommas = (value) => {
+  try {
+    let splitted = value.split(".");
+    return `${splitted[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}.${splitted[1]}`;
+  } catch {
+    return "";
+  }
+};
+
+export const calculateBandwithOrEnergy = (object, type) => {
+  try {
+    // (freeNetLimit - freeNetUsed) + (NetLimit - NetUsed)
+    let available = object.freeNetLimit - (object.freeNetUsed || 0) + ((object.NetLimit || 0) - (object.NetUsed || 0));
+    let total = object.freeNetLimit + (object.NetLimit || 0);
+    return {
+      available,
+      total,
+    };
+  } catch {
+    return {
+      available: 0,
+      total: 0,
+    };
+  }
+};
+
 export const nigeriaBanks = [
   { bankCode: "000", bankName: "VetroPay Africa" },
   { bankCode: "044", bankName: "Access Bank" },

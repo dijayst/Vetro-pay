@@ -39,6 +39,11 @@ const SUPPORTED_CURRENCIES = [
     code: "TRX",
     icon: "https://res.cloudinary.com/ancla8techs4/image/upload/v1662498547/vetropay/62837c68ab0e763d5f77e9a6_z7wfzs.png",
   },
+  {
+    fullname: "Bitcoin",
+    code: "BTC",
+    icon: "https://res.cloudinary.com/ancla8techs4/image/upload/v1671729820/vetropay/bitcoin-btc-logo_swmjng.png",
+  },
 ];
 export default function Home({ navigation }) {
   const userAuthentication = useSelector((state) => state.authentication.user);
@@ -451,18 +456,35 @@ export default function Home({ navigation }) {
         <View style={{ paddingHorizontal: 20 }}>
           {SUPPORTED_CURRENCIES.map((data, index) => {
             return (
-              <View key={index} style={{ marginBottom: 10, marginTop: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <Image source={{ uri: data.icon }} style={{ width: 40, height: 40, resizeMode: "contain", marginRight: 10 }} />
-                  <AppText styles={{ fontSize: 18 }}>
-                    {data.fullname} - &nbsp; {data.code}
-                  </AppText>
-                </View>
+              <Fragment>
+                <View key={index} style={{ marginBottom: 10, marginTop: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Image source={{ uri: data.icon }} style={{ width: 40, height: 40, resizeMode: "contain", marginRight: 10 }} />
+                    <AppText styles={{ fontSize: 18 }}>
+                      {data.fullname} - &nbsp; {data.code}
+                    </AppText>
+                  </View>
 
-                <TouchableOpacity onPress={() => handleSheetCloseRequest(data)} style={styles.currencyRadioContainer}>
-                  <View style={{ ...styles.currencyRadioContainerInner, backgroundColor: `${selectedCurrency.code == data.code ? "#0bc8a5" : "#FFFFFF"}` }}></View>
-                </TouchableOpacity>
-              </View>
+                  {data.code !== "BTC" && (
+                    <TouchableOpacity onPress={() => handleSheetCloseRequest(data)} style={styles.currencyRadioContainer}>
+                      <View style={{ ...styles.currencyRadioContainerInner, backgroundColor: `${selectedCurrency.code == data.code ? "#0bc8a5" : "#FFFFFF"}` }}></View>
+                    </TouchableOpacity>
+                  )}
+                </View>
+                <View>
+                  {data.code === "BTC" && (
+                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                      <Image
+                        source={{ uri: "https://res.cloudinary.com/ancla8techs4/image/upload/v1671737498/vetropay/bitcoin-lightning_rla5q9.png" }}
+                        style={{ width: 20, height: 20, resizeMode: "contain", marginRight: 10 }}
+                      />
+                      <AppText small bold styles={{ fontSize: 9 }}>
+                        Support for BTC {"&"} Bitcoin lightning coming soon.
+                      </AppText>
+                    </View>
+                  )}
+                </View>
+              </Fragment>
             );
           })}
         </View>

@@ -8,6 +8,7 @@ import {
   WITHDRAW_USD,
   USD_USDT_SWAP,
   DEPOSIT_TRX,
+  FREEZE_TRX,
 } from "../rootAction/types";
 
 const initialState = {
@@ -20,6 +21,7 @@ const initialState = {
   withdrawusd: [],
   usdusdtswap: [],
   deposittrx: [],
+  freezetrx: [],
 };
 
 export default function (state = initialState, action) {
@@ -68,6 +70,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         deposittrx: [...state.deposittrx, action.payload],
+      };
+    case FREEZE_TRX:
+      return {
+        ...state,
+        freezetrx: [...state.freezetrx, action.payload],
       };
     default:
       return state;

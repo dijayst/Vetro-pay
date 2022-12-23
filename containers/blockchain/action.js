@@ -10,6 +10,7 @@ import {
   WITHDRAW_USD,
   USD_USDT_SWAP,
   DEPOSIT_TRX,
+  FREEZE_TRX,
 } from "../rootAction/types";
 import { returnErrors } from "../messages/messages";
 import { BASE_URL } from "../rootAction/env";
@@ -152,6 +153,36 @@ export const depositTrxPrompt = (amount, source) => (dispatch, getState) => {
     .then((res) => {
       dispatch({
         type: DEPOSIT_TRX,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+    });
+};
+
+// FREEZE TRX
+export const freezeTrxPrompt = (amount, transaction_pin) => (dispatch, getState) => {
+  axios
+    .post(`${BASE_URL}/api/trx/freeze-asset`, { amount, transaction_pin }, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: FREEZE_TRX,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+    });
+};
+
+// UNFREEZE TRX
+export const unFreezeTrxPrompt = (transaction_pin) => (dispatch, getState) => {
+  axios
+    .post(`${BASE_URL}/api/trx/unfreeze-asset`, { transaction_pin }, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: FREEZE_TRX,
         payload: res.data,
       });
     })

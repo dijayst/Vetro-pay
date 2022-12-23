@@ -29,6 +29,7 @@ import WithdrawUsdt from "../screens/Usdt/Withdraw";
 import ReceiveTrx from "../screens/Tron/Receive";
 import DepositTrx from "../screens/Tron/Deposit";
 import SendTrx from "../screens/Tron/Send";
+import StakeTrx from "../screens/Tron/Stake";
 import WithdrawUsd from "../screens/Usd/Withdraw";
 import DepositUsd from "../screens/Usd/Deposit";
 import SwapUsd from "../screens/Usd/Swap";
@@ -356,6 +357,17 @@ export default function HomeStack() {
           headerTintColor: "#fff",
         }}
         component={SendTrx}
+      />
+
+      <Stack.Screen
+        name="StakeTrx"
+        options={{
+          title: "Freeze/Stake TRX",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={StakeTrx}
       />
 
       <Stack.Screen
