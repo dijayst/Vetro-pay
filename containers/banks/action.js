@@ -63,3 +63,18 @@ export const userBankWithdraw = (amount) => (dispatch, getState) => {
       dispatch(returnErrors(err.response.data, err.response.status));
     });
 };
+
+// WITHDRAW TO OTHER BANK
+export const userThirdPartyBankWithdraw = (amount, bank_name, account_no, recipient_name, transaction_pin) => (dispatch, getState) => {
+  axios
+    .post(`${BASE_URL}/api/user/bankwithdrawal-to-others`, { amount, bank_name, account_no, recipient_name, transaction_pin }, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: WITHDRAW_TO_BANK,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+    });
+};

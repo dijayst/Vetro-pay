@@ -184,6 +184,7 @@ export default function LinkBank({ navigation }) {
                   placeholder="Enter NUBAN"
                   keyboardType="numeric"
                   onChangeText={(text) => {
+                    setBankValid(false);
                     setLinkBankData((prevState) => ({
                       ...prevState,
                       payload: {

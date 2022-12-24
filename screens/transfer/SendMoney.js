@@ -594,11 +594,8 @@ export default function SendMoney({ navigation }) {
           </AppText>
 
           <View style={styles.recordForm}>
-            <View style={{ marginTop: 8, paddingLeft: 4, paddingRight: 4 }}>
+            <View style={{ marginTop: 0, paddingLeft: 4, paddingRight: 4 }}>
               <View style={styles.formGroup}>
-                <AppText>
-                  <Text style={{ fontWeight: "700" }}>Recipient Country</Text>
-                </AppText>
                 <View
                   style={{
                     marginTop: 10,
@@ -618,7 +615,7 @@ export default function SendMoney({ navigation }) {
                     borderColor={"transparent"}
                   >
                     <Picker.Item label="🇳🇬  Nigeria" value="NIGERIA" />
-                    <Picker.Item label="🇰🇪  Kenya" value="KENYA" />
+                    {/* <Picker.Item label="🇰🇪  Kenya" value="KENYA" /> */}
                   </Picker>
                 </View>
               </View>
@@ -661,7 +658,7 @@ export default function SendMoney({ navigation }) {
                 />
               </View>
 
-              <View style={styles.formGroup}>
+              {/* <View style={styles.formGroup}>
                 <AppText>
                   <Text style={{ fontWeight: "700" }}>Transaction Charge</Text>
                 </AppText>
@@ -670,7 +667,7 @@ export default function SendMoney({ navigation }) {
                   defaultValue={`${sendMoneyData.payload.currency} ${sendMoneyData.payload.transactionCharge}`}
                   editable={false}
                 />
-              </View>
+              </View> */}
 
               <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 10 }}>
                 <AppText bold="true" styles={{ fontSize: 15 }}>

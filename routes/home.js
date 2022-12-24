@@ -15,6 +15,7 @@ import SendMoney from "../screens/transfer/SendMoney";
 import TransferBusiness from "../screens/transfer/TransferBusiness";
 import SendMoneyBusiness from "../screens/transfer/SendMoneyBusiness";
 import Withdraw from "../screens/transfer/Withdraw";
+import WithdrawOthers from "../screens/transfer/WithdrawOthers";
 import LinkBank from "../screens/transfer/LinkBank";
 import AddRecord from "../screens/AddRecord";
 import Savings from "../screens/savings/Savings";
@@ -203,6 +204,17 @@ export default function HomeStack() {
           headerTintColor: "#fff",
         }}
         component={Withdraw}
+      />
+
+      <Stack.Screen
+        name="WithdrawOthers"
+        options={{
+          title: "Fund Transfer",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={WithdrawOthers}
       />
 
       <Stack.Screen

@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 
-import { Dimensions, View, Text, StyleSheet, Modal, TextInput } from "react-native";
+import { Dimensions, View, Text, StyleSheet, Modal, TextInput, Pressable } from "react-native";
 import { ImageBackground } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, FontAwesome } from "@expo/vector-icons";
 
 import AppText from "../../resources/AppText";
 import { PrimaryButton } from "../../resources/AppButton";
@@ -69,7 +69,7 @@ export default function Withdraw({ navigation }) {
 
   useEffect(() => {
     /**NAVIGATIOON */
-    navigation.addListener("didFocus", () => {
+    navigation.addListener("focus", () => {
       dispatch(getBank());
     });
   }, [navigation]);
@@ -173,37 +173,57 @@ export default function Withdraw({ navigation }) {
               </AppText>
 
               {userBankInfo.status == "success" ? (
-                <ImageBackground source={BankBackgroundImage} style={{ flex: 1, height: 126, opacity: 0.75, borderBottomLeftRadius: 8, borderRadius: 8 }}>
-                  <View style={{ flex: 1, backgroundColor: "rgba(36, 109, 220, 0.5)" }}>
-                    <View style={{ marginVertical: 10, marginHorizontal: 10, flexDirection: "row" }}>
-                      <BankWalletSvgComponent />
-                      <View style={{ marginLeft: 40 }}>
-                        {/**Bank name */}
-                        <AppText styles={{ fontSize: 16, color: "rgba(255, 255, 255, 0.9)" }}>Bank Name</AppText>
-                        <AppText bold="true" styles={{ fontSize: 16, color: "#FFFFFF" }}>
-                          {userBankInfo["data"].bank_name}
-                        </AppText>
+                <View>
+                  <ImageBackground resizeMode="contain" source={BankBackgroundImage} style={{ flex: 1, height: 126, opacity: 0.75 }} imageStyle={{ borderRadius: 10 }}>
+                    <View style={{ flex: 1, backgroundColor: "rgba(36, 109, 220, 0.5)", borderRadius: 8, height: 126 }}>
+                      <View style={{ marginVertical: 10, marginHorizontal: 10, flexDirection: "row" }}>
+                        <BankWalletSvgComponent />
+                        <View style={{ marginLeft: 40 }}>
+                          {/**Bank name */}
+                          <AppText styles={{ fontSize: 16, color: "rgba(255, 255, 255, 0.9)" }}>Bank Name</AppText>
+                          <AppText bold="true" styles={{ fontSize: 16, color: "#FFFFFF" }}>
+                            {userBankInfo["data"].bank_name}
+                          </AppText>
 
-                        {/** Bank Accoun Number */}
+                          {/** Bank Accoun Number */}
 
-                        <AppText styles={{ marginTop: 10, fontSize: 16, color: "rgba(255, 255, 255, 0.9)" }}>Account Number</AppText>
-                        <AppText bold="true" styles={{ fontSize: 16, color: "#FFFFFF" }}>
-                          {userBankInfo["data"].bank_account_number}
-                        </AppText>
+                          <AppText styles={{ marginTop: 10, fontSize: 16, color: "rgba(255, 255, 255, 0.9)" }}>Account Number</AppText>
+                          <AppText bold="true" styles={{ fontSize: 16, color: "#FFFFFF" }}>
+                            {userBankInfo["data"].bank_account_number}
+                          </AppText>
+                        </View>
                       </View>
                     </View>
-                  </View>
-                </ImageBackground>
+                  </ImageBackground>
+
+                  <Pressable
+                    onPress={() => navigation.navigate("LinkBank")}
+                    style={{
+                      width: "100%",
+                      borderWidth: 0,
+                      padding: 10,
+                      borderRadius: 5,
+                      marginTop: 5,
+                      marginBottom: 20,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flexDirection: "row",
+                    }}
+                  >
+                    <FontAwesome name="bank" size={15} color="#266ddc" />
+
+                    <AppText bold styles={{ fontSize: 14, color: "grey", marginLeft: 5 }}>
+                      Change Destination Bank
+                    </AppText>
+                  </Pressable>
+                </View>
               ) : (
                 <Text></Text> //"Empty"
               )}
 
               <View style={styles.formGroup}>
-                <AppText>
-                  <Text style={{ fontWeight: "700" }}>Amount ({currency})</Text>
-                </AppText>
                 <TextInput
-                  style={{ ...styles.textInput, borderColor: "#266ddc" }}
+                  style={{ ...styles.textInput, borderColor: "#266ddc", marginBottom: 4 }}
                   placeholder="Enter Amount"
                   keyboardType="numeric"
                   onChangeText={(text) =>
@@ -217,20 +237,13 @@ export default function Withdraw({ navigation }) {
                   }
                   value={withdrawalData.payload.amount}
                 />
-              </View>
-
-              <View style={styles.formGroup}>
-                <AppText>
-                  <Text style={{ fontWeight: "700" }}>Transaction Charge</Text>
+                <AppText styles={{ alignSelf: "flex-start", fontSize: 12 }}>
+                  <Text style={{ fontWeight: "700" }}>Transaction Charge: </Text>
+                  {`${currency} ${accountBalance > 0 ? "50" : withdrawalData.payload.transactionCharge}`}
                 </AppText>
-                <TextInput
-                  style={{ ...styles.textInput, borderColor: "#266ddc", backgroundColor: "#F0F0F8" }}
-                  defaultValue={`${currency} ${accountBalance > 0 ? "50" : withdrawalData.payload.transactionCharge}`}
-                  editable={false}
-                />
               </View>
 
-              <View style={{ ...styles.formGroup, alignItems: "center", display: `${!displaySpinner ? "flex" : "none"}` }}>
+              <View style={{ ...styles.formGroup, marginTop: 15, alignItems: "center", display: `${!displaySpinner ? "flex" : "none"}` }}>
                 <PrimaryButton disabled={userBankError} onPress={() => submitWithdrawalData()}>
                   <AppText bold="true" styles={{ color: "#fff", fontSize: 16 }}>
                     Withdraw
