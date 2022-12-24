@@ -108,7 +108,7 @@ export default function LinkBank({ navigation }) {
       if (prevUpdateBankResponse.length !== updateBankResponse.length) {
         if (updateBankResponse[updateBankResponse.length - 1]["status"] == "success") {
           setDisplaySpinner(false);
-          navigation.navigate("Withdraw");
+          navigation.goBack();
         } else {
           setDisplaySpinner(false);
           toast.show({
@@ -130,7 +130,7 @@ export default function LinkBank({ navigation }) {
 
         <View style={styles.balanceUpBackGround}>
           <AppText bold="true" styles={{ fontSize: 18, textTransform: "uppercase", color: "#FFFFFF" }}>
-            Withdrawal {">"} Link your Bank
+            Link your Bank
           </AppText>
 
           <View style={styles.recordForm}>

@@ -220,7 +220,7 @@ export default function HomeStack() {
       <Stack.Screen
         name="LinkBank"
         options={{
-          title: "Fund Transfer",
+          title: "Bank Profile",
           headerStyle: { backgroundColor: "#266ddc" },
           headerTitleStyle: { color: "#fff", fontWeight: "700" },
           headerTintColor: "#fff",

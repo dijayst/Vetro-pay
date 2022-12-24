@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { View, TextInput, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, TextInput, StyleSheet, TouchableOpacity, Image, Pressable } from "react-native";
 import AppText from "../../resources/AppText";
 import { toastColorObject } from "../../resources/rStyledComponent";
 import { useToast, Box, Text as NativeBaseText, Spinner } from "native-base";
@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { postVerificationId } from "../../containers/authentication/action";
 import { usePrevious } from "../../resources/utils";
+import { getBank } from "../../containers/banks/action";
 
 const KYC_VERIFIED_COLOR = {
   UNVERIFIED: {
@@ -37,8 +38,13 @@ export default function Kyc({ navigation }) {
   const [displaySpinner, setDisplaySpinner] = useState(false);
 
   const userAuthentication = useSelector((state) => state.authentication.user);
+  const userBank = useSelector((state) => state.banks.banks);
   const documentVerificationResponse = useSelector((state) => state.authentication.documentVerification);
   const prevDocumentVerificationResponse = usePrevious(documentVerificationResponse);
+
+  useEffect(() => {
+    dispatch(getBank());
+  }, []);
 
   useEffect(() => {
     if (displaySpinner && documentVerificationResponse.length != prevDocumentVerificationResponse?.length) {
@@ -178,6 +184,17 @@ export default function Kyc({ navigation }) {
           <View style={{ marginTop: 10 }}>
             <View style={{ marginTop: 15 }}>
               <AppText styles={{ textAlign: "center" }}>Your KYC input is being processed.</AppText>
+              {!userBank?.data?.bank_name && (
+                <Pressable onPress={() => navigation.navigate("LinkBank")}>
+                  <AppText bold styles={{ textAlign: "center", marginTop: 5 }}>
+                    Click{" "}
+                    <AppText bold styles={{ fontSize: 18 }}>
+                      HERE
+                    </AppText>{" "}
+                    to Add a Bank Account.
+                  </AppText>
+                </Pressable>
+              )}
               <Image
                 source={{ uri: "https://res.cloudinary.com/ancla8techs4/image/upload/v1662846199/vetropay/waiting_verification_hsme2y.png" }}
                 style={{ width: 200, height: 200, alignSelf: "center", marginTop: 20 }}
