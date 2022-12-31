@@ -122,41 +122,62 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
       {/**USDT GRAPH */}
       <View style={{ justifyContent: "center", alignItems: "center" }}>
         <View style={styles.menuBoard}>
+          <View
+            style={{
+              width: "100%",
+              alignItems: "center",
+              backgroundColor: "#ededed",
+              borderRadius: 5,
+              flexDirection: "row",
+              justifyContent: "flex-end",
+              paddingHorizontal: 15,
+              paddingBottom: 3,
+            }}
+          >
+            <AppText bold styles={{ color: "#2E2E2E", fontSize: 15 }}>
+              {usdtTransactions.processing ? "0.00" : `₦${usdtTransactions.ngn_usd_current}/$`}
+            </AppText>
+            {!usdtTransactions.processing && (
+              <View style={{ justifyContent: "center", alignItems: "center", marginLeft: 7 }}>
+                {usdtTransactions?.ngn_usd_current > usdtTransactions?.usd_last_closing ? (
+                  <AntDesign name="caretup" size={8} color="#0bc8a5" />
+                ) : (
+                  <AntDesign name="caretdown" size={8} color="red" />
+                )}
+              </View>
+            )}
+          </View>
           <LineChart
             data={{
               labels: ["2020", "2021", "1-Month", "Last Week", "Today"],
               datasets: [{ data: usdtTransactions.processing ? [0, 0, 0, 0, 0] : usdtTransactions.ngn_usd_history }],
             }}
             width={Dimensions.get("window").width * 0.9}
-            height={220}
+            height={200}
             yAxisLabel="₦"
             yAxisSuffix=""
             yAxisInterval={1}
             chartConfig={{
-              backgroundColor: "#f2f2f2",
-              backgroundGradientFrom: "#67819700",
-              backgroundGradientTo: "#90ee90",
+              backgroundColor: "#ededed",
+              backgroundGradientFrom: "#ededed",
+              backgroundGradientTo: "#ededed",
               decimalPlaces: 0,
-              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              color: (opacity = 1) => `#266ddc`,
+              labelColor: (opacity = 1) => `#808080`,
               style: {
                 borderRadius: 16,
               },
               propsForDots: {
-                r: "6",
+                r: "2",
                 strokeWidth: "2",
-                stroke: "green",
+                stroke: "lightgreen",
               },
             }}
             bezier
-            style={{
-              elevation: 4,
-              borderRadius: 5,
-            }}
           />
         </View>
       </View>
-      <View style={{ marginTop: 40, paddingHorizontal: 10, flex: 1 }}>
+      <View style={{ marginTop: 15, paddingHorizontal: 10, flex: 1 }}>
         <AppText bold styles={{ fontSize: 18, marginBottom: 5 }}>
           Transactions
         </AppText>
@@ -250,14 +271,18 @@ const styles = StyleSheet.create({
 
   menuBoard: {
     backgroundColor: "#ffffff",
-    height: 190,
+    height: 220,
     width: "90%",
     marginTop: -30,
     borderRadius: 5,
-    elevation: 3,
+    elevation: 4,
     flexWrap: "wrap",
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    shadowColor: "#000",
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.4,
+    shadowRadius: 2,
+    overflow: "hidden",
   },
   activityButtonIIText: {
     fontSize: 10,
