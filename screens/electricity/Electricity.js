@@ -11,7 +11,7 @@ import { PrimaryButton } from "../../resources/AppButton";
 import { validateElectricityData, buyUtility } from "../../containers/utility/action";
 import { SuccessfulSvgComponent } from "../../resources/Svg";
 import { Modal as AndroidModal } from "react-native";
-import { Modal as IOSmodal } from 'native-base';
+import { Modal as IOSmodal } from "native-base";
 
 const Ekologo = require("../../assets/logos/eko.jpg");
 const IBEDClogo = require("../../assets/logos/ibedc.png");
@@ -36,8 +36,8 @@ const discosPlatformName = {
 };
 
 export default function Electricity() {
-  const Modal = Platform.OS == "android" ?  AndroidModal : IOSmodal
-  const Picker = Platform.OS == "android" ? RNPicker : Select
+  const Modal = Platform.OS == "android" ? AndroidModal : IOSmodal;
+  const Picker = Platform.OS == "android" ? RNPicker : Select;
 
   const [modalOpen, setModalOpen] = useState(false);
   const [provider, setProvider] = useState("");
@@ -78,9 +78,9 @@ export default function Electricity() {
     if (prevElectricityVerifyData) {
       if (prevElectricityVerifyData.length !== electricityVerifyData.length) {
         if (electricityVerifyData[electricityVerifyData.length - 1]["status"] == "success") {
-          setCustomerName(electricityVerifyData[electricityVerifyData.length - 1]["data"]["name"]);
-          setCustomerAddress(electricityVerifyData[electricityVerifyData.length - 1]["data"]["address"]);
-          setCustomerOutstandingBalance(electricityVerifyData[electricityVerifyData.length - 1]["data"]["outstandingBalance"]);
+          setCustomerName(electricityVerifyData[electricityVerifyData.length - 1]["data"]["user"]["name"]);
+          setCustomerAddress(electricityVerifyData[electricityVerifyData.length - 1]["data"]["user"]["address"]);
+          setCustomerOutstandingBalance(electricityVerifyData[electricityVerifyData.length - 1]["data"]["user"]["outstandingBalance"]);
           setDisplaySpinner(false);
           setElectricityPurchaseStage(3);
         } else {
