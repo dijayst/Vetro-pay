@@ -166,7 +166,7 @@ export default function Swap({ navigation }) {
           </View>
 
           <AppText styles={{ fontSize: 13, color: "#5cb85c", marginTop: 10 }}>
-            Dear Customer, our USD to USDT conversions currently happens only between (5AM - 6AM) WAT daily. New transactions may be pending till the next window. Thank you.
+            New transactions may be pending for few minutes, USD to USDT conversions may take up to 15 minutes. Thank you.
           </AppText>
 
           <TextInput
