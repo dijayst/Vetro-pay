@@ -239,7 +239,7 @@ export default function Withdraw({ navigation }) {
                 />
                 <AppText styles={{ alignSelf: "flex-start", fontSize: 12 }}>
                   <Text style={{ fontWeight: "700" }}>Transaction Charge: </Text>
-                  {`${currency} ${accountBalance > 0 ? "50" : withdrawalData.payload.transactionCharge}`}
+                  {`${currency} ${accountBalance > 0 && Number(withdrawalData.payload.amount) > 5000 ? "50" : withdrawalData.payload.transactionCharge}`}
                 </AppText>
               </View>
 

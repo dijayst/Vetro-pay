@@ -285,7 +285,7 @@ export default function WithdrawOthers({ navigation }) {
                 />
                 <AppText styles={{ alignSelf: "flex-start", fontSize: 12 }}>
                   <Text style={{ fontWeight: "700" }}>Transaction Charge: </Text>
-                  {`${currency} ${accountBalance > 0 ? "50" : "0.00"}`}
+                  {`${currency} ${accountBalance > 0 && Number(thirdPartyBankTransferData.payload.amount) > 5000 ? "50" : "0.00"}`}
                 </AppText>
               </View>
 
