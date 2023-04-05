@@ -11,6 +11,10 @@ import {
   USD_USDT_SWAP,
   DEPOSIT_TRX,
   FREEZE_TRX,
+  GET_BTC_TRANSACTIONS,
+  GET_BTC_FEES,
+  POST_BTC,
+  DEPOSIT_BTC,
 } from "../rootAction/types";
 import { returnErrors } from "../messages/messages";
 import { BASE_URL } from "../rootAction/env";
@@ -46,7 +50,7 @@ export const getTrxTransactions = () => (dispatch, getState) => {
 
 export const getTrxFees = (type, network, address) => (dispatch, getState) => {
   axios
-    .post(`${BASE_URL}/api/blockchain/get-transaction-fee`, { type, network, address }, tokenConfig(getState))
+    .post(`${BASE_URL}/api/blockchain/get-transaction-fee`, { type, network, address, priority: "", amount: "" }, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: GET_TRX_FEES,
@@ -58,13 +62,42 @@ export const getTrxFees = (type, network, address) => (dispatch, getState) => {
     });
 };
 
+export const getBtcFees = (type, network, address, priority, amount) => (dispatch, getState) => {
+  axios
+    .post(`${BASE_URL}/api/blockchain/get-transaction-fee`, { type, network, address, priority, amount }, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: GET_BTC_FEES,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+    });
+};
+
 export const postTrxTransaction = (type, network, address, amount, transaction_pin) => (dispatch, getState) => {
   axios
-    .post(`${BASE_URL}/api/blockchain/post-transaction`, { type, network, address, amount, transaction_pin }, tokenConfig(getState))
+    .post(`${BASE_URL}/api/blockchain/post-transaction`, { type, network, address, amount, transaction_pin, priority: "" }, tokenConfig(getState))
     .then((res) => {
       console.log(res.data);
       dispatch({
         type: POST_TRX,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+    });
+};
+
+export const postBtcTransaction = (type, network, address, amount, priority, transaction_pin) => (dispatch, getState) => {
+  axios
+    .post(`${BASE_URL}/api/blockchain/post-transaction`, { type, network, address, amount, priority, transaction_pin }, tokenConfig(getState))
+    .then((res) => {
+      console.log(res.data);
+      dispatch({
+        type: POST_BTC,
         payload: res.data,
       });
     })
@@ -183,6 +216,36 @@ export const unFreezeTrxPrompt = (transaction_pin) => (dispatch, getState) => {
     .then((res) => {
       dispatch({
         type: FREEZE_TRX,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+    });
+};
+
+// GET BTC
+export const getBtcTransactions = () => (dispatch, getState) => {
+  axios
+    .get(`${BASE_URL}/api/blockchain/get-transactions/BTC`, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: GET_BTC_TRANSACTIONS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+    });
+};
+
+// DEPOSTI BTC
+export const depositBtcPrompt = (amount, source) => (dispatch, getState) => {
+  axios
+    .post(`${BASE_URL}/api/btc/buy-btc`, { amount, source }, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: DEPOSIT_BTC,
         payload: res.data,
       });
     })

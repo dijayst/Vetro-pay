@@ -12,10 +12,11 @@ import NairaLog from "../assets/naira.png";
 import { Asset, useAssets } from "expo-asset";
 import { numberWithCommas } from "../resources/utils";
 import BottomSheet, { BottomSheetModalProvider, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
-import { getTrxTransactions, getUsdTransactions, getUsdtTransactions } from "../containers/blockchain/action";
+import { getBtcTransactions, getTrxTransactions, getUsdTransactions, getUsdtTransactions } from "../containers/blockchain/action";
 import UsdtHome from "./Usdt";
 import TronHome from "./Tron";
 import UsdHome from "./Usd";
+import BtcHome from "./Btc";
 import { SafeAreaView } from "../resources/rStyledComponent";
 import { getBusinessNotifications } from "../containers/busnotifications/actions";
 
@@ -196,6 +197,8 @@ export default function Home({ navigation }) {
         dispatch(getTrxTransactions());
       } else if (data.code == "USD") {
         dispatch(getUsdTransactions());
+      } else if (data.code == "BTC") {
+        dispatch(getBtcTransactions());
       }
       setSelectedCurrency(data);
       bottomSheetRef.current.close();
@@ -456,6 +459,7 @@ export default function Home({ navigation }) {
       {selectedCurrency.code == "USD" && <UsdHome navigation={navigation} selectedCurrency={selectedCurrency} bottomSheetRef={bottomSheetRef} />}
       {selectedCurrency.code == "USDT" && <UsdtHome navigation={navigation} selectedCurrency={selectedCurrency} bottomSheetRef={bottomSheetRef} />}
       {selectedCurrency.code == "TRX" && <TronHome navigation={navigation} selectedCurrency={selectedCurrency} bottomSheetRef={bottomSheetRef} />}
+      {selectedCurrency.code == "BTC" && <BtcHome navigation={navigation} selectedCurrency={selectedCurrency} bottomSheetRef={bottomSheetRef} />}
       <BottomSheet ref={bottomSheetRef} index={0} enablePanDownToClose={true} snapPoints={snapPoints} backdropComponent={renderBackdrop} onChange={handleSheetChanges}>
         <View style={{ paddingHorizontal: 20 }}>
           {SUPPORTED_CURRENCIES.map((data, index) => {
@@ -469,11 +473,9 @@ export default function Home({ navigation }) {
                     </AppText>
                   </View>
 
-                  {data.code !== "BTC" && (
-                    <TouchableOpacity onPress={() => handleSheetCloseRequest(data)} style={styles.currencyRadioContainer}>
-                      <View style={{ ...styles.currencyRadioContainerInner, backgroundColor: `${selectedCurrency.code == data.code ? "#0bc8a5" : "#FFFFFF"}` }}></View>
-                    </TouchableOpacity>
-                  )}
+                  <TouchableOpacity onPress={() => handleSheetCloseRequest(data)} style={styles.currencyRadioContainer}>
+                    <View style={{ ...styles.currencyRadioContainerInner, backgroundColor: `${selectedCurrency.code == data.code ? "#0bc8a5" : "#FFFFFF"}` }}></View>
+                  </TouchableOpacity>
                 </View>
                 <View>
                   {data.code === "BTC" && (
@@ -483,7 +485,7 @@ export default function Home({ navigation }) {
                         style={{ width: 20, height: 20, resizeMode: "contain", marginRight: 10 }}
                       />
                       <AppText small bold styles={{ fontSize: 9 }}>
-                        Support for BTC {"&"} Bitcoin lightning coming soon.
+                        Support for Bitcoin lightning coming soon.
                       </AppText>
                     </View>
                   )}

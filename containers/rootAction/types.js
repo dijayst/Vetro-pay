@@ -73,6 +73,11 @@ export const POST_TRX = "POST_TRX";
 export const DEPOSIT_TRX = "DEPOSIT_TRX";
 export const FREEZE_TRX = "FREEZE_TRX";
 
+export const GET_BTC_TRANSACTIONS = "GET_BTC_TRANSACTIONS";
+export const GET_BTC_FEES = "GET_BTC_FEES";
+export const POST_BTC = "POST_BTC";
+export const DEPOSIT_BTC = "DEPOSIT_BTC";
+
 export const GET_LOAN_HISTORY = "GET_LOAN_HISTORY";
 export const VERIFY_EMPLOYMENT = "VERIFY_EMPLOYMENT";
 export const REQUEST_LOAN = "REQUEST_LOAN";

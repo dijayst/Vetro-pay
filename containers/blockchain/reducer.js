@@ -9,12 +9,17 @@ import {
   USD_USDT_SWAP,
   DEPOSIT_TRX,
   FREEZE_TRX,
+  GET_BTC_TRANSACTIONS,
+  GET_BTC_FEES,
+  POST_BTC,
+  DEPOSIT_BTC,
 } from "../rootAction/types";
 
 const initialState = {
   usd: { processing: true },
   usdt: { processing: true },
   trx: { processing: true },
+  btc: { processing: true },
   fees: [],
   posts: [],
   depositusd: [],
@@ -22,6 +27,7 @@ const initialState = {
   usdusdtswap: [],
   deposittrx: [],
   freezetrx: [],
+  depositbtc: [],
 };
 
 export default function (state = initialState, action) {
@@ -37,11 +43,13 @@ export default function (state = initialState, action) {
         trx: action.payload,
       };
     case GET_TRX_FEES:
+    case GET_BTC_FEES:
       return {
         ...state,
         fees: [...state.fees, action.payload],
       };
     case POST_TRX:
+    case POST_BTC:
       return {
         ...state,
         posts: [...state.posts, action.payload],
@@ -75,6 +83,17 @@ export default function (state = initialState, action) {
       return {
         ...state,
         freezetrx: [...state.freezetrx, action.payload],
+      };
+    case GET_BTC_TRANSACTIONS:
+      return {
+        ...state,
+        btc: action.payload,
+      };
+
+    case DEPOSIT_BTC:
+      return {
+        ...state,
+        depositbtc: [...state.depositbtc, action.payload],
       };
     default:
       return state;

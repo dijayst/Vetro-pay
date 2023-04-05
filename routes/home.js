@@ -34,6 +34,10 @@ import StakeTrx from "../screens/Tron/Stake";
 import WithdrawUsd from "../screens/Usd/Withdraw";
 import DepositUsd from "../screens/Usd/Deposit";
 import SwapUsd from "../screens/Usd/Swap";
+import ReceiveBtc from "../screens/Btc/Receive";
+import SendBtc from "../screens/Btc/Send";
+import WithdrawBtc from "../screens/Btc/Withdraw";
+import DepositBtc from "../screens/Btc/Deposit";
 
 const Stack = createStackNavigator();
 
@@ -413,6 +417,50 @@ export default function HomeStack() {
           headerTintColor: "#fff",
         }}
         component={SwapUsd}
+      />
+
+      <Stack.Screen
+        name="ReceiveBtc"
+        options={{
+          title: "Receive BTC",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={ReceiveBtc}
+      />
+
+      <Stack.Screen
+        name="SendBtc"
+        options={{
+          title: "Send BTC",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={SendBtc}
+      />
+
+      <Stack.Screen
+        name="WithdrawBtc"
+        options={{
+          title: "Withdraw BTC",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={WithdrawBtc}
+      />
+
+      <Stack.Screen
+        name="DepositBtc"
+        options={{
+          title: "Deposit BTC",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={DepositBtc}
       />
     </Stack.Navigator>
   );
