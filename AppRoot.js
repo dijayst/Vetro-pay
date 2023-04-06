@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import { StyleSheet, View, Platform } from "react-native";
 import Navigator from "./routes/main";
 import AuthNavigator from "./routes/auth";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import { StatusBar } from "expo-status-bar";
 import { useSelector, useDispatch } from "react-redux";
@@ -11,6 +11,9 @@ import { useToast, Box, Text as NativeBaseText } from "native-base";
 import * as SecureStore from "expo-secure-store";
 import { usePrevious } from "./resources/utils";
 import { toastColorObject } from "./resources/rStyledComponent";
+
+// Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
 
 export default function AppRoot() {
   const toast = useToast();
@@ -31,22 +34,27 @@ export default function AppRoot() {
     }).then(() => setFontsLoaded(true));
 
     //Get user details is on mobile device
-    if(Platform.OS == "android"){
+    if (Platform.OS == "android") {
       SecureStore.getItemAsync("firstName", SecureStore.WHEN_UNLOCKED).then((data) => setStoredFirstName(data));
-    }else{
+    } else {
       SecureStore.getItemAsync("firstName").then((data) => setStoredFirstName(data));
     }
     dispatch(loadUser());
+
+    async function splashScreenDismiss() {
+      await SplashScreen.hideAsync();
+    }
+    splashScreenDismiss();
   }, []);
 
   useEffect(() => {
     if (auth.isAuthenticated && auth.token !== null) {
       if (storedFirstName == null) {
         // Store User detail if not available
-        if(Platform.OS == "android"){
+        if (Platform.OS == "android") {
           SecureStore.setItemAsync("firstName", auth.user.fullname.split(" ")[0], SecureStore.WHEN_UNLOCKED);
           SecureStore.setItemAsync("phoneNumber", auth.user.phone_number, SecureStore.WHEN_UNLOCKED);
-        }else{
+        } else {
           SecureStore.setItemAsync("firstName", auth.user.fullname.split(" ")[0]);
           SecureStore.setItemAsync("phoneNumber", auth.user.phone_number);
         }
@@ -108,16 +116,11 @@ export default function AppRoot() {
 
   return (
     <Fragment>
-      {!fontsLoaded && <AppLoading />}
-      {fontsLoaded && (
-        <Fragment>
-          <View style={styles.container}>
-            {auth.isAuthenticated && <Navigator />}
-            {!auth.isAuthenticated && <AuthNavigator />}
-            <StatusBar style="light" translucent={true} backgroundColor="#00000066" />
-          </View>
-        </Fragment>
-      )}
+      <View style={styles.container}>
+        {auth.isAuthenticated && <Navigator />}
+        {!auth.isAuthenticated && <AuthNavigator />}
+        <StatusBar style="light" translucent={true} backgroundColor="#00000066" />
+      </View>
     </Fragment>
   );
 }

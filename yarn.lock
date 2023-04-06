@@ -1515,7 +1515,7 @@
     base64-js "^1.2.3"
     xmlbuilder "^14.0.0"
 
-"@expo/prebuild-config@5.0.7", "@expo/prebuild-config@~5.0.3":
+"@expo/prebuild-config@5.0.7", "@expo/prebuild-config@~5.0.0", "@expo/prebuild-config@~5.0.3":
   version "5.0.7"
   resolved "https://registry.yarnpkg.com/@expo/prebuild-config/-/prebuild-config-5.0.7.tgz#4658b66126c4d32c7b6302571e458a71811b07aa"
   integrity sha512-D+TBpJUHe4+oTGFPb4o0rrw/h1xxc6wF+abJnbDHUkhnaeiHkE2O3ByS7FdiZ2FT36t0OKqeSKG/xFwWT3m1Ew==
@@ -4592,6 +4592,14 @@ expo-secure-store@~11.3.0:
   version "11.3.0"
   resolved "https://registry.yarnpkg.com/expo-secure-store/-/expo-secure-store-11.3.0.tgz#7f2f05f6aa6669f2d31e034561aa6b3d530a71a0"
   integrity sha512-k8dw1v7MCHIv7MnAIBXqyqplJo0I5MmRjZXO7bsVPb/BqWvvfBo/JAFdM6K60X6szh+13TWgxwx6GxAkCJVUnQ==
+
+expo-splash-screen@~0.16.2:
+  version "0.16.2"
+  resolved "https://registry.yarnpkg.com/expo-splash-screen/-/expo-splash-screen-0.16.2.tgz#38ecba9fc9fc2234ee38bcb818d8c88cd83cff9e"
+  integrity sha512-AHSRyGwu58WNt8shW5g/4cQ9e9IzUwNTC/WGWxshHCwgbWIJmHLvK3+D45MTmzGWteOoTI8oV7KSQKBNJSTiyw==
+  dependencies:
+    "@expo/configure-splash-screen" "^0.6.0"
+    "@expo/prebuild-config" "~5.0.0"
 
 expo-splash-screen@~0.17.0:
   version "0.17.5"

@@ -478,8 +478,8 @@ export default function Home({ navigation }) {
         <View style={{ paddingHorizontal: 20 }}>
           {SUPPORTED_CURRENCIES.map((data, index) => {
             return (
-              <Fragment>
-                <View key={index} style={{ marginBottom: 10, marginTop: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+              <Fragment key={index}>
+                <View style={{ marginBottom: 10, marginTop: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <Image source={{ uri: data.icon }} style={{ width: 40, height: 40, resizeMode: "contain", marginRight: 10 }} />
                     <AppText styles={{ fontSize: 18 }}>

@@ -4,19 +4,31 @@ import AppText from "../../resources/AppText";
 import { AppButton } from "../../resources/AppButton";
 import * as Facebook from "expo-facebook";
 import { useAssets } from "expo-asset";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
 //const BackgroundImage = require("../../assets/authHome.png");
 
+// Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
+
 export default function AuthHome({ navigation }) {
-  Facebook.initializeAsync({ appId: "713268446200988", appName: "VetroPay Mobile", autoLogAppEvents: true });
+  // Facebook.initializeAsync({ appId: "713268446200988", appName: "VetroPay Mobile", autoLogAppEvents: true });
   const [BackgroundImage, error] = useAssets(require("../../assets/authHome.png"));
 
-  if (BackgroundImage) {
-    return (
-      <Pressable onPress={() => navigation.navigate("Login")} style={{ flex: 1 }}>
-        <ImageBackground source={BackgroundImage} style={{ flex: 1 }} imageStyle={{ resizeMode: "cover" }}>
-          <View style={styles.overlay}>
-            {/* <View style={{ flex: 1 }}>
+  useEffect(() => {
+    if (BackgroundImage) {
+      async function splashScreenDismiss() {
+        await SplashScreen.hideAsync();
+      }
+      splashScreenDismiss();
+    }
+  }, [BackgroundImage]);
+
+  return (
+    <Pressable onPress={() => navigation.navigate("Login")} style={{ flex: 1 }}>
+      <ImageBackground source={BackgroundImage} style={{ flex: 1 }} imageStyle={{ resizeMode: "cover" }}>
+        <View style={styles.overlay}>
+          {/* <View style={{ flex: 1 }}>
             <AppText bold="true" styles={styles.title}>
               {"<<<"} VetroPay {">>>"}
             </AppText>
@@ -31,13 +43,10 @@ export default function AuthHome({ navigation }) {
               </AppButton>
             </View>
           </View> */}
-          </View>
-        </ImageBackground>
-      </Pressable>
-    );
-  } else {
-    return <AppLoading />;
-  }
+        </View>
+      </ImageBackground>
+    </Pressable>
+  );
 }
 
 const styles = StyleSheet.create({
