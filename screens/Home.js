@@ -397,6 +397,20 @@ export default function Home({ navigation }) {
                   </View>
                 </TouchableOpacity>
 
+                <TouchableOpacity
+                  onPress={() =>
+                    Alert.alert(
+                      "💳 Debit & Credit Cards",
+                      "Exciting news! VetroPay virtual & physical cards are coming soon. We have registered your interest and will keep you updated; Stay tuned for more details. Thank you for your interest in VetroPay."
+                    )
+                  }
+                >
+                  <View style={styles.activityButton}>
+                    <AntDesign name="creditcard" size={20} color="#f2f2f2" />
+                    <AppText styles={styles.mainBoardIconText}>Cards</AppText>
+                  </View>
+                </TouchableOpacity>
+
                 <TouchableOpacity onPress={() => navigation.navigate("Transfer")}>
                   <View style={styles.activityButton}>
                     <Feather name="send" size={20} color="#f2f2f2" />

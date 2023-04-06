@@ -79,7 +79,7 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
                 } else {
                   Alert.alert(
                     "USD Transfers",
-                    "We are currently working on our direct Bank transfer service to Canada, UK & USA. Please check back later.\n\nFeature Delivery Date: 5th of January, 2023. "
+                    "We are currently working on our direct Bank transfer service to Canada, UK & USA. Please check back later.\n\nFeature Delivery Date: 5th of June, 2023. "
                   );
                 }
               }}
