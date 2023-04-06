@@ -5,20 +5,19 @@ import AppText from "../../resources/AppText";
 import { AppButton } from "../../resources/AppButton";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import * as SecureStore from "expo-secure-store";
-import { Spinner, useToast, Box, Text as NativeBaseText} from "native-base";
+import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
 import { useNetInfo } from "@react-native-community/netinfo";
 import OfflineNotice from "../../resources/OfflineNotice";
 import * as LocalAuthentication from "expo-local-authentication";
 import { login } from "../../containers/authentication/action";
-import * as Linking from "expo-linking";
+import * as WebBrowser from "expo-web-browser";
 import { toastColorObject } from "../../resources/rStyledComponent";
 import { Picker as RNPicker } from "@react-native-picker/picker";
 import { Select } from "native-base";
 
-
 export default function Login({ navigation }) {
   const toast = useToast();
-  const Picker = Platform.OS == "android" ? RNPicker : Select
+  const Picker = Platform.OS == "android" ? RNPicker : Select;
   const [storedFirstName, setStoredFirstName] = useState("");
   const [storedPhoneNumberData, setStoredPhoneNumberData] = useState("");
   const [storedPassData, setStoredPassData] = useState("");
@@ -35,15 +34,14 @@ export default function Login({ navigation }) {
   });
   const [displaySpinner, setDisplaySpinner] = useState(false);
 
-  if(Platform.OS == "android"){
+  if (Platform.OS == "android") {
     SecureStore.getItemAsync("firstName", SecureStore.WHEN_UNLOCKED).then((data) => setStoredFirstName(data));
     SecureStore.getItemAsync("phoneNumber", SecureStore.WHEN_UNLOCKED).then((data) => setStoredPhoneNumberData(data));
     SecureStore.getItemAsync("pass", SecureStore.WHEN_UNLOCKED).then((data) => setStoredPassData(data));
-  }else{
+  } else {
     SecureStore.getItemAsync("firstName").then((data) => setStoredFirstName(data));
     SecureStore.getItemAsync("phoneNumber").then((data) => setStoredPhoneNumberData(data));
     SecureStore.getItemAsync("pass").then((data) => setStoredPassData(data));
-
   }
 
   const netInfo = useNetInfo();
@@ -98,9 +96,9 @@ export default function Login({ navigation }) {
         });
       }
     } else {
-      if(Platform.OS == "android"){
+      if (Platform.OS == "android") {
         SecureStore.setItemAsync("pass", loginData.payload.password, SecureStore.WHEN_UNLOCKED);
-      }else{
+      } else {
         SecureStore.setItemAsync("pass", loginData.payload.password);
       }
       setDisplaySpinner(true);
@@ -118,9 +116,9 @@ export default function Login({ navigation }) {
         ),
       });
     } else {
-      if(Platform.OS == "android"){
+      if (Platform.OS == "android") {
         SecureStore.setItemAsync("pass", loginData.payload.password, SecureStore.WHEN_UNLOCKED);
-      }else{
+      } else {
         SecureStore.setItemAsync("pass", loginData.payload.password);
       }
       setDisplaySpinner(true);
@@ -175,12 +173,16 @@ export default function Login({ navigation }) {
     }
   };
 
+  const _forgotPasswordViewHandler = async (hash) => {
+    await WebBrowser.openBrowserAsync("https://vetropay.com/customer-care-portal");
+  };
+
   const clearUserDeviceDetails = () => {
-    if(Platform.OS == "android"){
+    if (Platform.OS == "android") {
       SecureStore.deleteItemAsync("firstName", SecureStore.WHEN_UNLOCKED).then((data) => setStoredFirstName(null));
       SecureStore.deleteItemAsync("phoneNumber", SecureStore.WHEN_UNLOCKED).then((data) => setStoredPhoneNumberData(null));
       SecureStore.deleteItemAsync("pass", SecureStore.WHEN_UNLOCKED).then((data) => setStoredPassData(null));
-    }else{
+    } else {
       SecureStore.deleteItemAsync("firstName").then((data) => setStoredFirstName(null));
       SecureStore.deleteItemAsync("phoneNumber").then((data) => setStoredPhoneNumberData(null));
       SecureStore.deleteItemAsync("pass").then((data) => setStoredPassData(null));
@@ -261,11 +263,11 @@ export default function Login({ navigation }) {
               borderWidth: 0.5,
               borderColor: "#266ddc",
               borderRadius: 15,
-              overflow: "hidden"
+              overflow: "hidden",
             }}
           >
             <Picker
-              style={{ height: 45, }}
+              style={{ height: 45 }}
               onValueChange={(itemValue, itemIndex) => {
                 setLoginData((prevState) => ({
                   ...prevState,
@@ -324,7 +326,7 @@ export default function Login({ navigation }) {
 
       <View>
         <AppText bold="true" styles={{ ...styles.loginIntro, marginBottom: 10, textAlign: "center", color: "#266ddc" }}>
-          <Text onPress={() => Linking.openURL("https://vetropay.com/customer-care-portal")}>Forgot Password</Text>
+          <Text onPress={() => _forgotPasswordViewHandler()}>Forgot Password</Text>
         </AppText>
 
         <AppText bold="true" styles={{ ...styles.loginIntro, marginBottom: 30, textAlign: "center" }}>

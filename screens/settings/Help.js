@@ -3,17 +3,21 @@ import { Text, View, StyleSheet, TouchableNativeFeedback, TouchableOpacity } fro
 import AppText from "../../resources/AppText";
 import { HelpSvgComponent, PrivacyPoilicySvgComponent } from "../../resources/Svg";
 import * as Linking from "expo-linking";
+import * as WebBrowser from "expo-web-browser";
 
 function Separator() {
   return <View style={styles.separator} />;
 }
 
 export default function Help() {
+  const _externalWebPageViewHandler = async (url) => {
+    await WebBrowser.openBrowserAsync(url);
+  };
   return (
     <View style={styles.container}>
       <View style={styles.listContainer}>
         {/** FAQ */}
-        <TouchableNativeFeedback onPress={() => Linking.openURL("https://vetropay.com/mobile/faq")}>
+        <TouchableNativeFeedback onPress={() => _externalWebPageViewHandler("https://vetropay.com/mobile/faq")}>
           <View style={styles.listItem}>
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
               <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
@@ -29,7 +33,7 @@ export default function Help() {
 
         <Separator />
         {/** Privacy Policy */}
-        <TouchableNativeFeedback onPress={() => Linking.openURL("https://vetropay.com/mobile/privacy-policy")}>
+        <TouchableNativeFeedback onPress={() => _externalWebPageViewHandler("https://vetropay.com/mobile/privacy-policy")}>
           <View style={styles.listItem}>
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
               <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>

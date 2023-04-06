@@ -12,7 +12,7 @@ import { Spinner } from "native-base";
 import { Picker } from "@react-native-picker/picker";
 //import { convertUTCDateToLocalDate } from "../resource/MetaFunctions";
 import moment from "moment";
-import * as Linking from "expo-linking";
+import * as WebBrowser from "expo-web-browser";
 
 function Separator() {
   return <View style={styles.separator} />;
@@ -113,6 +113,10 @@ export default function UserTransactions({ navigation }) {
   const layoutEvent = (event) => {
     SetNonTransactionHeight(event.nativeEvent.layout.height);
     //console.log("evented");
+  };
+
+  const _extensiveTransactionDetailsViewHandler = async (url) => {
+    await WebBrowser.openBrowserAsync(url);
   };
   return (
     <View style={styles.container}>
@@ -220,7 +224,7 @@ export default function UserTransactions({ navigation }) {
             {modalData.paid_merchant && modalData.transaction_insight[0]?.includes("Smart Web") && (
               <AppButton
                 onPress={() => {
-                  Linking.openURL(
+                  _extensiveTransactionDetailsViewHandler(
                     `https://vetropay.com/marketplace/transaction/${modalData.transaction_insight[3].split(": ")[1].replace(/\s/g, "")}/${modalData.transaction_insight
                       .reverse()[0]
                       .split(": ")[1]
