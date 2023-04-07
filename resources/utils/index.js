@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
-export const ONE_BTC_TO_SATS = 100_000_000;
+//export const ONE_BTC_TO_SATS = 100_000_000;
+export const ONE_BTC_TO_SATS = 100000000;
 
 export const usePrevious = (value) => {
   const ref = useRef();
