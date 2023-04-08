@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View, ImageBackground, TouchableWithoutFeedbackBase, Pressable } from "react-native";
 import AppText from "../../resources/AppText";
 import { AppButton } from "../../resources/AppButton";
-import * as Facebook from "expo-facebook";
+//import * as Facebook from "expo-facebook";
 import { useAssets } from "expo-asset";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";

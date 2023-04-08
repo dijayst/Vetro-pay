@@ -25,7 +25,6 @@
     "expo-asset": "~8.6.3",
     "expo-barcode-scanner": "~11.5.0",
     "expo-contacts": "~10.3.0",
-    "expo-facebook": "~12.2.0",
     "expo-font": "~10.2.0",
     "expo-linking": "~3.2.4",
     "expo-local-authentication": "~12.3.0",
