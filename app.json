@@ -43,7 +43,7 @@
     "facebookScheme": "fb713268446200988",
     "facebookAppId": "713268446200988",
     "facebookDisplayName": "VetroPay Mobile",
-    "facebookAutoLogAppEventsEnabled": true,
+    "facebookAutoLogAppEventsEnabled": false,
     "description": "",
     "extra": {
       "eas": {
