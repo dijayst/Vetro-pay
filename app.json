@@ -25,7 +25,7 @@
         "NSContactsUsageDescription": "This app uses contact list to make purchase airtime faster"
       },
       "bundleIdentifier": "com.anclatechs.vetropaymobile",
-      "buildNumber": "1.0.12"
+      "buildNumber": "1.0.13"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
