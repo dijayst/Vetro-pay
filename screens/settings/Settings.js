@@ -1,17 +1,33 @@
 import React, { useRef } from "react";
 import { Text, View, StyleSheet, TouchableNativeFeedback, Share, Alert } from "react-native";
-import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import { AntDesign, FontAwesome, Feather } from "@expo/vector-icons";
 import AppText from "../../resources/AppText";
 import { AccountProfileSvgComponent, HelpSvgComponent, InviteFriendSvgComponent } from "../../resources/Svg";
 import { logout } from "../../containers/authentication/action";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const onShare = async () => {
   try {
     const result = await Share.share({
       message:
-        "Hi there, \nHave you tried *VetroPay*; an interest free loan plattform, bill payment and a personal accountant all in one. I think you'd love it. \n\nDownload here:  https://play.google.com/store/apps/details?id=com.anclatechs.vetropaymobile",
+        "Hi there, \nHave you tried *VetroPay*; enjoy interest free credit, bill payments, loans and a personal account management all in one. I think you'd love it. \n\nDownload here:  https://linktr.ee/vetropay",
     });
+  } catch (error) {
+    Alert.alert("Error", "Error sending invite");
+  }
+};
+
+const onSharePayme = async (uid, sole_proprietor) => {
+  try {
+    if (sole_proprietor) {
+      const result = await Share.share({
+        message: `Pay with VETRO - Earn 5% cashback on all transactions: https://send.vetropay.com/${uid}`,
+      });
+    } else {
+      const result = await Share.share({
+        message: `Pay with VETRO - It's faster, simpler and better: https://send.vetropay.com/${uid}`,
+      });
+    }
   } catch (error) {
     Alert.alert("Error", "Error sending invite");
   }
@@ -24,6 +40,8 @@ function Separator() {
 export default function Settings({ navigation }) {
   const refRBSheet = useRef();
   const dispatch = useDispatch();
+
+  const userAuthentication = useSelector((state) => state.authentication.user);
 
   const alertLogout = () => {
     Alert.alert(
@@ -118,6 +136,32 @@ export default function Settings({ navigation }) {
           </View>
         </TouchableNativeFeedback>
         {/** End Help */}
+
+        <Separator />
+
+        {/** Payme Link */}
+        <TouchableNativeFeedback onPress={() => onSharePayme(userAuthentication.user_uid, userAuthentication.partnered_sole_proprietor)}>
+          <View style={styles.listItem}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+              <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
+                <View style={{ backgroundColor: "#266ddc", height: 26, width: 26, borderRadius: 13, justifyContent: "center", alignItems: "center" }}>
+                  <Feather name="share-2" size={15} color="#FFFFFF" />
+                </View>
+                <View style={{ flexDirection: "column" }}>
+                  <AppText bold="true" styles={{ paddingLeft: 10, fontSize: 15 }}>
+                    Payme Link
+                  </AppText>
+                  <AppText styles={{ fontSize: 12, marginLeft: 10 }}>send.vetropay.com/{userAuthentication.user_uid}</AppText>
+                </View>
+              </View>
+
+              <View>
+                <Feather name="clipboard" color="grey" size={20} />
+              </View>
+            </View>
+          </View>
+        </TouchableNativeFeedback>
+        {/** Payme Link */}
 
         <Separator />
 
