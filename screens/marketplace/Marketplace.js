@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
-import { View, TextInput, StyleSheet, Text, ScrollView, Image, TouchableNativeFeedback, Alert } from "react-native";
+import { View, TextInput, StyleSheet, Text, ScrollView, Image, TouchableNativeFeedback, TouchableWithoutFeedback, Alert } from "react-native";
 import AppText from "../../resources/AppText";
 import { Placeholder, PlaceholderMedia, PlaceholderLine, Fade } from "rn-placeholder";
 import { getMarketplaceBusiness } from "../../containers/business/action";
@@ -46,8 +46,8 @@ export default function Marketplace({ navigation }) {
       </AppText>
 
       {!skeletonVisible && (
-        <TouchableNativeFeedback onPress={() => Alert.alert("Marketplace", "Marketplace currently unavailable")}>
-          <ScrollView>
+        <ScrollView>
+          <TouchableWithoutFeedback onPress={() => Alert.alert("Marketplace", "Marketplace currently unavailable")}>
             {/* <View style={{ marginTop: 30, marginHorizontal: 5 }}>
             {registeredBusinesses.map((bus, index) => {
               return (
@@ -152,8 +152,8 @@ export default function Marketplace({ navigation }) {
                 <AppText>No business available</AppText>
               </View>
             </View>
-          </ScrollView>
-        </TouchableNativeFeedback>
+          </TouchableWithoutFeedback>
+        </ScrollView>
       )}
 
       {skeletonVisible && (
