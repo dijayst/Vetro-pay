@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
+import * as Linking from "expo-linking";
 import AppText from "../resources/AppText";
 import { StyleSheet, Image, Text, View, StatusBar, FlatList, Button, TouchableOpacity, Alert, Dimensions, Pressable, Platform, ScrollView } from "react-native";
 import { MaterialCommunityIcons, AntDesign, Feather, Octicons, SimpleLineIcons, FontAwesome, Foundation, Fontisto, MaterialIcons, Entypo } from "@expo/vector-icons";
@@ -19,6 +20,7 @@ import UsdHome from "./Usd";
 import BtcHome from "./Btc";
 import { SafeAreaView } from "../resources/rStyledComponent";
 import { getBusinessNotifications } from "../containers/busnotifications/actions";
+import { flushDeepLinkGatewayExchange } from "../containers/authentication/action";
 
 const SUPPORTED_CURRENCIES = [
   {
@@ -49,6 +51,7 @@ const SUPPORTED_CURRENCIES = [
 ];
 export default function Home({ navigation }) {
   const userAuthentication = useSelector((state) => state.authentication.user);
+  const deeplinkGatewayExchange = useSelector((state) => state.authentication.deeplinkGatewayExchange);
   const currencySymbol = `${userAuthentication.country == "NIGERIA" ? "₦" : "K"}`;
   const [accountBalance, setAccountBalance] = useState("0.00");
   const [savingsImagePosition, setSavingsImagePosition] = useState(Math.floor(Math.random() * 6));
@@ -89,6 +92,20 @@ export default function Home({ navigation }) {
       dispatch(getUserTransaction(""));
       dispatch(getBusinessNotifications());
     });
+
+    if (deeplinkGatewayExchange) {
+      let requiredData = deeplinkGatewayExchange;
+      let extractedParams = {};
+      const { hostname, path, queryParams } = Linking.parse(requiredData);
+      if (path.split("/")[0] == "transfer") {
+        extractedParams = {
+          ...queryParams,
+          recipient: path.split("/")[1] || "",
+        };
+        dispatch(flushDeepLinkGatewayExchange());
+        navigation.navigate("SendMoney", extractedParams);
+      }
+    }
   }, [navigation]);
 
   useEffect(() => {

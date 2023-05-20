@@ -9,6 +9,7 @@ import {
   PUSH_ACTIVITY_VERIFICATION_TOKEN,
   DOCUMENT_VERIFICATION,
   DELETE_ACCOUNT_SUCCESS,
+  FLUSH_DEEPLINK_DATA,
 } from "../rootAction/types";
 import { returnErrors } from "../messages/messages";
 import { BASE_URL } from "../rootAction/env";
@@ -55,21 +56,31 @@ export const loadUser = () => (dispatch, getState) => {
 };
 
 // LOGIN USER
-export const login = (phoneNumber, password) => (dispatch, getState) => {
-  axios
-    .post(`${BASE_URL}/api/auth/login`, { phone_number: phoneNumber, password: password }, tokenConfig(getState))
-    .then((res) => {
-      dispatch({
-        type: LOGIN_SUCCESS,
-        payload: res.data,
+export const login =
+  (phoneNumber, password, deeplinkGatewayExchange = null) =>
+  (dispatch, getState) => {
+    axios
+      .post(`${BASE_URL}/api/auth/login`, { phone_number: phoneNumber, password: password }, tokenConfig(getState))
+      .then((res) => {
+        dispatch({
+          type: LOGIN_SUCCESS,
+          payload: res.data,
+          deeplinkGatewayExchange: deeplinkGatewayExchange,
+        });
+      })
+      .catch((err) => {
+        dispatch(returnErrors(err.response.data, err.response.status));
+        dispatch({
+          type: LOGIN_FAIL,
+        });
       });
-    })
-    .catch((err) => {
-      dispatch(returnErrors(err.response.data, err.response.status));
-      dispatch({
-        type: LOGIN_FAIL,
-      });
-    });
+  };
+
+// FLUSH DEEPLINK GATEWAY EXCHANGE
+export const flushDeepLinkGatewayExchange = () => (dispatch, getState) => {
+  dispatch({
+    type: FLUSH_DEEPLINK_DATA,
+  });
 };
 
 // USER DELETE ACCOUNT

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
-import { View, TextInput, StyleSheet, Text, ScrollView, Image, TouchableNativeFeedback } from "react-native";
+import { View, TextInput, StyleSheet, Text, ScrollView, Image, TouchableNativeFeedback, Alert } from "react-native";
 import AppText from "../../resources/AppText";
 import { Placeholder, PlaceholderMedia, PlaceholderLine, Fade } from "rn-placeholder";
 import { getMarketplaceBusiness } from "../../containers/business/action";
@@ -36,18 +36,19 @@ export default function Marketplace({ navigation }) {
   });
 
   return (
-    <View style={{ paddingHorizontal: 10 }}>
+    <View style={{ paddingHorizontal: 10, flex: 1 }}>
       <View style={styles.formGroup}>
         <TextInput style={{ ...styles.textInput }} placeholder="Search Business" />
       </View>
 
       <AppText bold="true" styles={{ fontSize: 16 }}>
-        Result <AppText styles={{ fontSize: 12, color: `${businessNumbers == "Loading..." ? "gray" : "black"}` }}>({businessNumbers} Businesses)</AppText>
+        <AppText styles={{ fontSize: 12, color: `${businessNumbers == "Loading..." ? "gray" : "black"}` }}>({"..." || businessNumbers} Businesses)</AppText>
       </AppText>
 
       {!skeletonVisible && (
-        <ScrollView>
-          <View style={{ marginTop: 30, marginHorizontal: 5 }}>
+        <TouchableNativeFeedback onPress={() => Alert.alert("Marketplace", "Marketplace currently unavailable")}>
+          <ScrollView>
+            {/* <View style={{ marginTop: 30, marginHorizontal: 5 }}>
             {registeredBusinesses.map((bus, index) => {
               return (
                 <TouchableNativeFeedback
@@ -71,8 +72,88 @@ export default function Marketplace({ navigation }) {
                 </TouchableNativeFeedback>
               );
             })}
-          </View>
-        </ScrollView>
+          </View> */}
+            <View style={{ paddingBottom: 40 }}>
+              <View style={{ marginVertical: 10 }}>
+                <AppText bold styles={{ color: "#266ddc", fontSize: 16 }}>
+                  Restaurants
+                </AppText>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <View style={{ paddingHorizontal: 10 }}>
+                    <Image
+                      source={{ uri: "https://png.pngtree.com/png-vector/20220727/ourmid/pngtree-cooking-logo-png-image_6089722.png" }}
+                      style={{ height: 100, width: 100, maxHeight: 100, resizeMode: "contain", marginBottom: 5 }}
+                    />
+                    <AppText styles={{ fontWeight: "bold", fontSize: 15, color: "#36454F" }}>Dally's Kitchen</AppText>
+                  </View>
+
+                  <View>
+                    <Image
+                      source={{ uri: "https://static.vecteezy.com/system/resources/thumbnails/004/999/867/small_2x/chef-hat-with-cross-spatula-and-mustache-free-vector.jpg" }}
+                      style={{ height: 100, width: 100, maxHeight: 100, resizeMode: "contain", borderRadius: 10, marginBottom: 5 }}
+                    />
+                    <AppText styles={{ fontWeight: "bold", fontSize: 15, color: "#36454F" }}>Xquisite Ikeja</AppText>
+                  </View>
+                </View>
+              </View>
+
+              <AppText bold styles={{ marginVertical: 20, color: "#266ddc", fontSize: 16 }}>
+                Transport
+              </AppText>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <View style={{ paddingHorizontal: 10 }}>
+                  <View>
+                    <Image
+                      source={{ uri: "https://pngimg.com/uploads/uber/uber_PNG17.png" }}
+                      style={{ height: 100, width: 100, maxHeight: 100, resizeMode: "contain", borderRadius: 10, marginBottom: 5 }}
+                    />
+                    <AppText styles={{ fontWeight: "bold", fontSize: 15, color: "#36454F" }}>Uber NG</AppText>
+                  </View>
+                </View>
+              </View>
+              <View>
+                <AppText bold styles={{ marginTop: 10, color: "#266ddc", fontSize: 16 }}>
+                  Groceries & Supermarkets
+                </AppText>
+                <AppText>No business available</AppText>
+              </View>
+
+              <View>
+                <AppText bold styles={{ marginTop: 10, color: "#266ddc", fontSize: 16 }}>
+                  Health & General Insurance
+                </AppText>
+                <AppText>No business available</AppText>
+              </View>
+
+              <View>
+                <AppText bold styles={{ marginVertical: 20, color: "#266ddc", fontSize: 16 }}>
+                  Cloud Technologies
+                </AppText>
+                <View>
+                  <Image
+                    source={{ uri: "https://media.trustradius.com/product-logos/Wa/72/N8G8EK7BWPXB.PNG" }}
+                    style={{ height: 100, width: 100, maxHeight: 100, resizeMode: "contain", borderRadius: 10, marginBottom: 5 }}
+                  />
+                  <AppText styles={{ fontWeight: "bold", fontSize: 15, color: "#36454F" }}>Heroku</AppText>
+                </View>
+              </View>
+
+              <View>
+                <AppText bold styles={{ marginTop: 10, color: "#266ddc", fontSize: 16 }}>
+                  Gaming
+                </AppText>
+                <AppText>No business available</AppText>
+              </View>
+
+              <View>
+                <AppText bold styles={{ marginTop: 10, color: "#266ddc", fontSize: 16 }}>
+                  Religious Institutions
+                </AppText>
+                <AppText>No business available</AppText>
+              </View>
+            </View>
+          </ScrollView>
+        </TouchableNativeFeedback>
       )}
 
       {skeletonVisible && (

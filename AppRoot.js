@@ -1,12 +1,12 @@
-import React, { useState, useEffect, Fragment } from "react";
-import { StyleSheet, View, Platform } from "react-native";
+import React, { useState, useEffect, useRef, Fragment } from "react";
+import { StyleSheet, View, Platform, AppState } from "react-native";
 import Navigator from "./routes/main";
 import AuthNavigator from "./routes/auth";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import { StatusBar } from "expo-status-bar";
 import { useSelector, useDispatch } from "react-redux";
-import { loadUser } from "./containers/authentication/action";
+import { loadUser, logout } from "./containers/authentication/action";
 import { useToast, Box, Text as NativeBaseText } from "native-base";
 import * as SecureStore from "expo-secure-store";
 import { usePrevious } from "./resources/utils";
@@ -26,6 +26,7 @@ export default function AppRoot() {
   const prevMessage = usePrevious(message);
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [storedFirstName, setStoredFirstName] = useState("");
+  const appState = useRef(AppState.currentState);
 
   useEffect(() => {
     Font.loadAsync({
@@ -113,6 +114,43 @@ export default function AppRoot() {
       }
     }
   }, [error, auth]);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", async (nextAppState) => {
+      if (appState.current.match(/inactive|background/) && nextAppState === "active") {
+        //App has come to the foreground
+        let appStateLastActive;
+        if (Platform.OS == "android") {
+          await SecureStore.getItemAsync("lastActive", SecureStore.WHEN_UNLOCKED).then((data) => {
+            appStateLastActive = data;
+          });
+        } else {
+          await SecureStore.getItemAsync("lastActive").then((data) => {
+            appStateLastActive = data;
+          });
+        }
+
+        if (new Date() - (new Date(appStateLastActive) || new Date()) > 60000) {
+          dispatch(logout());
+        }
+      }
+
+      if (appState.current.match(/inactive|background/)) {
+        if (Platform.OS == "android") {
+          await SecureStore.setItemAsync("lastActive", new Date().toString(), SecureStore.WHEN_UNLOCKED);
+        } else {
+          await SecureStore.setItemAsync("lastActive", new Date().toString());
+        }
+      }
+
+      appState.current = nextAppState;
+      //console.log("AppState", appState.current);
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [appState]);
 
   return (
     <Fragment>

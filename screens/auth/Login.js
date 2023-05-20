@@ -15,10 +15,11 @@ import { toastColorObject } from "../../resources/rStyledComponent";
 import { Picker as RNPicker } from "@react-native-picker/picker";
 import { Select } from "native-base";
 
-export default function Login({ navigation }) {
+export default function Login({ navigation, route }) {
   const toast = useToast();
   const Picker = Platform.OS == "android" ? RNPicker : Select;
   const [storedFirstName, setStoredFirstName] = useState("");
+  const [deeplinkUrl, setDeepLinkUrl] = useState(null);
   const [storedPhoneNumberData, setStoredPhoneNumberData] = useState("");
   const [storedPassData, setStoredPassData] = useState("");
   const [biometricHardware, setBiometricHardware] = useState(false);
@@ -47,6 +48,16 @@ export default function Login({ navigation }) {
   const netInfo = useNetInfo();
   const dispatch = useDispatch();
   const userAuth = useSelector((state) => state.authentication);
+
+  useEffect(() => {
+    if (route.params) {
+      let recipient = route.params?.recipient;
+      let amount = route.params?.amount || "";
+      if (recipient && amount) {
+        setDeepLinkUrl(route.path);
+      }
+    }
+  }, [navigation]);
 
   const onValueChange = (fieldName, value) => {
     if (fieldName == "phoneNumber") {
@@ -102,7 +113,7 @@ export default function Login({ navigation }) {
         SecureStore.setItemAsync("pass", loginData.payload.password);
       }
       setDisplaySpinner(true);
-      dispatch(login(getMobileNumberCountryCode(loginData.payload.country, loginData.payload.phoneNumber), loginData.payload.password));
+      dispatch(login(getMobileNumberCountryCode(loginData.payload.country, loginData.payload.phoneNumber), loginData.payload.password, deeplinkUrl));
     }
   };
 
@@ -122,7 +133,7 @@ export default function Login({ navigation }) {
         SecureStore.setItemAsync("pass", loginData.payload.password);
       }
       setDisplaySpinner(true);
-      dispatch(login(storedPhoneNumberData, loginData.payload.password));
+      dispatch(login(storedPhoneNumberData, loginData.payload.password, deeplinkUrl));
     }
   };
 
@@ -169,7 +180,7 @@ export default function Login({ navigation }) {
     let result = await LocalAuthentication.authenticateAsync();
     if (result.success) {
       setDisplaySpinner(true);
-      dispatch(login(storedPhoneNumberData, storedPassData));
+      dispatch(login(storedPhoneNumberData, storedPassData, deeplinkUrl));
     }
   };
 

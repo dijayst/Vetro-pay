@@ -9,6 +9,7 @@ import {
   PUSH_ACTIVITY_VERIFICATION_TOKEN,
   DOCUMENT_VERIFICATION,
   DELETE_ACCOUNT_SUCCESS,
+  FLUSH_DEEPLINK_DATA,
 } from "../rootAction/types";
 
 const initialState = {
@@ -19,6 +20,7 @@ const initialState = {
   dateTime: new Date(),
   activityToken: [],
   documentVerification: [],
+  deeplinkGatewayExchange: null,
 };
 
 export default function (state = initialState, action) {
@@ -47,6 +49,13 @@ export default function (state = initialState, action) {
         isAuthenticated: true,
         isLoading: false,
         dateTime: new Date(),
+        deeplinkGatewayExchange: action.deeplinkGatewayExchange,
+      };
+
+    case FLUSH_DEEPLINK_DATA:
+      return {
+        ...state,
+        deeplinkGatewayExchange: null,
       };
 
     case AUTH_ERROR:

@@ -22,7 +22,7 @@ function Separator() {
   return <View style={styles.separator} />;
 }
 
-export default function SendMoney({ navigation }) {
+export default function SendMoney({ navigation, route }) {
   const Picker = Platform.OS == "android" ? RNPicker : Select;
   class UserContactListItem extends React.PureComponent {
     render() {
@@ -178,6 +178,20 @@ export default function SendMoney({ navigation }) {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    if (route.params) {
+      let recipient = route.params?.recipient;
+      let amount = route.params?.amount || "";
+      setSendMoneyData({
+        payload: {
+          ...sendMoneyData.payload,
+          phoneNumberUID: recipient,
+          amount: amount,
+        },
+      });
+    }
+  }, [navigation]);
 
   const changeRecipientCountry = (itemValue, itemIndex) => {
     setSendMoneyData((prevState) => ({

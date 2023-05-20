@@ -10,10 +10,23 @@ import Settings from "../routes/settings";
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+  const linking = {
+    prefixes: ["vetropay://"],
+    config: {
+      screens: {
+        Home: {
+          screens: {
+            SendMoney: "transfer/:recipient",
+          },
+        },
+      },
+    },
+  };
+
   const businessNotificationsData = useSelector((state) => state.busnotifications.notifications);
 
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <Tab.Navigator
         screenOptions={{
           tabBarStyle: {

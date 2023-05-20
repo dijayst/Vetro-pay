@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "vetropay",
     "name": "Vetropay Mobile",
     "slug": "vetropay-mobile",
     "privacy": "public",

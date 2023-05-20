@@ -9,8 +9,17 @@ import Register from "../screens/auth/Register";
 const Stack = createStackNavigator();
 
 export default function AuthStack() {
+  const linking = {
+    prefixes: ["vetropay://"],
+    config: {
+      screens: {
+        Login: "transfer/:recipient",
+      },
+    },
+  };
+
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <Stack.Navigator>
         <Stack.Screen
           name="AuthHome"
