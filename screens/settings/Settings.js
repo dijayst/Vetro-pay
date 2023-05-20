@@ -21,11 +21,11 @@ const onSharePayme = async (uid, sole_proprietor) => {
   try {
     if (sole_proprietor) {
       const result = await Share.share({
-        message: `Pay with VETRO - Earn 5% cashback on all transactions: https://send.vetropay.com/${uid}`,
+        message: `Pay with VETRO - Earn 5% cashback on all transactions:\nhttps://send.vetropay.com/${uid}`,
       });
     } else {
       const result = await Share.share({
-        message: `Pay with VETRO - It's faster, simpler and better: https://send.vetropay.com/${uid}`,
+        message: `My VETRO Payment link - It's faster, simpler and better:\nhttps://send.vetropay.com/${uid}`,
       });
     }
   } catch (error) {
