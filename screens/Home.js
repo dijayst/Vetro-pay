@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
-import * as Permissions from "expo-permissions";
+import * as Device from "expo-device";
 import * as Linking from "expo-linking";
 import AppText from "../resources/AppText";
 import { StyleSheet, Image, Text, View, StatusBar, FlatList, Button, TouchableOpacity, Alert, Dimensions, Pressable, Platform, ScrollView } from "react-native";
@@ -112,11 +111,11 @@ export default function Home({ navigation }) {
     let isMounted = true;
     (async () => {
       let token;
-      if (Constants.isDevice) {
-        const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+      if (Device.isDevice) {
+        const { status: existingStatus } = await Notifications.getPermissionsAsync();
         let finalStatus = existingStatus;
         if (existingStatus !== "granted") {
-          const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+          const { status } = await Notifications.requestPermissionsAsync();
           finalStatus = status;
         }
 
