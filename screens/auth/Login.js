@@ -52,8 +52,8 @@ export default function Login({ navigation, route }) {
   useEffect(() => {
     if (route.params) {
       let recipient = route.params?.recipient;
-      let amount = route.params?.amount || "";
-      if (recipient && amount) {
+      //let amount = route.params?.amount || "";
+      if (recipient) {
         setDeepLinkUrl(route.path);
       }
     }
@@ -109,8 +109,10 @@ export default function Login({ navigation, route }) {
     } else {
       if (Platform.OS == "android") {
         SecureStore.setItemAsync("pass", loginData.payload.password, SecureStore.WHEN_UNLOCKED);
+        SecureStore.setItemAsync("lastActive", new Date().toString(), SecureStore.WHEN_UNLOCKED);
       } else {
         SecureStore.setItemAsync("pass", loginData.payload.password);
+        SecureStore.setItemAsync("lastActive", new Date().toString());
       }
       setDisplaySpinner(true);
       dispatch(login(getMobileNumberCountryCode(loginData.payload.country, loginData.payload.phoneNumber), loginData.payload.password, deeplinkUrl));
@@ -129,8 +131,10 @@ export default function Login({ navigation, route }) {
     } else {
       if (Platform.OS == "android") {
         SecureStore.setItemAsync("pass", loginData.payload.password, SecureStore.WHEN_UNLOCKED);
+        SecureStore.setItemAsync("lastActive", new Date().toString(), SecureStore.WHEN_UNLOCKED);
       } else {
         SecureStore.setItemAsync("pass", loginData.payload.password);
+        SecureStore.setItemAsync("lastActive", new Date().toString());
       }
       setDisplaySpinner(true);
       dispatch(login(storedPhoneNumberData, loginData.payload.password, deeplinkUrl));
@@ -179,6 +183,11 @@ export default function Login({ navigation, route }) {
   const handleBiometricAuthentication = async () => {
     let result = await LocalAuthentication.authenticateAsync();
     if (result.success) {
+      if (Platform.OS == "android") {
+        SecureStore.setItemAsync("lastActive", new Date().toString(), SecureStore.WHEN_UNLOCKED);
+      } else {
+        SecureStore.setItemAsync("lastActive", new Date().toString());
+      }
       setDisplaySpinner(true);
       dispatch(login(storedPhoneNumberData, storedPassData, deeplinkUrl));
     }

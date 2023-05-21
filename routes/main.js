@@ -15,6 +15,7 @@ export default function App() {
     config: {
       screens: {
         Home: {
+          initialRouteName: "HomeHome",
           screens: {
             SendMoney: "transfer/:recipient",
           },
