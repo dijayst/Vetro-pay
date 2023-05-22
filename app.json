@@ -5,7 +5,7 @@
     "slug": "vetropay-mobile",
     "privacy": "public",
     "platforms": ["ios", "android", "web"],
-    "version": "1.0.14",
+    "version": "1.0.15",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -26,12 +26,12 @@
         "NSContactsUsageDescription": "This app uses contact list to make purchase airtime faster"
       },
       "bundleIdentifier": "com.anclatechs.vetropaymobile",
-      "buildNumber": "1.0.14"
+      "buildNumber": "1.0.15"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
       "package": "com.anclatechs.vetropaymobile",
-      "versionCode": 23,
+      "versionCode": 24,
       "useNextNotificationsApi": true,
       "permissions": ["USE_BIOMETRIC", "USE_FINGERPRINT", "READ_CONTACTS", "CAMERA"],
       "blockedPermissions": ["android.permission.REQUEST_INSTALL_PACKAGES"]

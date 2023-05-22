@@ -180,7 +180,7 @@ export default function CreditLoansHome({ navigation }) {
           <Image source={WalletImage} style={{ width: 60, height: 60, resizeMode: "contain" }} />
           <View style={{ marginLeft: 7 }}>
             <AppText bold styles={{ fontSize: 15 }}>
-              Available Credit: ₦0.00
+              Available Credit: ₦{loanHistory ? numberWithCommas(Number(loanHistory.data.available_credit).toFixed(2)) : 0.0}
             </AppText>
             <AppText>0% Interest rate/mo.</AppText>
           </View>
@@ -197,7 +197,7 @@ export default function CreditLoansHome({ navigation }) {
           >
             {(fill) => (
               <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-                <AppText styles={{ fontSize: 18 }}>300 Points</AppText>
+                <AppText styles={{ fontSize: 18 }}>{loanHistory ? loanHistory.data.credit_score : 300} Points</AppText>
                 <Entypo name="info-with-circle" size={24} color="#266ddc" style={{ marginTop: 5 }} />
               </View>
             )}

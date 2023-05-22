@@ -17,15 +17,15 @@ const onShare = async () => {
   }
 };
 
-const onSharePayme = async (uid, sole_proprietor) => {
+const onSharePayme = async (uid, sole_proprietor, nuban) => {
   try {
     if (sole_proprietor) {
       const result = await Share.share({
-        message: `Pay with VETRO - Earn 5% cashback on all transactions:\nhttps://send.vetropay.com/${uid}`,
+        message: `${nuban}\nProvidus Bank\n\nOr\n\nPay with VETRO - Earn 5% cashback on all your transactions:\n\nhttps://send.vetropay.com/${uid}`,
       });
     } else {
       const result = await Share.share({
-        message: `My VETRO Payment link - It's faster, simpler and better:\nhttps://send.vetropay.com/${uid}`,
+        message: `My VETRO Payme link - It's faster, simpler and better:\n\nhttps://send.vetropay.com/${uid}`,
       });
     }
   } catch (error) {
@@ -140,7 +140,7 @@ export default function Settings({ navigation }) {
         <Separator />
 
         {/** Payme Link */}
-        <TouchableNativeFeedback onPress={() => onSharePayme(userAuthentication.user_uid, userAuthentication.partnered_sole_proprietor)}>
+        <TouchableNativeFeedback onPress={() => onSharePayme(userAuthentication.user_uid, userAuthentication.partnered_sole_proprietor, userAuthentication.nuban)}>
           <View style={styles.listItem}>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
