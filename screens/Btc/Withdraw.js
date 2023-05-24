@@ -114,7 +114,7 @@ export default function Withdraw({ navigation }) {
       // SEND TRANSACTION
       setDisplaySpinner(true);
       let amountBtc = activeCurrencyMode == "BTC" ? userAmount : Number(userAmount) / ONE_BTC_TO_SATS;
-      dispatch(postBtcTransaction("transfer", "BTC", VETROPAY_ADMIN_BTC_ADDRESS, amountBtc, "high", transactionPin));
+      dispatch(postBtcTransaction("withdraw", "BTC", VETROPAY_ADMIN_BTC_ADDRESS, amountBtc, "high", transactionPin));
     }
   };
   return (
