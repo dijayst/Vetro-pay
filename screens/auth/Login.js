@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { View, StyleSheet, TextInput, Text, Alert, Image, TouchableOpacity, Platform } from "react-native";
 import AppText from "../../resources/AppText";
 import { AppButton } from "../../resources/AppButton";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 import * as SecureStore from "expo-secure-store";
 import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
 import { useNetInfo } from "@react-native-community/netinfo";
@@ -25,6 +25,7 @@ export default function Login({ navigation, route }) {
   const [biometricHardware, setBiometricHardware] = useState(false);
   const [biometricHardwareType, setBiometricHardwareType] = useState([]);
   const [biometricHardwareTypeSet, setBiometricHardwareTypeSet] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [loginData, setLoginData] = useState({
     payload: {
@@ -219,16 +220,21 @@ export default function Login({ navigation, route }) {
           Please sign in to continue.
         </AppText>
 
-        <View>
+        <View style={{ ...styles.textInput, marginTop: 20, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
           <TextInput
-            style={{ ...styles.textInput, marginTop: 20 }}
+            style={{ flexBasis: "80%" }}
             placeholder="Password"
             placeholderTextColor="gray"
             textContentType="password"
-            secureTextEntry
+            secureTextEntry={!showPassword}
             autoComplete="off"
             onChangeText={(text) => onValueChange("password", text)}
           />
+          {loginData.payload.password.length > 0 && (
+            <TouchableOpacity onPress={() => setShowPassword((prevState) => !prevState)}>
+              <FontAwesome5 name={showPassword ? "eye-slash" : "eye"} size={15} color="gray" />
+            </TouchableOpacity>
+          )}
         </View>
 
         <View style={{ alignItems: "center", flexDirection: "row", justifyContent: "space-around", display: `${!displaySpinner ? "flex" : "none"}` }}>
@@ -316,15 +322,22 @@ export default function Login({ navigation, route }) {
             onChangeText={(text) => onValueChange("phoneNumber", text)}
           />
 
-          <TextInput
-            style={{ ...styles.textInput, marginTop: 10 }}
-            placeholder="Password"
-            placeholderTextColor="gray"
-            textContentType="password"
-            secureTextEntry
-            autoComplete="off"
-            onChangeText={(text) => onValueChange("password", text)}
-          />
+          <View style={{ ...styles.textInput, marginTop: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+            <TextInput
+              style={{ flexBasis: "80%" }}
+              placeholder="Password"
+              placeholderTextColor="gray"
+              textContentType="password"
+              secureTextEntry={!showPassword}
+              autoComplete="off"
+              onChangeText={(text) => onValueChange("password", text)}
+            />
+            {loginData.payload.password.length > 0 && (
+              <TouchableOpacity onPress={() => setShowPassword((prevState) => !prevState)}>
+                <FontAwesome5 name={showPassword ? "eye-slash" : "eye"} size={15} color="gray" />
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
 
         <View style={{ alignItems: "center", flexDirection: "row", justifyContent: "space-around" }}>
