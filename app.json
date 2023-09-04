@@ -32,7 +32,6 @@
       "googleServicesFile": "./google-services.json",
       "package": "com.anclatechs.vetropaymobile",
       "versionCode": 26,
-      "useNextNotificationsApi": true,
       "permissions": ["USE_BIOMETRIC", "USE_FINGERPRINT", "READ_CONTACTS", "CAMERA"],
       "blockedPermissions": ["android.permission.REQUEST_INSTALL_PACKAGES"]
     },
