@@ -156,10 +156,10 @@ export default function Loans({ navigation }) {
         "🆕 Loan Request",
         `𝐏𝐫𝐢𝐧𝐜𝐢𝐩𝐚𝐥: ₦${numberWithCommas(loanAmount)}
 𝐏𝐫𝐨𝐜𝐞𝐬𝐬𝐢𝐧𝐠 𝐅𝐞𝐞: ₦${Math.min(Number(loanAmount * 0.005).toFixed(2), 750)}\n
-𝐈𝐧𝐭𝐞𝐫𝐞𝐬𝐭: 6.5 percent /Mo.
+𝐈𝐧𝐭𝐞𝐫𝐞𝐬𝐭: 0.197% /day (or 5.9% per Mo).
 𝐃𝐮𝐫𝐚𝐭𝐢𝐨𝐧: ${loanDuration} Month(s)\n
-𝐓𝐨𝐭𝐚𝐥 𝐏𝐚𝐲𝐚𝐛𝐥𝐞: ₦${numberWithCommas(Number(loanAmount * 0.065 * loanDuration + loanAmount).toFixed(2))}
-𝐌𝐨𝐧𝐭𝐡𝐥𝐲 𝐜𝐡𝐚𝐫𝐠𝐞: ₦${numberWithCommas(+(Number(loanAmount * 0.065 * loanDuration + loanAmount) / parseInt(loanDuration)).toFixed(2))}`,
+𝐓𝐨𝐭𝐚𝐥 𝐏𝐚𝐲𝐚𝐛𝐥𝐞: ₦${numberWithCommas(Number(loanAmount * 0.059 * loanDuration + loanAmount).toFixed(2))}
+𝐌𝐨𝐧𝐭𝐡𝐥𝐲 𝐜𝐡𝐚𝐫𝐠𝐞: ₦${numberWithCommas(+(Number(loanAmount * 0.059 * loanDuration + loanAmount) / parseInt(loanDuration)).toFixed(2))}`,
 
         [
           {
@@ -236,7 +236,7 @@ export default function Loans({ navigation }) {
                   <Picker.Item label="Charisol Inc" value="2" />
                   <Picker.Item label="Ekiti State Government" value="3" />
                   <Picker.Item label="Prelate Travel Ltd" value="4" />
-                  <Picker.Item label="RCCG Trinity Temple Parish" value="5" />
+                  {/* <Picker.Item label="RCCG Trinity Temple Parish" value="5" /> */}
                 </Picker>
               </View>
 
@@ -386,7 +386,7 @@ export default function Loans({ navigation }) {
 
               {/** Foot Note */}
               <AppText styles={{ color: "green", marginTop: 10, lineHeight: 20 }}>
-                <AppText bold>N.B</AppText> If your pay day comes earlier than 29 days from now; VetroPay helps calculate your interest at 0.2% per day. Loans closer to paydays
+                <AppText bold>N.B</AppText> If your pay day comes earlier than 29 days from now; VetroPay helps calculate your interest at 0.197% per day. Loans closer to paydays
                 enjoy lower interest rate.
               </AppText>
             </View>
