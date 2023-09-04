@@ -7,6 +7,7 @@ import {
   DEPOSIT_USD,
   WITHDRAW_USD,
   USD_USDT_SWAP,
+  DEPOSIT_USDT,
   DEPOSIT_TRX,
   FREEZE_TRX,
   GET_BTC_TRANSACTIONS,
@@ -23,6 +24,7 @@ const initialState = {
   fees: [],
   posts: [],
   depositusd: [],
+  depositusdt: [],
   withdrawusd: [],
   usdusdtswap: [],
   deposittrx: [],
@@ -63,6 +65,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         depositusd: [...state.depositusd, action.payload],
+      };
+    case DEPOSIT_USDT:
+      return {
+        ...state,
+        depositusdt: [...state.depositusdt, action.payload],
       };
     case WITHDRAW_USD:
       return {

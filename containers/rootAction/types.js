@@ -68,6 +68,7 @@ export const WITHDRAW_USD = "WITHDRAW_USD";
 export const USD_USDT_SWAP = "USD_USDT_SWAP";
 
 export const GET_USDT_TRANSACTIONS = "GET_USDT_TRANSACTIONS";
+export const DEPOSIT_USDT = "DEPOSIT_USDT";
 export const GET_TRX_TRANSACTIONS = "GET_TRX_TRANSACTIONS";
 export const GET_TRX_FEES = "GET_TRX_FEES";
 export const POST_TRX = "POST_TRX";

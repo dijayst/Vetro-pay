@@ -8,17 +8,16 @@ import { numberWithCommas } from "../../resources/MetaFunctions";
 import { toastColorObject } from "../../resources/rStyledComponent";
 import { useToast, Box, Text as NativeBaseText, Spinner } from "native-base";
 import { usePrevious } from "../../resources/utils";
-import { depositTrxPrompt, getTrxTransactions } from "../../containers/blockchain/action";
-import { AntDesign } from "@expo/vector-icons";
+import { depositUsdtFromNgnWallet, getUsdtTransactions } from "../../containers/blockchain/action";
 
 export default function Deposit({ navigation }) {
   const toast = useToast();
   const dispatch = useDispatch();
   const Picker = Platform.OS == "android" ? RNPicker : Select;
-  const trxTransactions = useSelector((state) => state.blockchain.trx);
-  const trxDepositResponse = useSelector((state) => state.blockchain.deposittrx);
-  const prevTrxDepositResponse = usePrevious(trxDepositResponse);
-  const [userTrxDepositDetails, setUserTrxDepositDetails] = useState({
+  const usdtTransactions = useSelector((state) => state.blockchain.usdt);
+  const usdtDepositResponse = useSelector((state) => state.blockchain.depositusdt);
+  const prevUsdDepositResponse = usePrevious(usdtDepositResponse);
+  const [userUsdtDepositDetails, setUserUsdtDepositDetails] = useState({
     payload: {
       source: "",
       amount: "",
@@ -27,14 +26,14 @@ export default function Deposit({ navigation }) {
   const [displaySpinner, setDisplaySpinner] = useState(false);
 
   useEffect(() => {
-    if (userTrxDepositDetails.payload.amount != "" && trxDepositResponse.length && trxDepositResponse.length != prevTrxDepositResponse?.length) {
-      if (trxDepositResponse[trxDepositResponse.length - 1]?.status == "success") {
+    if (userUsdtDepositDetails.payload.amount != "" && usdtDepositResponse.length && usdtDepositResponse.length != prevUsdDepositResponse?.length) {
+      if (usdtDepositResponse[usdtDepositResponse.length - 1]?.status == "success") {
         setDisplaySpinner(false);
-        Alert.alert("Deposit successful", `Equivalent TRX will be credited into your account. Thank you  🎉`, [
+        Alert.alert("Deposit successful", `Equivalent USDT will be credited into your account. Thank you  🎉`, [
           {
             text: "Go Home",
             onPress: () => {
-              dispatch(getTrxTransactions());
+              dispatch(getUsdtTransactions());
               navigation.goBack();
             },
           },
@@ -43,59 +42,44 @@ export default function Deposit({ navigation }) {
         toast.show({
           render: () => (
             <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>{trxDepositResponse[trxDepositResponse.length - 1]?.message}</NativeBaseText>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>{usdtDepositResponse[usdtDepositResponse.length - 1]?.message}</NativeBaseText>
             </Box>
           ),
         });
         setDisplaySpinner(false);
       }
     }
-  }, [trxDepositResponse]);
+  }, [usdtDepositResponse]);
 
-  const proceedTrxDeposit = () => {
-    let trxAmount;
-    if (userTrxDepositDetails.payload.source == "NGN") {
-      trxAmount = Number(userTrxDepositDetails.payload.amount / +trxTransactions.ngn_usd_current) / trxTransactions.tron_value;
-    } else {
-      trxAmount = Number(userTrxDepositDetails.payload.amount / trxTransactions.tron_value);
-    }
-
-    if (userTrxDepositDetails.payload.source == "") {
-      toast.show({
-        render: () => (
-          <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-            <NativeBaseText style={{ color: "#FFFFFF" }}>Payment method not set</NativeBaseText>
-          </Box>
-        ),
-      });
-    } else {
-      if (trxAmount < 20) {
+  const proceedUsdtDeposit = () => {
+    if (userUsdtDepositDetails.payload.source == "" || Number(userUsdtDepositDetails.payload.amount) < 1000) {
+      if (userUsdtDepositDetails.payload.source == "") {
         toast.show({
           render: () => (
             <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>TRX topup cannot be less than 20 TRX</NativeBaseText>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Payment method not set</NativeBaseText>
             </Box>
           ),
         });
-      } else if (trxAmount > 45000) {
+      } else if (Number(userUsdtDepositDetails.payload.amount) < 1000) {
         toast.show({
           render: () => (
             <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>TRX topup from VetroPay cannot be more than 45,000 TRX per month</NativeBaseText>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Naira conversion cannot be less than ₦1000</NativeBaseText>
             </Box>
           ),
         });
-      } else {
-        setDisplaySpinner(true);
-        dispatch(depositTrxPrompt(userTrxDepositDetails.payload.amount, userTrxDepositDetails.payload.source));
       }
+    } else {
+      setDisplaySpinner(true);
+      dispatch(depositUsdtFromNgnWallet(userUsdtDepositDetails.payload.amount));
     }
   };
 
   return (
     <View style={styles.container}>
       <View style={{ margin: 10 }}>
-        <AppText bold>Fund your Tron TRX Wallet</AppText>
+        <AppText bold>Fund your VetroPay USDT Wallet</AppText>
 
         <View
           style={{
@@ -109,7 +93,7 @@ export default function Deposit({ navigation }) {
           <Picker
             style={{ height: 45 }}
             onValueChange={(itemValue, itemIndex) => {
-              setUserTrxDepositDetails((prevState) => ({
+              setUserUsdtDepositDetails((prevState) => ({
                 ...prevState,
                 payload: {
                   ...prevState.payload,
@@ -119,11 +103,11 @@ export default function Deposit({ navigation }) {
             }}
             accessibilityLabel="Choose Country"
             borderColor={"transparent"}
-            selectedValue={userTrxDepositDetails.payload.source}
+            selectedValue={userUsdtDepositDetails.payload.source}
           >
             <Picker.Item label="--- Select Payment Method---" value="" />
             <Picker.Item label="NGN Wallet" value="NGN" />
-            {/* <Picker.Item label="USD Wallet" value="USD" /> */}
+            {/* <Picker.Item label="Debit/Credit Card" value="USD" /> */}
           </Picker>
         </View>
 
@@ -132,9 +116,9 @@ export default function Deposit({ navigation }) {
           placeholder="Amount"
           placeholderTextColor="gray"
           keyboardType="numeric"
-          value={userTrxDepositDetails.payload.amount}
+          value={userUsdtDepositDetails.payload.amount}
           onChangeText={(value) =>
-            setUserTrxDepositDetails((prevState) => ({
+            setUserUsdtDepositDetails((prevState) => ({
               ...prevState,
               payload: {
                 ...prevState.payload,
@@ -145,36 +129,21 @@ export default function Deposit({ navigation }) {
         />
 
         <View style={styles.creditBox}>
-          {userTrxDepositDetails.payload.source === "NGN" ? (
-            <AppText>
-              You will receive: TRX
-              {userTrxDepositDetails.payload.amount > 0
-                ? numberWithCommas(Number(userTrxDepositDetails.payload.amount / +trxTransactions.ngn_usd_current) / trxTransactions.tron_value)
-                : "0.000000"}
-            </AppText>
+          {userUsdtDepositDetails.payload.source !== "NGN" ? (
+            <AppText>You will receive: ${userUsdtDepositDetails.payload.amount > 0 ? numberWithCommas(userUsdtDepositDetails.payload.amount) : "0.00"}</AppText>
           ) : (
             <AppText>
-              You will receive: TRX
-              {userTrxDepositDetails.payload.amount > 0 ? numberWithCommas(Number(userTrxDepositDetails.payload.amount / trxTransactions.tron_value)) : "0.000000"}
+              You will receive: $
+              {userUsdtDepositDetails.payload.amount > 0 ? numberWithCommas(userUsdtDepositDetails.payload.amount / Number(usdtTransactions.ngn_usd_current)) : "0.00"}
             </AppText>
           )}
-        </View>
-
-        <View style={{ backgroundColor: "lightblue", padding: 10, borderRadius: 10, flexDirection: "row", alignItems: "center", marginTop: 10 }}>
-          <AntDesign name="infocirlce" size={20} color="#198754" style={{ marginTop: 5 }} />
-          <View>
-            <AppText bold styles={{ color: "#040404", lineHeight: 22, marginLeft: 10, marginRight: 7 }}>
-              Customers may only purchase limited TRX directly from our reserves per month. While there are no limits on how much TRX customers can hold in their TRX wallet, direct
-              Naira purchase is limited to 45,000 TRX per month. Thank you.
-            </AppText>
-          </View>
         </View>
 
         {!displaySpinner ? (
           <Fragment>
             <TouchableOpacity
-              disabled={Number(userTrxDepositDetails.payload.amount) < 1}
-              onPress={() => proceedTrxDeposit()}
+              disabled={Number(userUsdtDepositDetails.payload.amount) < 1}
+              onPress={() => proceedUsdtDeposit()}
               style={{ width: "100%", backgroundColor: "#266ddc", marginTop: 20, justifyContent: "center", height: 45, borderRadius: 5, alignItems: "center" }}
             >
               <AppText styles={{ color: "#ffffff", fontSize: 16 }} bold>

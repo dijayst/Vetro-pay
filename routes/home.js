@@ -27,6 +27,7 @@ import Loans from "../screens/creditloans/Loans";
 import ReceiveUsdt from "../screens/Usdt/Receive";
 import SendUsdt from "../screens/Usdt/Send";
 import WithdrawUsdt from "../screens/Usdt/Withdraw";
+import DepositUsdt from "../screens/Usdt/Deposit";
 import ReceiveTrx from "../screens/Tron/Receive";
 import DepositTrx from "../screens/Tron/Deposit";
 import SendTrx from "../screens/Tron/Send";
@@ -343,6 +344,17 @@ export default function HomeStack() {
       />
 
       <Stack.Screen
+        name="DepositUsdt"
+        options={{
+          title: "Deposit USDT",
+          headerStyle: { backgroundColor: "#266ddc" },
+          headerTitleStyle: { color: "#fff", fontWeight: "700" },
+          headerTintColor: "#fff",
+        }}
+        component={DepositUsdt}
+      />
+
+      <Stack.Screen
         name="ReceiveTrx"
         options={{
           title: "Receive TRX",
@@ -386,7 +398,7 @@ export default function HomeStack() {
         component={StakeTrx}
       />
 
-      <Stack.Screen
+      {/* <Stack.Screen
         name="WithdrawUsd"
         options={{
           title: "Withdraw USD",
@@ -417,7 +429,7 @@ export default function HomeStack() {
           headerTintColor: "#fff",
         }}
         component={SwapUsd}
-      />
+      /> */}
 
       <Stack.Screen
         name="ReceiveBtc"

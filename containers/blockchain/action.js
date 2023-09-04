@@ -15,6 +15,7 @@ import {
   GET_BTC_FEES,
   POST_BTC,
   DEPOSIT_BTC,
+  DEPOSIT_USDT,
 } from "../rootAction/types";
 import { returnErrors } from "../messages/messages";
 import { BASE_URL } from "../rootAction/env";
@@ -26,6 +27,21 @@ export const getUsdtTransactions = () => (dispatch, getState) => {
     .then((res) => {
       dispatch({
         type: GET_USDT_TRANSACTIONS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+    });
+};
+
+// DEPOSIT USDT
+export const depositUsdtFromNgnWallet = (amount) => (dispatch, getState) => {
+  axios
+    .post(`${BASE_URL}/api/usd/swap-ngn-to-usdt`, { amount }, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: DEPOSIT_USDT,
         payload: res.data,
       });
     })

@@ -1,10 +1,12 @@
-import React, { useRef } from "react";
-import { Text, View, StyleSheet, TouchableNativeFeedback, Share, Alert } from "react-native";
-import { AntDesign, FontAwesome, Feather } from "@expo/vector-icons";
+import React, { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Text, View, StyleSheet, TouchableNativeFeedback, Share, Alert, Switch, Platform } from "react-native";
+import { AntDesign, FontAwesome, Feather, FontAwesome5 } from "@expo/vector-icons";
 import AppText from "../../resources/AppText";
 import { AccountProfileSvgComponent, HelpSvgComponent, InviteFriendSvgComponent } from "../../resources/Svg";
 import { logout } from "../../containers/authentication/action";
-import { useDispatch, useSelector } from "react-redux";
+import * as SecureStore from "expo-secure-store";
+import { useEffect } from "react";
 
 const onShare = async () => {
   try {
@@ -40,8 +42,33 @@ function Separator() {
 export default function Settings({ navigation }) {
   const refRBSheet = useRef();
   const dispatch = useDispatch();
-
+  const [vetroPayDeFiEnabled, setVetroPayDeFiEnabled] = useState(false);
   const userAuthentication = useSelector((state) => state.authentication.user);
+
+  useEffect(() => {
+    if (Platform.OS == "android") {
+      SecureStore.getItemAsync("vetroPayDeFiEnabled", SecureStore.WHEN_UNLOCKED).then((data) => setVetroPayDeFiEnabled(data == "true" || false));
+    } else {
+      SecureStore.getItemAsync("vetroPayDeFiEnabled").then((data) => setVetroPayDeFiEnabled(data == "true" || false));
+    }
+  }, []);
+
+  const toggleDeFiSwitch = () => {
+    setVetroPayDeFiEnabled((previousState) => {
+      if (Platform.OS == "android") {
+        SecureStore.setItemAsync("vetroPayDeFiEnabled", String(!previousState), SecureStore.WHEN_UNLOCKED);
+        if (!previousState) {
+          SecureStore.setItemAsync("vetroPayBalanceHidden", String(false), SecureStore.WHEN_UNLOCKED);
+        }
+      } else {
+        SecureStore.setItemAsync("vetroPayDeFiEnabled", String(!previousState));
+        if (!previousState) {
+          SecureStore.setItemAsync("vetroPayBalanceHidden", String(false));
+        }
+      }
+      return !previousState;
+    });
+  };
 
   const alertLogout = () => {
     Alert.alert(
@@ -163,6 +190,37 @@ export default function Settings({ navigation }) {
         </TouchableNativeFeedback>
         {/** Payme Link */}
 
+        <Separator />
+
+        {/** Payme Link */}
+        <TouchableNativeFeedback onPress={() => onSharePayme(userAuthentication.user_uid, userAuthentication.partnered_sole_proprietor, userAuthentication.nuban)}>
+          <View style={styles.listItem}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+              <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
+                <View style={{ backgroundColor: "#266ddc", height: 26, width: 26, borderRadius: 13, justifyContent: "center", alignItems: "center" }}>
+                  <FontAwesome5 name="ethereum" size={15} color="#FFFFFF" />
+                </View>
+                <View style={{ flexDirection: "column" }}>
+                  <AppText bold="true" styles={{ paddingLeft: 10, fontSize: 15 }}>
+                    VetroPay DeFi
+                  </AppText>
+                  <AppText styles={{ fontSize: 12, marginLeft: 10 }}>DeFi Wallets Display {"(BTC, USDT, TRX..)"}</AppText>
+                </View>
+              </View>
+
+              <View>
+                <Switch
+                  trackColor={{ false: "#767577", true: "#81b0ff" }}
+                  thumbColor={vetroPayDeFiEnabled ? "lightgreen" : "#f4f3f4"}
+                  ios_backgroundColor="#3e3e3e"
+                  onValueChange={toggleDeFiSwitch}
+                  value={vetroPayDeFiEnabled}
+                />
+              </View>
+            </View>
+          </View>
+        </TouchableNativeFeedback>
+        {/** Payme Link */}
         <Separator />
 
         {/** Invite a friend */}

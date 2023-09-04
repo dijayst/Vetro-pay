@@ -3,9 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import * as Linking from "expo-linking";
+import * as SecureStore from "expo-secure-store";
 import AppText from "../resources/AppText";
 import { StyleSheet, Image, Text, View, StatusBar, FlatList, Button, TouchableOpacity, Alert, Dimensions, Pressable, Platform, ScrollView } from "react-native";
-import { MaterialCommunityIcons, AntDesign, Feather, Octicons, SimpleLineIcons, FontAwesome, Foundation, Fontisto, MaterialIcons, Entypo } from "@expo/vector-icons";
+import { MaterialCommunityIcons, AntDesign, Feather, Octicons, FontAwesome5, FontAwesome, MaterialIcons, Entypo } from "@expo/vector-icons";
 import { getUserTransaction } from "../containers/transactions/action";
 import { updateNotificationToken } from "../containers/regvalidate/action";
 import NairaLog from "../assets/naira.png";
@@ -27,11 +28,11 @@ const SUPPORTED_CURRENCIES = [
     code: "NGN",
     icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Flag_of_Nigeria.svg/1280px-Flag_of_Nigeria.svg.png",
   },
-  {
-    fullname: "United States Dollar",
-    code: "USD",
-    icon: "https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/255px-Flag_of_the_United_States.svg.png",
-  },
+  // {
+  //   fullname: "United States Dollar",
+  //   code: "USD",
+  //   icon: "https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/255px-Flag_of_the_United_States.svg.png",
+  // },
   {
     fullname: "Tether",
     code: "USDT",
@@ -79,6 +80,8 @@ export default function Home({ navigation }) {
   const [expoPushToken, setExpoPushToken] = useState("");
   const prevExpoPushToken = usePrevious(expoPushToken);
   const [sendToken, setSendToken] = useState(false);
+  const [vetroPayDeFiEnabled, setVetroPayDeFiEnabled] = useState(false);
+  const [vetroPayBalanceHidden, setVetroPayBalanceHidden] = useState(false);
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
@@ -106,6 +109,16 @@ export default function Home({ navigation }) {
       }
     }
   }, [navigation]);
+
+  useEffect(() => {
+    if (Platform.OS == "android") {
+      SecureStore.getItemAsync("vetroPayDeFiEnabled", SecureStore.WHEN_UNLOCKED).then((data) => setVetroPayDeFiEnabled(data == "true" || false));
+      SecureStore.getItemAsync("vetroPayBalanceHidden", SecureStore.WHEN_UNLOCKED).then((data) => setVetroPayBalanceHidden(data == "true" || false));
+    } else {
+      SecureStore.getItemAsync("vetroPayDeFiEnabled").then((data) => setVetroPayDeFiEnabled(data == "true" || false));
+      SecureStore.getItemAsync("vetroPayBalanceHidden").then((data) => setVetroPayBalanceHidden(data == "true" || false));
+    }
+  });
 
   useEffect(() => {
     let isMounted = true;
@@ -219,6 +232,17 @@ export default function Home({ navigation }) {
       setSelectedCurrency(data);
       bottomSheetRef.current.close();
     }
+  };
+
+  const toggleHideUserBalance = () => {
+    setVetroPayBalanceHidden((previousState) => {
+      if (Platform.OS == "android") {
+        SecureStore.setItemAsync("vetroPayBalanceHidden", String(!previousState), SecureStore.WHEN_UNLOCKED);
+      } else {
+        SecureStore.setItemAsync("vetroPayBalanceHidden", String(!previousState));
+      }
+      return !previousState;
+    });
   };
 
   const menusItem = [
@@ -364,38 +388,68 @@ export default function Home({ navigation }) {
       {selectedCurrency.code == "NGN" && (
         <Fragment>
           <View style={{ backgroundColor: "#266ddc", borderBottomLeftRadius: 15, borderBottomRightRadius: 15, paddingBottom: 30 }}>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 15 }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 15, alignItems: "center" }}>
               <View>
                 <AppText bold="true" styles={{ fontSize: 14, color: "#f2f2f2", marginTop: StatusBar.currentHeight + 10 }}>
                   Balance
                 </AppText>
                 <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", width: "100%" }}>
                   <MaterialIcons name="account-balance-wallet" size={24} color="#f2f2f2" />
-                  <AppText bold="true" styles={{ fontSize: 18, color: "#f2f2f2", marginLeft: 5 }}>
-                    {currencySymbol}
-                    {numberWithCommas(accountBalance)}
-                  </AppText>
+                  {vetroPayBalanceHidden ? (
+                    <AppText
+                      bold="true"
+                      styles={{
+                        fontSize: 18,
+                        color: "#f2f2f2",
+                        marginLeft: 5,
+                        textShadowColor: "rgba(255,255,255,0.8)",
+                        textShadowOffset: {
+                          width: 0,
+                          height: 0,
+                        },
+                        textShadowRadius: 10,
+                        fontWeight: "600",
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      ✧･ﾟ: *✧･ﾟ:*
+                    </AppText>
+                  ) : (
+                    <AppText bold="true" styles={{ fontSize: 18, color: "#f2f2f2", marginLeft: 5 }}>
+                      {currencySymbol}
+                      {numberWithCommas(accountBalance)}
+                    </AppText>
+                  )}
                 </View>
               </View>
-              {/* <TouchableNativeFeedback onPress={() => alertLogout()}>
-            <AntDesign name="logout" size={24} style={{ marginTop: StatusBar.currentHeight + 10, marginHorizontal: 15 }} color="#f2f2f2" />
-          </TouchableNativeFeedback> */}
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#FFFFFF",
-                  marginTop: StatusBar.currentHeight + 10,
-                  paddingHorizontal: 10,
-                  paddingVertical: 10,
-                  borderRadius: 10,
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-                onPress={() => bottomSheetRef.current?.expand()}
-              >
-                <Image source={{ uri: selectedCurrency.icon }} style={{ width: 30, height: 30, resizeMode: "contain" }} />
-                <AppText styles={{ marginHorizontal: 5 }}>{selectedCurrency.code}</AppText>
-                <AntDesign name="down" size={15} color="black" style={{ alignSelf: "flex-end", marginBottom: 5 }} />
-              </TouchableOpacity>
+
+              {vetroPayDeFiEnabled ? (
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#FFFFFF",
+                    marginTop: StatusBar.currentHeight + 10,
+                    paddingHorizontal: 10,
+                    paddingVertical: 10,
+                    borderRadius: 10,
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                  onPress={() => bottomSheetRef.current?.expand()}
+                >
+                  <Image source={{ uri: selectedCurrency.icon }} style={{ width: 30, height: 30, resizeMode: "contain" }} />
+                  <AppText styles={{ marginHorizontal: 5 }}>{selectedCurrency.code}</AppText>
+                  <AntDesign name="down" size={15} color="black" style={{ alignSelf: "flex-end", marginBottom: 5 }} />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={() => toggleHideUserBalance()}>
+                  <FontAwesome5
+                    name={vetroPayBalanceHidden ? "eye" : "eye-slash"}
+                    size={24}
+                    style={{ marginTop: StatusBar.currentHeight + 10, marginHorizontal: 15 }}
+                    color="#f2f2f2"
+                  />
+                </TouchableOpacity>
+              )}
             </View>
             <View style={{ justifyContent: "center", alignItems: "center" }}>
               <View style={styles.mainBoard}>
@@ -486,7 +540,7 @@ export default function Home({ navigation }) {
         </Fragment>
       )}
 
-      {selectedCurrency.code == "USD" && <UsdHome navigation={navigation} selectedCurrency={selectedCurrency} bottomSheetRef={bottomSheetRef} />}
+      {/* {selectedCurrency.code == "USD" && <UsdHome navigation={navigation} selectedCurrency={selectedCurrency} bottomSheetRef={bottomSheetRef} />} */}
       {selectedCurrency.code == "USDT" && <UsdtHome navigation={navigation} selectedCurrency={selectedCurrency} bottomSheetRef={bottomSheetRef} />}
       {selectedCurrency.code == "TRX" && <TronHome navigation={navigation} selectedCurrency={selectedCurrency} bottomSheetRef={bottomSheetRef} />}
       {selectedCurrency.code == "BTC" && <BtcHome navigation={navigation} selectedCurrency={selectedCurrency} bottomSheetRef={bottomSheetRef} />}

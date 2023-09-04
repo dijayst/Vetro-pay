@@ -76,6 +76,21 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
                 if (usdtTransactions.processing) {
                   alertUserToAwaitLoading();
                 } else {
+                  navigation.navigate("DepositUsdt");
+                }
+              }}
+            >
+              <View style={{ ...styles.activityButton, width: 60 }}>
+                <AntDesign name="pluscircleo" size={20} color="#f2f2f2" />
+                <AppText styles={styles.mainBoardIconText}>Deposit</AppText>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                if (usdtTransactions.processing) {
+                  alertUserToAwaitLoading();
+                } else {
                   navigation.navigate("SendUsdt");
                 }
               }}

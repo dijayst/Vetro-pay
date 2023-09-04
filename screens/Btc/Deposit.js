@@ -129,7 +129,7 @@ export default function Deposit({ navigation }) {
           >
             <Picker.Item label="--- Select Payment Method---" value="" />
             <Picker.Item label="NGN Wallet" value="NGN" />
-            <Picker.Item label="USD Wallet" value="USD" />
+            {/* <Picker.Item label="USD Wallet" value="USD" /> */}
           </Picker>
         </View>
 
