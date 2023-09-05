@@ -5,9 +5,12 @@
     "slug": "vetropay-mobile",
     "privacy": "public",
     "platforms": ["ios", "android", "web"],
-    "version": "1.0.16",
+    "version": "1.0.17",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "notification": {
+      "icon": "./assets/notification-icon.png"
+    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
@@ -26,14 +29,18 @@
         "NSContactsUsageDescription": "This app uses contact list to make purchase airtime faster"
       },
       "bundleIdentifier": "com.anclatechs.vetropaymobile",
-      "buildNumber": "1.0.16"
+      "buildNumber": "1.0.17"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
       "package": "com.anclatechs.vetropaymobile",
-      "versionCode": 26,
+      "versionCode": 27,
       "permissions": ["USE_BIOMETRIC", "USE_FINGERPRINT", "READ_CONTACTS", "CAMERA"],
-      "blockedPermissions": ["android.permission.REQUEST_INSTALL_PACKAGES"]
+      "blockedPermissions": ["android.permission.REQUEST_INSTALL_PACKAGES"],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      }
     },
     "androidStatusBar": {
       "barStyle": "light-content",
