@@ -137,32 +137,47 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
       {/**USDT GRAPH */}
       <View style={{ justifyContent: "center", alignItems: "center" }}>
         <View style={styles.menuBoard}>
-          <View
-            style={{
-              width: "100%",
-              alignItems: "center",
-              backgroundColor: "#ededed",
-              borderRadius: 5,
-              flexDirection: "row",
-              justifyContent: "flex-end",
-              paddingHorizontal: 15,
-              paddingBottom: 3,
-            }}
-          >
-            <AppText bold styles={{ color: "#2E2E2E", fontSize: 15 }}>
-              {usdtTransactions.processing ? "0.00" : `₦${usdtTransactions.ngn_usd_current}/$`}
-            </AppText>
-            {!usdtTransactions.processing && (
-              <View style={{ justifyContent: "center", alignItems: "center", marginLeft: 7 }}>
-                {usdtTransactions?.ngn_usd_current > usdtTransactions?.usd_last_closing ? (
-                  <AntDesign name="caretup" size={8} color="#0bc8a5" />
-                ) : (
-                  <AntDesign name="caretdown" size={8} color="red" />
-                )}
-              </View>
-            )}
+          <View style={{ flexDirection: "row", justifyContent: "space-evenly", alignItems: "center", width: "100%", paddingHorizontal: 20, height: "100%" }}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#266ddc",
+                padding: 9,
+                borderRadius: 20,
+              }}
+              onPress={() => {
+                if (usdtTransactions.processing) {
+                  alertUserToAwaitLoading();
+                } else {
+                  navigation.navigate("DepositUsdt");
+                }
+              }}
+            >
+              <AppText bold styles={{ color: "#f2f2f2", paddingHorizontal: usdtTransactions.processing ? 20 : 0 }}>
+                Buy{usdtTransactions.processing ? "" : ` - ₦${usdtTransactions.ngn_usd_current}/$`}
+              </AppText>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                borderColor: "#266ddc",
+                borderWidth: 1,
+                padding: 9,
+                borderRadius: 20,
+              }}
+              onPress={() => {
+                if (usdtTransactions.processing) {
+                  alertUserToAwaitLoading();
+                } else {
+                  navigation.navigate("WithdrawUsdt");
+                }
+              }}
+            >
+              <AppText bold styles={{ color: "#36454F", paddingHorizontal: usdtTransactions.processing ? 20 : 0 }}>
+                Sell{usdtTransactions.processing ? "" : ` - ₦${usdtTransactions.usd_ngn_current}/$`}
+              </AppText>
+            </TouchableOpacity>
           </View>
-          <LineChart
+          {/* <LineChart
             data={{
               labels: ["2020", "2021", "1-Month", "Last Week", "Today"],
               datasets: [{ data: usdtTransactions.processing ? [0, 0, 0, 0, 0] : usdtTransactions.ngn_usd_history }],
@@ -189,7 +204,7 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
               },
             }}
             bezier
-          />
+          /> */}
         </View>
       </View>
       <View style={{ marginTop: 15, paddingHorizontal: 10, flex: 1 }}>
@@ -286,7 +301,7 @@ const styles = StyleSheet.create({
 
   menuBoard: {
     backgroundColor: "#ffffff",
-    height: 220,
+    height: 60,
     width: "90%",
     marginTop: -30,
     borderRadius: 5,

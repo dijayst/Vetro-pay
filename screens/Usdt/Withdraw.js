@@ -19,7 +19,7 @@ export default function Withdraw({ navigation }) {
     amount: "",
   });
   const usdtTransactions = useSelector((state) => state.blockchain.usdt);
-  const USD_RATE = usdtTransactions?.ngn_usd_current;
+  const USD_RATE = usdtTransactions?.usd_ngn_current;
   const TRON_VALUE_IN_USD = Number(usdtTransactions?.tron_value);
   const blockchainFees = useSelector((state) => state.blockchain.fees);
   const prevBlockchainFees = usePrevious(blockchainFees);
