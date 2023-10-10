@@ -5,6 +5,7 @@ import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import AppText from "../../resources/AppText";
 import { AccountProfileSvgComponent, EmailSvgComponent, KycSvgComponent, QrCodeSvgComponent, UserPinSvgComponent, BusinessSvgComponent } from "../../resources/Svg";
 import { loadUser, deleteUserAccountPrompt } from "../../containers/authentication/action";
+import { getBank } from "../../containers/banks/action";
 
 function Separator() {
   return <View style={styles.separator} />;
@@ -12,8 +13,14 @@ function Separator() {
 
 export default function Account({ navigation }) {
   const userAuthentication = useSelector((state) => state.authentication.user);
+  const userBank = useSelector((state) => state.banks.banks);
+
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getBank());
+  }, []);
 
   useEffect(() => {
     /**NAVIGATIOON */
@@ -160,7 +167,7 @@ export default function Account({ navigation }) {
                       color: `${userAuthentication.kyc_verified == "UNVERIFIED" ? "red" : `${userAuthentication.kyc_verified == "VERIFIED" ? "green" : "#B76E79"}`}`,
                     }}
                   >
-                    {userAuthentication.kyc_verified}
+                    {userAuthentication.kyc_verified == "PROCESSING" ? `${!userBank?.data?.bank_name ? "**Action Required": userAuthentication.kyc_verified}` : userAuthentication.kyc_verified}
                   </AppText>
                 </View>
               </View>
