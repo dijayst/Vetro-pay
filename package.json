@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo/config-plugins": "~7.2.2",
+    "@expo/prebuild-config": "~6.2.4",
     "@freakycoder/react-native-bounceable": "^0.2.5",
     "@gorhom/bottom-sheet": "^4",
     "@react-native-async-storage/async-storage": "1.18.2",
@@ -24,7 +25,6 @@
     "axios": "^0.20.0",
     "deprecated-react-native-prop-types": "^4.0.0",
     "expo": "^49.0.8",
-    "expo-app-loading": "~2.1.1",
     "expo-asset": "~8.10.1",
     "expo-barcode-scanner": "~12.5.3",
     "expo-contacts": "~12.2.0",
@@ -73,6 +73,9 @@
   "devDependencies": {
     "@babel/core": "^7.19.3",
     "babel-preset-expo": "^9.5.0"
+  },
+  "resolutions": {
+    "@react-native/normalize-colors": "0.73.0"
   },
   "private": true
 }
