@@ -13,18 +13,18 @@ import TvDstv from "./TvDstv";
 import TvGotv from "./TvGotv";
 import TvStartimes from "./TvStartimes";
 
-export default function Tv() {
+export default function Tv({ navigation }) {
   const Modal = Platform.OS == "android" ?  AndroidModal : IOSmodal
   const [modalOpen, setModalOpen] = useState(false);
   const [tvProvider, setTvProvider] = useState("");
 
   const renderModalContent = () => {
     if (tvProvider == "DSTV") {
-      return <TvDstv />;
+      return <TvDstv navigation={navigation} setModalOpen={setModalOpen} />;
     } else if (tvProvider == "GOTV") {
-      return <TvGotv />;
+      return <TvGotv navigation={navigation} setModalOpen={setModalOpen} />;
     } else if (tvProvider == "STARTIMES") {
-      return <TvStartimes />;
+      return <TvStartimes navigation={navigation} setModalOpen={setModalOpen} />;
     }
   };
 

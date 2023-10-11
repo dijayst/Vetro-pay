@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { View, StyleSheet, Button, TextInput } from "react-native";
+import { View, StyleSheet, Button, TextInput, TouchableOpacity } from "react-native";
 import { Picker as RNPicker } from "@react-native-picker/picker";
 import { Select } from "native-base";
 import AppText from "../../resources/AppText";
@@ -11,8 +11,10 @@ import { Spinner } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { buyUtility } from "../../containers/utility/action";
 import { SuccessfulSvgComponent } from "../../resources/Svg";
+import { getUserTransaction } from "../../containers/transactions/action";
 
-export default function TvDstv() {
+
+export default function TvDstv({ navigation, setModalOpen }) {
   const Picker = Platform.OS == "android" ? RNPicker : Select
   const provider = "Multichoice";
   const product = "GOTV";
@@ -379,7 +381,9 @@ export default function TvDstv() {
               <View style={{ marginTop: 24, alignItems: "center" }}>
                 <PrimaryButton
                   onPress={() => {
-                    null;
+                    setModalOpen(false)
+                    dispatch(getUserTransaction(""));
+                    navigation.navigate("HomeHome");
                   }}
                 >
                   <AppText bold="true" styles={{ color: "#fff", fontSize: 16 }}>
@@ -387,13 +391,19 @@ export default function TvDstv() {
                   </AppText>
                 </PrimaryButton>
 
-                <View style={{ marginTop: 16, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                <TouchableOpacity
+                onPress={() => {
+                  setModalOpen(false)
+                  dispatch(getUserTransaction(""));
+                  navigation.navigate("HomeHome");
+                }}
+                style={{ marginTop: 16, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
                   <MaterialIcons name="home" size={18} color="#266ddc" />
                   <AppText bold="true" styles={{ fontSize: 18, color: "#266ddc" }}>
                     {" "}
                     Go home
                   </AppText>
-                </View>
+                </TouchableOpacity>
               </View>
             </View>
           </View>

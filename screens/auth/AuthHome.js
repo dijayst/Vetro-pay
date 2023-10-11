@@ -1,51 +1,23 @@
 import React from "react";
-import { StyleSheet, Text, View, ImageBackground, TouchableWithoutFeedbackBase, Pressable } from "react-native";
-import AppText from "../../resources/AppText";
-import { AppButton } from "../../resources/AppButton";
-//import * as Facebook from "expo-facebook";
+import { StyleSheet, Text, View, ImageBackground, Pressable, ActivityIndicator } from "react-native";
 import { useAssets } from "expo-asset";
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
 //const BackgroundImage = require("../../assets/authHome.png");
 
-// Keep the splash screen visible while we fetch resources
-SplashScreen.preventAutoHideAsync();
-
 export default function AuthHome({ navigation }) {
-  // Facebook.initializeAsync({ appId: "713268446200988", appName: "VetroPay Mobile", autoLogAppEvents: true });
   const [BackgroundImage, error] = useAssets(require("../../assets/authHome.png"));
-
-  useEffect(() => {
-    if (BackgroundImage) {
-      async function splashScreenDismiss() {
-        await SplashScreen.hideAsync();
-      }
-      splashScreenDismiss();
-    }
-  }, [BackgroundImage]);
-
   return (
-    <Pressable onPress={() => navigation.navigate("Login")} style={{ flex: 1 }}>
+    <>
+    {BackgroundImage ? <Pressable onPress={() => navigation.navigate("Login")} style={{ flex: 1 }}>
       <ImageBackground source={BackgroundImage} style={{ flex: 1 }} imageStyle={{ resizeMode: "cover" }}>
         <View style={styles.overlay}>
-          {/* <View style={{ flex: 1 }}>
-            <AppText bold="true" styles={styles.title}>
-              {"<<<"} VetroPay {">>>"}
-            </AppText>
-
-            <AppText styles={styles.base}>Welcome to Vetro-World</AppText>
-          </View>
-          <View style={styles.footer}>
-            <AppText styles={styles.footerAimText}>...your official payment partner</AppText>
-            <View style={{ alignItems: "center" }}>
-              <AppButton styles={styles.continueButton} onPress={() => navigation.navigate("Login")}>
-                <Text style={styles.buttonText}>Continue</Text>
-              </AppButton>
-            </View>
-          </View> */}
         </View>
       </ImageBackground>
-    </Pressable>
+    </Pressable>: 
+    <View style={{ height: '100%', alignItems: "center", justifyContent: "center" }}>
+      <ActivityIndicator color={"#266ddc"} size="large" />
+    </View>
+    }
+    </>
   );
 }
 

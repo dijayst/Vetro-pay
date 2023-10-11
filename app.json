@@ -5,7 +5,7 @@
     "slug": "vetropay-mobile",
     "privacy": "public",
     "platforms": ["ios", "android", "web"],
-    "version": "1.0.17",
+    "version": "1.0.18",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "notification": {
@@ -29,12 +29,12 @@
         "NSContactsUsageDescription": "This app uses contact list to make purchase airtime faster"
       },
       "bundleIdentifier": "com.anclatechs.vetropaymobile",
-      "buildNumber": "1.0.17"
+      "buildNumber": "1.0.18"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
       "package": "com.anclatechs.vetropaymobile",
-      "versionCode": 27,
+      "versionCode": 28,
       "permissions": ["USE_BIOMETRIC", "USE_FINGERPRINT", "READ_CONTACTS", "CAMERA"],
       "blockedPermissions": ["android.permission.REQUEST_INSTALL_PACKAGES"],
       "adaptiveIcon": {
@@ -47,10 +47,6 @@
       "backgroundColor": "#00000066",
       "translucent": true
     },
-    "facebookScheme": "fb713268446200988",
-    "facebookAppId": "713268446200988",
-    "facebookDisplayName": "VetroPay Mobile",
-    "facebookAutoLogAppEventsEnabled": false,
     "description": "",
     "extra": {
       "eas": {

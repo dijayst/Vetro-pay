@@ -1,4 +1,4 @@
-import localStorage from "react-native-sync-localstorage";
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import {
   USER_LOADING,
   USER_LOADED,
@@ -13,7 +13,7 @@ import {
 } from "../rootAction/types";
 
 const initialState = {
-  token: localStorage.getItem("token"),
+  token: AsyncStorage.getItem("token"),
   isAuthenticated: null,
   isLoading: false,
   user: null,
@@ -42,7 +42,7 @@ export default function (state = initialState, action) {
       };
 
     case LOGIN_SUCCESS:
-      localStorage.setItem("token", action.payload.token);
+      AsyncStorage.setItem("token", action.payload.token);
       return {
         ...state,
         ...action.payload,

@@ -12,6 +12,7 @@ import { validateElectricityData, buyUtility } from "../../containers/utility/ac
 import { SuccessfulSvgComponent } from "../../resources/Svg";
 import { Modal as AndroidModal } from "react-native";
 import { Modal as IOSmodal } from "native-base";
+import { getUserTransaction } from "../../containers/transactions/action";
 
 const Ekologo = require("../../assets/logos/eko.jpg");
 const IBEDClogo = require("../../assets/logos/ibedc.png");
@@ -35,7 +36,7 @@ const discosPlatformName = {
   PORTH: "PORTHARCOURT Electric",
 };
 
-export default function Electricity() {
+export default function Electricity({ navigation }) {
   const Modal = Platform.OS == "android" ? AndroidModal : IOSmodal;
   const Picker = Platform.OS == "android" ? RNPicker : Select;
 
@@ -401,13 +402,18 @@ export default function Electricity() {
                 </AppText>
               </PrimaryButton>
 
-              <View style={{ marginTop: 16, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+              <TouchableOpacity
+              onPress={() => {
+                dispatch(getUserTransaction(""));
+                navigation.goBack()
+              }}
+              style={{ marginTop: 16, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
                 <MaterialIcons name="home" size={18} color="#266ddc" />
                 <AppText bold="true" styles={{ fontSize: 18, color: "#266ddc" }}>
                   {" "}
                   Go home
                 </AppText>
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
         );
