@@ -17,6 +17,7 @@ import { toastColorObject } from "../../resources/rStyledComponent";
 import { Picker as RNPicker } from "@react-native-picker/picker";
 import { Select } from "native-base";
 //import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { getUserTransaction } from "../../containers/transactions/action";
 
 function Separator() {
   return <View style={styles.separator} />;
@@ -552,13 +553,19 @@ export default function SendMoney({ navigation, route }) {
                 </AppText>
               </PrimaryButton>
 
-              <View style={{ marginTop: 16, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+              <TouchableOpacity
+              onPress={() => {
+                setModalOpen(false)
+                dispatch(getUserTransaction(""));
+                navigation.navigate("HomeHome");
+              }}
+              style={{ marginTop: 16, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
                 <MaterialIcons name="home" size={18} color="#266ddc" />
                 <AppText bold="true" styles={{ fontSize: 18, color: "#266ddc" }}>
                   {" "}
                   Go home
                 </AppText>
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
         );
