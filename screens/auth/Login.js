@@ -317,7 +317,7 @@ export default function Login({ navigation, route }) {
             placeholder="Phone Number"
             placeholderTextColor="gray"
             textContentType="telephoneNumber"
-            keyboardType="visible-password"
+            keyboardType="numeric"
             autoComplete="off"
             onChangeText={(text) => onValueChange("phoneNumber", text)}
           />

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Dimensions, Modal, View, Text, StyleSheet, Image, TextInput, ScrollView } from "react-native";
+import { Dimensions, Modal, View, Text, StyleSheet, Image, TextInput, ScrollView, TouchableOpacity } from "react-native";
 import AppText from "../../resources/AppText";
 import { AppButton, PrimaryButton } from "../../resources/AppButton";
-import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 
 import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
 import { postPreReg, postRegAuth, registerUser } from "../../containers/regvalidate/action";
@@ -17,6 +17,7 @@ export default function Register({ navigation }) {
   const toast = useToast();
   const Picker = Platform.OS == "android" ? RNPicker : Select;
   const [stage, setStage] = useState(1);
+  const [showPassword, setShowPassword] = useState(false);
   const [registerData, setRegisterData] = useState({
     payload: {
       country: "NIGERIA",
@@ -383,23 +384,38 @@ export default function Register({ navigation }) {
                   placeholderTextColor="gray"
                   onChangeText={(text) => onValueChange("phoneNumber", text)}
                 />
-                <TextInput
-                  style={{ ...styles.textInput, marginTop: 10 }}
-                  placeholder="Password"
-                  placeholderTextColor="gray"
-                  textContentType="password"
-                  secureTextEntry
-                  onChangeText={(text) => onValueChange("password", text)}
-                />
 
-                <TextInput
-                  style={{ ...styles.textInput, marginTop: 10 }}
-                  placeholder="Confirm Password"
-                  placeholderTextColor="gray"
-                  textContentType="password"
-                  secureTextEntry
-                  onChangeText={(text) => onValueChange("confirmPassword", text)}
-                />
+                <View style={{ ...styles.textInput, marginTop: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                  <TextInput
+                    style={{ flexBasis: "80%" }}
+                    placeholder="Password"
+                    placeholderTextColor="gray"
+                    textContentType="password"
+                    secureTextEntry={!showPassword}
+                    onChangeText={(text) => onValueChange("password", text)}
+                  />
+                  {registerData.payload.password.length > 0 && (
+                    <TouchableOpacity onPress={() => setShowPassword((prevState) => !prevState)}>
+                      <FontAwesome5 name={showPassword ? "eye-slash" : "eye"} size={15} color="gray" />
+                    </TouchableOpacity>
+                  )}
+                  </View>
+
+                  <View style={{ ...styles.textInput, marginTop: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                    <TextInput
+                      style={{ flexBasis: "80%" }}
+                      placeholder="Confirm Password"
+                      placeholderTextColor="gray"
+                      textContentType="password"
+                      secureTextEntry={!showPassword}
+                      onChangeText={(text) => onValueChange("confirmPassword", text)}
+                    />
+                    {registerData.payload.confirmPassword.length > 0 && (
+                        <TouchableOpacity onPress={() => setShowPassword((prevState) => !prevState)}>
+                          <FontAwesome5 name={showPassword ? "eye-slash" : "eye"} size={15} color="gray" />
+                        </TouchableOpacity>
+                      )}
+                  </View>
 
                 <AppButton styles={{ ...styles.signupButton, display: `${!displaySpinner ? "flex" : "none"}` }} onPress={() => goToAuthCode()}>
                   <AppText bold="true" styles={{ color: "#FFFFFF", fontSize: 18 }}>
