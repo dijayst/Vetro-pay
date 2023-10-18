@@ -40,7 +40,7 @@
     "android": {
       "googleServicesFile": "./google-services.json",
       "package": "com.anclatechs.vetropaymobile",
-      "versionCode": 29,
+      "versionCode": 30,
       "permissions": [
         "USE_BIOMETRIC",
         "USE_FINGERPRINT",
