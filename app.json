@@ -4,8 +4,12 @@
     "name": "Vetropay Mobile",
     "slug": "vetropay-mobile",
     "privacy": "public",
-    "platforms": ["ios", "android", "web"],
-    "version": "1.0.18",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "version": "1.0.19",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "notification": {
@@ -19,7 +23,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": false,
       "infoPlist": {
@@ -29,14 +35,21 @@
         "NSContactsUsageDescription": "This app uses contact list to make purchase airtime faster"
       },
       "bundleIdentifier": "com.anclatechs.vetropaymobile",
-      "buildNumber": "1.0.18"
+      "buildNumber": "1.0.19"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
       "package": "com.anclatechs.vetropaymobile",
-      "versionCode": 28,
-      "permissions": ["USE_BIOMETRIC", "USE_FINGERPRINT", "READ_CONTACTS", "CAMERA"],
-      "blockedPermissions": ["android.permission.REQUEST_INSTALL_PACKAGES"],
+      "versionCode": 29,
+      "permissions": [
+        "USE_BIOMETRIC",
+        "USE_FINGERPRINT",
+        "READ_CONTACTS",
+        "CAMERA"
+      ],
+      "blockedPermissions": [
+        "android.permission.REQUEST_INSTALL_PACKAGES"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
