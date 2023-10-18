@@ -1,19 +1,57 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback, Fragment } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+  Fragment,
+} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import * as Linking from "expo-linking";
 import * as SecureStore from "expo-secure-store";
 import AppText from "../resources/AppText";
-import { StyleSheet, Image, Text, View, StatusBar, FlatList, Button, TouchableOpacity, Alert, Dimensions, Pressable, Platform, ScrollView } from "react-native";
-import { MaterialCommunityIcons, AntDesign, Feather, Octicons, FontAwesome5, FontAwesome, MaterialIcons, Entypo } from "@expo/vector-icons";
+import {
+  StyleSheet,
+  Image,
+  Text,
+  View,
+  StatusBar,
+  FlatList,
+  Button,
+  TouchableOpacity,
+  Alert,
+  Dimensions,
+  Pressable,
+  Platform,
+  ScrollView,
+} from "react-native";
+import {
+  MaterialCommunityIcons,
+  AntDesign,
+  Feather,
+  Octicons,
+  FontAwesome5,
+  FontAwesome,
+  MaterialIcons,
+  Entypo,
+} from "@expo/vector-icons";
 import { getUserTransaction } from "../containers/transactions/action";
 import { updateNotificationToken } from "../containers/regvalidate/action";
 import NairaLog from "../assets/naira.png";
 import { Asset, useAssets } from "expo-asset";
 import { numberWithCommas } from "../resources/utils";
-import BottomSheet, { BottomSheetModalProvider, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
-import { getBtcTransactions, getTrxTransactions, getUsdTransactions, getUsdtTransactions } from "../containers/blockchain/action";
+import BottomSheet, {
+  BottomSheetModalProvider,
+  BottomSheetBackdrop,
+} from "@gorhom/bottom-sheet";
+import {
+  getBtcTransactions,
+  getTrxTransactions,
+  getUsdTransactions,
+  getUsdtTransactions,
+} from "../containers/blockchain/action";
 import UsdtHome from "./Usdt";
 import TronHome from "./Tron";
 import UsdHome from "./Usd";
@@ -51,10 +89,16 @@ const SUPPORTED_CURRENCIES = [
 ];
 export default function Home({ navigation }) {
   const userAuthentication = useSelector((state) => state.authentication.user);
-  const deeplinkGatewayExchange = useSelector((state) => state.authentication.deeplinkGatewayExchange);
-  const currencySymbol = `${userAuthentication.country == "NIGERIA" ? "₦" : "K"}`;
+  const deeplinkGatewayExchange = useSelector(
+    (state) => state.authentication.deeplinkGatewayExchange
+  );
+  const currencySymbol = `${
+    userAuthentication.country == "NIGERIA" ? "₦" : "K"
+  }`;
   const [accountBalance, setAccountBalance] = useState("0.00");
-  const [savingsImagePosition, setSavingsImagePosition] = useState(Math.floor(Math.random() * 6));
+  const [savingsImagePosition, setSavingsImagePosition] = useState(
+    Math.floor(Math.random() * 6)
+  );
   const [SAVINGS_IMAGE_ARRAY, setSavingsImage] = useAssets([
     require("../assets/savingsHome2.png"),
     require("../assets/Savings-bro.png"),
@@ -70,13 +114,17 @@ export default function Home({ navigation }) {
     const ref = useRef();
     useEffect(() => {
       ref.current = value;
-    });
+    }, [value]);
     return ref.current;
   };
 
-  const userTransactions = useSelector((state) => state.transactions.usertransactions);
+  const userTransactions = useSelector(
+    (state) => state.transactions.usertransactions
+  );
   const prevUserTransactions = usePrevious(userTransactions); // <--- Review the importortance if no useEffect promting a major service is required
-  const [selectedCurrency, setSelectedCurrency] = useState(SUPPORTED_CURRENCIES[0]);
+  const [selectedCurrency, setSelectedCurrency] = useState(
+    SUPPORTED_CURRENCIES[0]
+  );
   const [expoPushToken, setExpoPushToken] = useState("");
   const prevExpoPushToken = usePrevious(expoPushToken);
   const [sendToken, setSendToken] = useState(false);
@@ -112,11 +160,21 @@ export default function Home({ navigation }) {
 
   useEffect(() => {
     if (Platform.OS == "android") {
-      SecureStore.getItemAsync("vetroPayDeFiEnabled", SecureStore.WHEN_UNLOCKED).then((data) => setVetroPayDeFiEnabled(data == "true" || false));
-      SecureStore.getItemAsync("vetroPayBalanceHidden", SecureStore.WHEN_UNLOCKED).then((data) => setVetroPayBalanceHidden(data == "true" || false));
+      SecureStore.getItemAsync(
+        "vetroPayDeFiEnabled",
+        SecureStore.WHEN_UNLOCKED
+      ).then((data) => setVetroPayDeFiEnabled(data == "true" || false));
+      SecureStore.getItemAsync(
+        "vetroPayBalanceHidden",
+        SecureStore.WHEN_UNLOCKED
+      ).then((data) => setVetroPayBalanceHidden(data == "true" || false));
     } else {
-      SecureStore.getItemAsync("vetroPayDeFiEnabled").then((data) => setVetroPayDeFiEnabled(data == "true" || false));
-      SecureStore.getItemAsync("vetroPayBalanceHidden").then((data) => setVetroPayBalanceHidden(data == "true" || false));
+      SecureStore.getItemAsync("vetroPayDeFiEnabled").then((data) =>
+        setVetroPayDeFiEnabled(data == "true" || false)
+      );
+      SecureStore.getItemAsync("vetroPayBalanceHidden").then((data) =>
+        setVetroPayBalanceHidden(data == "true" || false)
+      );
     }
   });
 
@@ -125,7 +183,8 @@ export default function Home({ navigation }) {
     (async () => {
       let token;
       if (Device.isDevice) {
-        const { status: existingStatus } = await Notifications.getPermissionsAsync();
+        const { status: existingStatus } =
+          await Notifications.getPermissionsAsync();
         let finalStatus = existingStatus;
         if (existingStatus !== "granted") {
           const { status } = await Notifications.requestPermissionsAsync();
@@ -160,13 +219,15 @@ export default function Home({ navigation }) {
       }),
     });
 
-    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
-      setNotification(notification);
-    });
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        setNotification(notification);
+      });
 
-    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-      //console.log(response);
-    });
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        //console.log(response);
+      });
 
     return () => {
       Notifications.removeNotificationSubscription(notificationListener);
@@ -188,9 +249,14 @@ export default function Home({ navigation }) {
     /** GET USER ACCOUNT BALANCE */
     if (prevUserTransactions) {
       if (prevUserTransactions.length !== userTransactions.length) {
-        if (userTransactions[userTransactions.length - 1]["status"] == "success") {
+        if (
+          userTransactions[userTransactions.length - 1]["status"] == "success"
+        ) {
           //Update Account Balance
-          setAccountBalance(userTransactions[userTransactions.length - 1]["data"].wallet_info.current_balance);
+          setAccountBalance(
+            userTransactions[userTransactions.length - 1]["data"].wallet_info
+              .current_balance
+          );
         }
       }
     } else {
@@ -200,11 +266,17 @@ export default function Home({ navigation }) {
     /** END GET USER ACCOUNT BALANCE */
   });
 
-  const renderBackdrop = useCallback((props) => <BottomSheetBackdrop {...props} />, []);
+  const renderBackdrop = useCallback(
+    (props) => <BottomSheetBackdrop {...props} />,
+    []
+  );
   const handleSheetChanges = useCallback((index) => {}, []);
 
   const handleSheetCloseRequest = (data) => {
-    if (!userAuthentication.email || userAuthentication.kyc_verified != "VERIFIED") {
+    if (
+      !userAuthentication.email ||
+      userAuthentication.kyc_verified != "VERIFIED"
+    ) {
       bottomSheetRef.current.close();
       Alert.alert(
         "🚨 KYC Verification required",
@@ -237,9 +309,16 @@ export default function Home({ navigation }) {
   const toggleHideUserBalance = () => {
     setVetroPayBalanceHidden((previousState) => {
       if (Platform.OS == "android") {
-        SecureStore.setItemAsync("vetroPayBalanceHidden", String(!previousState), SecureStore.WHEN_UNLOCKED);
+        SecureStore.setItemAsync(
+          "vetroPayBalanceHidden",
+          String(!previousState),
+          SecureStore.WHEN_UNLOCKED
+        );
       } else {
-        SecureStore.setItemAsync("vetroPayBalanceHidden", String(!previousState));
+        SecureStore.setItemAsync(
+          "vetroPayBalanceHidden",
+          String(!previousState)
+        );
       }
       return !previousState;
     });
@@ -252,7 +331,12 @@ export default function Home({ navigation }) {
       content: () => {
         return (
           <View style={styles.activityButtonIIContainer}>
-            <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(114, 191, 247, 0.3)" }}>
+            <View
+              style={{
+                ...styles.activityButtonII,
+                backgroundColor: "rgba(114, 191, 247, 0.3)",
+              }}
+            >
               <AntDesign name="wifi" size={24} color="black" />
             </View>
             <AppText bold styles={styles.activityButtonIIText}>
@@ -269,7 +353,12 @@ export default function Home({ navigation }) {
       content: () => {
         return (
           <View style={styles.activityButtonIIContainer}>
-            <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(147, 254, 170, 0.3)" }}>
+            <View
+              style={{
+                ...styles.activityButtonII,
+                backgroundColor: "rgba(147, 254, 170, 0.3)",
+              }}
+            >
               <Feather name="tv" size={24} color="rgb(72, 140, 86)" />
             </View>
             <AppText bold styles={styles.activityButtonIIText}>
@@ -286,7 +375,12 @@ export default function Home({ navigation }) {
       content: () => {
         return (
           <View style={styles.activityButtonIIContainer}>
-            <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(240,230,140, 0.3)" }}>
+            <View
+              style={{
+                ...styles.activityButtonII,
+                backgroundColor: "rgba(240,230,140, 0.3)",
+              }}
+            >
               <Octicons name="zap" size={24} color="rgb(189,183,107)" />
             </View>
             <AppText bold styles={styles.activityButtonIIText}>
@@ -302,7 +396,12 @@ export default function Home({ navigation }) {
       content: () => {
         return (
           <View style={styles.activityButtonIIContainer}>
-            <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(252, 130, 130, 0.3)" }}>
+            <View
+              style={{
+                ...styles.activityButtonII,
+                backgroundColor: "rgba(252, 130, 130, 0.3)",
+              }}
+            >
               {/* <Foundation name="ticket" size={24} color="rgb(196, 87, 87)" /> */}
               <FontAwesome name="bank" size={24} color="rgb(196, 87, 87)" />
             </View>
@@ -320,8 +419,16 @@ export default function Home({ navigation }) {
       content: () => {
         return (
           <View style={styles.activityButtonIIContainer}>
-            <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(114, 191, 247, 0.3)" }}>
-              <Image source={NairaLog} style={{ width: 24, height: 24, resizeMode: "contain" }} />
+            <View
+              style={{
+                ...styles.activityButtonII,
+                backgroundColor: "rgba(114, 191, 247, 0.3)",
+              }}
+            >
+              <Image
+                source={NairaLog}
+                style={{ width: 24, height: 24, resizeMode: "contain" }}
+              />
             </View>
             <AppText bold styles={styles.activityButtonIIText}>
               Credit {"&"} Loans
@@ -337,7 +444,12 @@ export default function Home({ navigation }) {
       content: () => {
         return (
           <View style={styles.activityButtonIIContainer}>
-            <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(147, 254, 170, 0.3)" }}>
+            <View
+              style={{
+                ...styles.activityButtonII,
+                backgroundColor: "rgba(147, 254, 170, 0.3)",
+              }}
+            >
               <Entypo name="suitcase" size={24} color="rgb(72, 140, 86)" />
             </View>
             <AppText bold styles={styles.activityButtonIIText}>
@@ -354,7 +466,12 @@ export default function Home({ navigation }) {
       content: () => {
         return (
           <View style={styles.activityButtonIIContainer}>
-            <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(114, 191, 247, 0.3)" }}>
+            <View
+              style={{
+                ...styles.activityButtonII,
+                backgroundColor: "rgba(114, 191, 247, 0.3)",
+              }}
+            >
               <AntDesign name="addfolder" size={24} color="black" />
             </View>
             <AppText bold styles={styles.activityButtonIIText}>
@@ -371,7 +488,12 @@ export default function Home({ navigation }) {
       content: () => {
         return (
           <View style={styles.activityButtonIIContainer}>
-            <View style={{ ...styles.activityButtonII, backgroundColor: "rgba(252, 130, 130, 0.3)" }}>
+            <View
+              style={{
+                ...styles.activityButtonII,
+                backgroundColor: "rgba(252, 130, 130, 0.3)",
+              }}
+            >
               <MaterialIcons name="history" size={24} color="black" />
             </View>
             <AppText bold styles={styles.activityButtonIIText}>
@@ -387,14 +509,46 @@ export default function Home({ navigation }) {
       {Platform.OS !== "android" && <SafeAreaView />}
       {selectedCurrency.code == "NGN" && (
         <Fragment>
-          <View style={{ backgroundColor: "#266ddc", borderBottomLeftRadius: 15, borderBottomRightRadius: 15, paddingBottom: 30 }}>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 15, alignItems: "center" }}>
+          <View
+            style={{
+              backgroundColor: "#266ddc",
+              borderBottomLeftRadius: 15,
+              borderBottomRightRadius: 15,
+              paddingBottom: 30,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginHorizontal: 15,
+                alignItems: "center",
+              }}
+            >
               <View>
-                <AppText bold="true" styles={{ fontSize: 14, color: "#f2f2f2", marginTop: StatusBar.currentHeight + 10 }}>
+                <AppText
+                  bold="true"
+                  styles={{
+                    fontSize: 14,
+                    color: "#f2f2f2",
+                    marginTop: StatusBar.currentHeight + 10,
+                  }}
+                >
                   Balance
                 </AppText>
-                <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", width: "100%" }}>
-                  <MaterialIcons name="account-balance-wallet" size={24} color="#f2f2f2" />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    width: "100%",
+                  }}
+                >
+                  <MaterialIcons
+                    name="account-balance-wallet"
+                    size={24}
+                    color="#f2f2f2"
+                  />
                   {vetroPayBalanceHidden ? (
                     <AppText
                       bold="true"
@@ -415,7 +569,10 @@ export default function Home({ navigation }) {
                       ✧･ﾟ: *✧･ﾟ:*
                     </AppText>
                   ) : (
-                    <AppText bold="true" styles={{ fontSize: 18, color: "#f2f2f2", marginLeft: 5 }}>
+                    <AppText
+                      bold="true"
+                      styles={{ fontSize: 18, color: "#f2f2f2", marginLeft: 5 }}
+                    >
                       {currencySymbol}
                       {numberWithCommas(accountBalance)}
                     </AppText>
@@ -436,16 +593,29 @@ export default function Home({ navigation }) {
                   }}
                   onPress={() => bottomSheetRef.current?.expand()}
                 >
-                  <Image source={{ uri: selectedCurrency.icon }} style={{ width: 30, height: 30, resizeMode: "contain" }} />
-                  <AppText styles={{ marginHorizontal: 5 }}>{selectedCurrency.code}</AppText>
-                  <AntDesign name="down" size={15} color="black" style={{ alignSelf: "flex-end", marginBottom: 5 }} />
+                  <Image
+                    source={{ uri: selectedCurrency.icon }}
+                    style={{ width: 30, height: 30, resizeMode: "contain" }}
+                  />
+                  <AppText styles={{ marginHorizontal: 5 }}>
+                    {selectedCurrency.code}
+                  </AppText>
+                  <AntDesign
+                    name="down"
+                    size={15}
+                    color="black"
+                    style={{ alignSelf: "flex-end", marginBottom: 5 }}
+                  />
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity onPress={() => toggleHideUserBalance()}>
                   <FontAwesome5
                     name={vetroPayBalanceHidden ? "eye" : "eye-slash"}
                     size={24}
-                    style={{ marginTop: StatusBar.currentHeight + 10, marginHorizontal: 15 }}
+                    style={{
+                      marginTop: StatusBar.currentHeight + 10,
+                      marginHorizontal: 15,
+                    }}
                     color="#f2f2f2"
                   />
                 </TouchableOpacity>
@@ -453,14 +623,22 @@ export default function Home({ navigation }) {
             </View>
             <View style={{ justifyContent: "center", alignItems: "center" }}>
               <View style={styles.mainBoard}>
-                <TouchableOpacity onPress={() => navigation.navigate("ScanPay")}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("ScanPay")}
+                >
                   <View style={styles.activityButton}>
-                    <MaterialCommunityIcons name="qrcode-scan" size={20} color="#f2f2f2" />
+                    <MaterialCommunityIcons
+                      name="qrcode-scan"
+                      size={20}
+                      color="#f2f2f2"
+                    />
                     <AppText styles={styles.mainBoardIconText}>Scan</AppText>
                   </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.navigate("DepositFund")}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("DepositFund")}
+                >
                   <View style={styles.activityButton}>
                     <AntDesign name="pluscircleo" size={20} color="#f2f2f2" />
                     <AppText styles={styles.mainBoardIconText}>Deposit</AppText>
@@ -481,14 +659,18 @@ export default function Home({ navigation }) {
                   </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.navigate("Transfer")}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("Transfer")}
+                >
                   <View style={styles.activityButton}>
                     <Feather name="send" size={20} color="#f2f2f2" />
                     <AppText styles={styles.mainBoardIconText}>Send</AppText>
                   </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.navigate("ReceiveFund")}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("ReceiveFund")}
+                >
                   <View style={styles.activityButton}>
                     <AntDesign name="download" size={20} color="#f2f2f2" />
                     <AppText styles={styles.mainBoardIconText}>Receive</AppText>
@@ -503,28 +685,65 @@ export default function Home({ navigation }) {
                 horizontal={false}
                 numColumns={4}
                 data={menusItem}
-                renderItem={({ item }) => <TouchableOpacity onPress={() => item.action()}>{item.content()}</TouchableOpacity>}
+                renderItem={({ item }) => (
+                  <TouchableOpacity onPress={() => item.action()}>
+                    {item.content()}
+                  </TouchableOpacity>
+                )}
                 keyExtractor={(item, index) => index}
-                contentContainerStyle={{ alignItems: "center", justifyContent: "space-around", width: "100%" }}
+                contentContainerStyle={{
+                  alignItems: "center",
+                  justifyContent: "space-around",
+                  width: "100%",
+                }}
               />
             </View>
           </View>
 
           <ScrollView>
             {/* <AppText styles={{ marginTop: 20, marginHorizontal: 10, fontSize: 16, textAlign: "center" }}> • • •</AppText> */}
-            <View style={{ flexDirection: "row", marginTop: 30, marginHorizontal: 10 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 30,
+                marginHorizontal: 10,
+              }}
+            >
               <MaterialIcons name="graphic-eq" size={24} color="red" />
               <AppText bold="true" styles={{ fontSize: 16 }}>
                 Earn Interest on your savings every month
               </AppText>
             </View>
 
-            {SAVINGS_IMAGE_ARRAY && <Image source={SAVINGS_IMAGE_ARRAY[savingsImagePosition]} style={{ width: 170, marginTop: 10, height: 170, alignSelf: "center" }} />}
+            {SAVINGS_IMAGE_ARRAY && (
+              <Image
+                source={SAVINGS_IMAGE_ARRAY[savingsImagePosition]}
+                style={{
+                  width: 170,
+                  marginTop: 10,
+                  height: 170,
+                  alignSelf: "center",
+                }}
+              />
+            )}
 
-            <View style={{ display: "flex", marginTop: 10, alignItems: "center", justifyContent: "center" }}>
+            <View
+              style={{
+                display: "flex",
+                marginTop: 10,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <View style={{ width: "80%" }}>
                 <Pressable
-                  style={{ width: "100%", backgroundColor: "#266ddc", padding: 10, alignItems: "center", borderRadius: 5 }}
+                  style={{
+                    width: "100%",
+                    backgroundColor: "#266ddc",
+                    padding: 10,
+                    alignItems: "center",
+                    borderRadius: 5,
+                  }}
                   onPress={() => {
                     navigation.navigate("Savings");
                     //Alert.alert("Coming soon", "Our savings features will be available from the 1st of August, 2022.");
@@ -541,32 +760,98 @@ export default function Home({ navigation }) {
       )}
 
       {/* {selectedCurrency.code == "USD" && <UsdHome navigation={navigation} selectedCurrency={selectedCurrency} bottomSheetRef={bottomSheetRef} />} */}
-      {selectedCurrency.code == "USDT" && <UsdtHome navigation={navigation} selectedCurrency={selectedCurrency} bottomSheetRef={bottomSheetRef} />}
-      {selectedCurrency.code == "TRX" && <TronHome navigation={navigation} selectedCurrency={selectedCurrency} bottomSheetRef={bottomSheetRef} />}
-      {selectedCurrency.code == "BTC" && <BtcHome navigation={navigation} selectedCurrency={selectedCurrency} bottomSheetRef={bottomSheetRef} />}
-      <BottomSheet ref={bottomSheetRef} index={0} enablePanDownToClose={true} snapPoints={snapPoints} backdropComponent={renderBackdrop} onChange={handleSheetChanges}>
+      {selectedCurrency.code == "USDT" && (
+        <UsdtHome
+          navigation={navigation}
+          selectedCurrency={selectedCurrency}
+          bottomSheetRef={bottomSheetRef}
+        />
+      )}
+      {selectedCurrency.code == "TRX" && (
+        <TronHome
+          navigation={navigation}
+          selectedCurrency={selectedCurrency}
+          bottomSheetRef={bottomSheetRef}
+        />
+      )}
+      {selectedCurrency.code == "BTC" && (
+        <BtcHome
+          navigation={navigation}
+          selectedCurrency={selectedCurrency}
+          bottomSheetRef={bottomSheetRef}
+        />
+      )}
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={0}
+        enablePanDownToClose={true}
+        snapPoints={snapPoints}
+        backdropComponent={renderBackdrop}
+        onChange={handleSheetChanges}
+      >
         <View style={{ paddingHorizontal: 20 }}>
           {SUPPORTED_CURRENCIES.map((data, index) => {
             return (
               <Fragment key={index}>
-                <View style={{ marginBottom: 10, marginTop: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                <View
+                  style={{
+                    marginBottom: 10,
+                    marginTop: 10,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <Image source={{ uri: data.icon }} style={{ width: 40, height: 40, resizeMode: "contain", marginRight: 10 }} />
+                    <Image
+                      source={{ uri: data.icon }}
+                      style={{
+                        width: 40,
+                        height: 40,
+                        resizeMode: "contain",
+                        marginRight: 10,
+                      }}
+                    />
                     <AppText styles={{ fontSize: 18 }}>
                       {data.fullname} - &nbsp; {data.code}
                     </AppText>
                   </View>
 
-                  <TouchableOpacity onPress={() => handleSheetCloseRequest(data)} style={styles.currencyRadioContainer}>
-                    <View style={{ ...styles.currencyRadioContainerInner, backgroundColor: `${selectedCurrency.code == data.code ? "#0bc8a5" : "#FFFFFF"}` }}></View>
+                  <TouchableOpacity
+                    onPress={() => handleSheetCloseRequest(data)}
+                    style={styles.currencyRadioContainer}
+                  >
+                    <View
+                      style={{
+                        ...styles.currencyRadioContainerInner,
+                        backgroundColor: `${
+                          selectedCurrency.code == data.code
+                            ? "#0bc8a5"
+                            : "#FFFFFF"
+                        }`,
+                      }}
+                    ></View>
                   </TouchableOpacity>
                 </View>
                 <View>
                   {data.code === "BTC" && (
-                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
                       <Image
-                        source={{ uri: "https://res.cloudinary.com/ancla8techs4/image/upload/v1671737498/vetropay/bitcoin-lightning_rla5q9.png" }}
-                        style={{ width: 20, height: 20, resizeMode: "contain", marginRight: 10 }}
+                        source={{
+                          uri: "https://res.cloudinary.com/ancla8techs4/image/upload/v1671737498/vetropay/bitcoin-lightning_rla5q9.png",
+                        }}
+                        style={{
+                          width: 20,
+                          height: 20,
+                          resizeMode: "contain",
+                          marginRight: 10,
+                        }}
                       />
                       <AppText small bold styles={{ fontSize: 9 }}>
                         Support for Bitcoin lightning coming soon.
