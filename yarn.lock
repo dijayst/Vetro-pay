@@ -5213,11 +5213,6 @@ expo-notifications@~0.28.11:
     expo-constants "~16.0.0"
     fs-extra "^9.1.0"
 
-expo-permissions@~14.2.1:
-  version "14.2.1"
-  resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-14.2.1.tgz#da4a7ef45e13da99032960528267cc9ca8e964b8"
-  integrity sha512-jXGnOODtDMFvK7cwo7wIRPcnA7m1bie80gJ5BdL6Vs5kgCU7+RCLOCp3sBw7TKRPIlVMmQDhZA62bGzoBV0hkA==
-
 expo-secure-store@~13.0.2:
   version "13.0.2"
   resolved "https://registry.yarnpkg.com/expo-secure-store/-/expo-secure-store-13.0.2.tgz#ba8f6076fc38062a28bb2ce5edab9cd28ef88598"
