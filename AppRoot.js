@@ -11,6 +11,7 @@ import { useToast, Box, Text as NativeBaseText } from "native-base";
 import * as SecureStore from "expo-secure-store";
 import { usePrevious } from "./resources/utils";
 import { toastColorObject } from "./resources/rStyledComponent";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -36,9 +37,13 @@ export default function AppRoot() {
 
     //Get user details is on mobile device
     if (Platform.OS == "android") {
-      SecureStore.getItemAsync("firstName", SecureStore.WHEN_UNLOCKED).then((data) => setStoredFirstName(data));
+      SecureStore.getItemAsync("firstName", SecureStore.WHEN_UNLOCKED).then(
+        (data) => setStoredFirstName(data)
+      );
     } else {
-      SecureStore.getItemAsync("firstName").then((data) => setStoredFirstName(data));
+      SecureStore.getItemAsync("firstName").then((data) =>
+        setStoredFirstName(data)
+      );
     }
     dispatch(loadUser());
 
@@ -53,10 +58,21 @@ export default function AppRoot() {
       if (storedFirstName == null) {
         // Store User detail if not available
         if (Platform.OS == "android") {
-          SecureStore.setItemAsync("firstName", auth.user.fullname.split(" ")[0], SecureStore.WHEN_UNLOCKED);
-          SecureStore.setItemAsync("phoneNumber", auth.user.phone_number, SecureStore.WHEN_UNLOCKED);
+          SecureStore.setItemAsync(
+            "firstName",
+            auth.user.fullname.split(" ")[0],
+            SecureStore.WHEN_UNLOCKED
+          );
+          SecureStore.setItemAsync(
+            "phoneNumber",
+            auth.user.phone_number,
+            SecureStore.WHEN_UNLOCKED
+          );
         } else {
-          SecureStore.setItemAsync("firstName", auth.user.fullname.split(" ")[0]);
+          SecureStore.setItemAsync(
+            "firstName",
+            auth.user.fullname.split(" ")[0]
+          );
           SecureStore.setItemAsync("phoneNumber", auth.user.phone_number);
         }
       }
@@ -66,8 +82,16 @@ export default function AppRoot() {
       if (error.msg.phone_number) {
         toast.show({
           render: () => (
-            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>{`Phone Number: ${error.msg.phone_number.join()}`}</NativeBaseText>
+            <Box
+              bg={toastColorObject["danger"]}
+              px="2"
+              py="2"
+              rounded="sm"
+              mb={5}
+            >
+              <NativeBaseText
+                style={{ color: "#FFFFFF" }}
+              >{`Phone Number: ${error.msg.phone_number.join()}`}</NativeBaseText>
             </Box>
           ),
         });
@@ -75,8 +99,16 @@ export default function AppRoot() {
       if (error.msg.password) {
         toast.show({
           render: () => (
-            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>{`Password: ${error.msg.password.join()}`}</NativeBaseText>
+            <Box
+              bg={toastColorObject["danger"]}
+              px="2"
+              py="2"
+              rounded="sm"
+              mb={5}
+            >
+              <NativeBaseText
+                style={{ color: "#FFFFFF" }}
+              >{`Password: ${error.msg.password.join()}`}</NativeBaseText>
             </Box>
           ),
         });
@@ -85,8 +117,16 @@ export default function AppRoot() {
       if (error.msg.non_field_errors) {
         toast.show({
           render: () => (
-            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>{error.msg.non_field_errors.join()}</NativeBaseText>
+            <Box
+              bg={toastColorObject["danger"]}
+              px="2"
+              py="2"
+              rounded="sm"
+              mb={5}
+            >
+              <NativeBaseText style={{ color: "#FFFFFF" }}>
+                {error.msg.non_field_errors.join()}
+              </NativeBaseText>
             </Box>
           ),
         });
@@ -95,8 +135,16 @@ export default function AppRoot() {
       if (error.msg.status == "failed") {
         toast.show({
           render: () => (
-            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>{error.msg.message}</NativeBaseText>
+            <Box
+              bg={toastColorObject["danger"]}
+              px="2"
+              py="2"
+              rounded="sm"
+              mb={5}
+            >
+              <NativeBaseText style={{ color: "#FFFFFF" }}>
+                {error.msg.message}
+              </NativeBaseText>
             </Box>
           ),
         });
@@ -106,8 +154,16 @@ export default function AppRoot() {
         //Authentication credentials were not provided.
         toast.show({
           render: () => (
-            <Box bg={toastColorObject["default"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>User not signed in</NativeBaseText>
+            <Box
+              bg={toastColorObject["default"]}
+              px="2"
+              py="2"
+              rounded="sm"
+              mb={5}
+            >
+              <NativeBaseText style={{ color: "#FFFFFF" }}>
+                User not signed in
+              </NativeBaseText>
             </Box>
           ),
         });
@@ -116,36 +172,52 @@ export default function AppRoot() {
   }, [error, auth]);
 
   useEffect(() => {
-    const subscription = AppState.addEventListener("change", async (nextAppState) => {
-      if (appState.current.match(/inactive|background/) && nextAppState === "active") {
-        //App has come to the foreground
-        let appStateLastActive;
-        if (Platform.OS == "android") {
-          await SecureStore.getItemAsync("lastActive", SecureStore.WHEN_UNLOCKED).then((data) => {
-            appStateLastActive = data;
-          });
-        } else {
-          await SecureStore.getItemAsync("lastActive").then((data) => {
-            appStateLastActive = data;
-          });
+    const subscription = AppState.addEventListener(
+      "change",
+      async (nextAppState) => {
+        if (
+          appState.current.match(/inactive|background/) &&
+          nextAppState === "active"
+        ) {
+          //App has come to the foreground
+          let appStateLastActive;
+          if (Platform.OS == "android") {
+            await SecureStore.getItemAsync(
+              "lastActive",
+              SecureStore.WHEN_UNLOCKED
+            ).then((data) => {
+              appStateLastActive = data;
+            });
+          } else {
+            await SecureStore.getItemAsync("lastActive").then((data) => {
+              appStateLastActive = data;
+            });
+          }
+
+          if (
+            new Date() - (new Date(appStateLastActive) || new Date()) >
+            60000
+          ) {
+            dispatch(logout());
+          }
         }
 
-        if (new Date() - (new Date(appStateLastActive) || new Date()) > 60000) {
-          dispatch(logout());
+        if (appState.current.match(/inactive|background/)) {
+          if (Platform.OS == "android") {
+            await SecureStore.setItemAsync(
+              "lastActive",
+              new Date().toString(),
+              SecureStore.WHEN_UNLOCKED
+            );
+          } else {
+            await SecureStore.setItemAsync("lastActive", new Date().toString());
+          }
         }
+
+        appState.current = nextAppState;
+        //console.log("AppState", appState.current);
       }
-
-      if (appState.current.match(/inactive|background/)) {
-        if (Platform.OS == "android") {
-          await SecureStore.setItemAsync("lastActive", new Date().toString(), SecureStore.WHEN_UNLOCKED);
-        } else {
-          await SecureStore.setItemAsync("lastActive", new Date().toString());
-        }
-      }
-
-      appState.current = nextAppState;
-      //console.log("AppState", appState.current);
-    });
+    );
 
     return () => {
       subscription.remove();
@@ -155,9 +227,14 @@ export default function AppRoot() {
   return (
     <Fragment>
       <View style={styles.container}>
+        <SafeAreaView />
         {auth.isAuthenticated && <Navigator />}
         {!auth.isAuthenticated && <AuthNavigator />}
-        <StatusBar style="light" translucent={true} backgroundColor="#00000066" />
+        <StatusBar
+          style="light"
+          translucent={true}
+          backgroundColor="#00000066"
+        />
       </View>
     </Fragment>
   );
