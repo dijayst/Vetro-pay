@@ -4,10 +4,10 @@ import { useAssets } from "expo-asset";
 //const BackgroundImage = require("../../assets/authHome.png");
 
 export default function AuthHome({ navigation }) {
-  const [BackgroundImage, error] = useAssets(require("../../assets/authHome.png"));
+  const [BackgroundImage, error] = useAssets(require("../../assets/splash.png"));
   return (
     <>
-    {BackgroundImage ? <Pressable onPress={() => navigation.navigate("Login")} style={{ flex: 1 }}>
+    {BackgroundImage ? <Pressable onPress={() => navigation.navigate("Slide")} style={{ flex: 1 }}>
       <ImageBackground source={BackgroundImage} style={{ flex: 1 }} imageStyle={{ resizeMode: "cover" }}>
         <View style={styles.overlay}>
         </View>

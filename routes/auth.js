@@ -1,7 +1,7 @@
 import React from "react";
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-
+import Slide from "../slide/Slide"
 import AuthHome from "../screens/auth/AuthHome";
 import Login from "../screens/auth/Login";
 import Register from "../screens/auth/Register";
@@ -27,6 +27,14 @@ export default function AuthStack() {
             headerShown: false,
           }}
           component={AuthHome}
+        />
+
+      <Stack.Screen
+          name="Slide"
+          options={{
+            headerShown: false,
+          }}
+          component={Slide}
         />
 
         <Stack.Screen

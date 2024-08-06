@@ -1,0 +1,42 @@
+
+export const Slide = [
+    {id:1,
+      
+ "image":require("../assets/slide1.png"),
+        title:"⁠Mobile Banking Account for your Everyday use",
+      description: "Experience the freedom of banking whenever and wherever you need it, empowering you to take control of your financial well-being with ease",
+      click :"Next"
+    },
+    {
+        id:2,
+        "image":require("../assets/slide2.png"),
+      title: "⁠Explore the experience of Payday Loans",
+      description:"Experience the ease and convenience of accessing immediate financial assistance with our payday loans",
+      click :'Next',
+    },
+    {id:3,
+      "image":require("../assets/slide3.png"),
+      title: "⁠Savings, Bill payments & Expense Management ",
+      description:"Effortlessly handle all aspects of your finances in one place. From building savings and staying ahead on bills to monitoring expenses.",
+      click :'Next',
+    },
+    {id:4,
+      "image":require("../assets/slide4.png"),
+        title: "Unprecedented Cashback Offers",
+        description:"Get rewarded for your everyday purchases in ways you never imagined, making every transaction more rewarding than ever before.",
+        click :'Next',
+      },
+      {id:5,
+        "image":require("../assets/slide5.png"),
+        title: "⁠get Virtual Credit cards & Physical ATM cards",
+        description:"Enjoy seamless flexibility in managing your finances, whether you're shopping online or in-store, ensure you're always equipped with the right solution",
+        click :'Next',
+      },
+      {id:6,
+        "image":require("../assets/slide6.png"),
+        title: "Send, Receive & Exchange Digital Currencies",
+        description:"Our platform empowers you to navigate the world of cryptocurrencies, enabling you to securely send, receive, and exchange digital assets with ease.",
+        click :'Next',
+      },
+   
+  ];
