@@ -22,7 +22,9 @@ export const numberWithCommas = (value) => {
 export const customTrxWithCommas = (value) => {
   try {
     let splitted = value.split(".");
-    return `${splitted[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}.${splitted[1]}`;
+    return `${splitted[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}.${
+      splitted[1]
+    }`;
   } catch {
     return "";
   }
@@ -31,7 +33,10 @@ export const customTrxWithCommas = (value) => {
 export const calculateBandwithOrEnergy = (object, type) => {
   try {
     // (freeNetLimit - freeNetUsed) + (NetLimit - NetUsed)
-    let available = object.freeNetLimit - (object.freeNetUsed || 0) + ((object.NetLimit || 0) - (object.NetUsed || 0));
+    let available =
+      object.freeNetLimit -
+      (object.freeNetUsed || 0) +
+      ((object.NetLimit || 0) - (object.NetUsed || 0));
     let total = object.freeNetLimit + (object.NetLimit || 0);
     return {
       available,
@@ -94,4 +99,49 @@ export const nigeriaBanks = [
   { bankCode: "566", bankName: "VFD" },
   { bankCode: "035", bankName: "Wema Bank" },
   { bankCode: "057", bankName: "Zenith Bank" },
+];
+
+export const onboarding = [
+  {
+    id: "1",
+    title: "Mobile Banking Account for your Everyday use",
+    description:
+      "Experience the freedom of banking whenever and wherever you need it, empowering you to take control of your financial well-being with ease",
+    image: require("../../assets/onboarding1.png"),
+  },
+  {
+    id: "2",
+    title: "⁠Explore the experience of Payday Loans",
+    description:
+      "Experience the ease and convenience of accessing immediate financial assistance with our payday loans",
+    image: require("../../assets/onboarding2.png"),
+  },
+  {
+    id: "3",
+    title: "⁠Savings, Bill payments & Expense Management ",
+    description:
+      "Effortlessly handle all aspects of your finances in one place. From building savings and staying ahead on bills to monitoring expenses.",
+    image: require("../../assets/onboarding3.png"),
+  },
+  {
+    id: "4",
+    title: "Unprecedented Cashback Offers",
+    description:
+      "Get rewarded for your everyday purchases in ways you never imagined, making every transaction more rewarding than ever before.",
+    image: require("../../assets/onboarding4.png"),
+  },
+  {
+    id: "5",
+    title: "⁠Get Virtual Credit cards & Physical ATM cards",
+    description:
+      "Enjoy seamless flexibility in managing your finances, whether you're shopping online or in-store, ensure you're always equipped with the right solution",
+    image: require("../../assets/onboarding5.png"),
+  },
+  {
+    id: "6",
+    title: "Send, Receive & Exchange Digital Currencies",
+    description:
+      "Our platform empowers you to navigate the world of cryptocurrencies, enabling you to securely send, receive, and exchange digital assets with ease.",
+    image: require("../../assets/onboarding6.png"),
+  },
 ];

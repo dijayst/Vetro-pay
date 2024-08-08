@@ -10,7 +10,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
 
 import { postTransaction } from "../containers/transactions/action";
-import { convertUTCDateToLocalDate } from "../resources/MetaFunctions";
+import { convertUTCDateToLocalDate } from "../resources/utils/MetaFunctions";
 import { toastColorObject } from "../resources/rStyledComponent";
 import { Picker as RNPicker } from "@react-native-picker/picker";
 import { Select } from "native-base";
@@ -59,11 +59,24 @@ export default function AddRecord({ navigation }) {
       return (
         <Text>
           <AntDesign name="calendar" color="#266ddc" size={16} />
-          <Text style={{ color: "#266ddc", fontWeight: "700", textTransform: "uppercase" }}> Select Transaction Date</Text>
+          <Text
+            style={{
+              color: "#266ddc",
+              fontWeight: "700",
+              textTransform: "uppercase",
+            }}
+          >
+            {" "}
+            Select Transaction Date
+          </Text>
         </Text>
       );
     } else {
-      return <Text>{new Date(transactionData.payload.transactionDate).toDateString()}</Text>;
+      return (
+        <Text>
+          {new Date(transactionData.payload.transactionDate).toDateString()}
+        </Text>
+      );
     }
   };
 
@@ -100,8 +113,16 @@ export default function AddRecord({ navigation }) {
       if (transactionData.payload.transactionDate == "") {
         toast.show({
           render: () => (
-            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>Select transaction date</NativeBaseText>
+            <Box
+              bg={toastColorObject["danger"]}
+              px="2"
+              py="2"
+              rounded="sm"
+              mb={5}
+            >
+              <NativeBaseText style={{ color: "#FFFFFF" }}>
+                Select transaction date
+              </NativeBaseText>
             </Box>
           ),
         });
@@ -109,8 +130,16 @@ export default function AddRecord({ navigation }) {
       if (transactionData.payload.transactionClass == "") {
         toast.show({
           render: () => (
-            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>Select transaction type</NativeBaseText>
+            <Box
+              bg={toastColorObject["danger"]}
+              px="2"
+              py="2"
+              rounded="sm"
+              mb={5}
+            >
+              <NativeBaseText style={{ color: "#FFFFFF" }}>
+                Select transaction type
+              </NativeBaseText>
             </Box>
           ),
         });
@@ -118,17 +147,37 @@ export default function AddRecord({ navigation }) {
       if (transactionData.payload.paymentMethod == "") {
         toast.show({
           render: () => (
-            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>Select payment method</NativeBaseText>
+            <Box
+              bg={toastColorObject["danger"]}
+              px="2"
+              py="2"
+              rounded="sm"
+              mb={5}
+            >
+              <NativeBaseText style={{ color: "#FFFFFF" }}>
+                Select payment method
+              </NativeBaseText>
             </Box>
           ),
         });
       }
-      if (transactionData.payload.amount == "" || Number(transactionData.payload.amount) == NaN || Number(transactionData.payload.amount) < 0) {
+      if (
+        transactionData.payload.amount == "" ||
+        Number(transactionData.payload.amount) == NaN ||
+        Number(transactionData.payload.amount) < 0
+      ) {
         toast.show({
           render: () => (
-            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>Amount Invalid</NativeBaseText>
+            <Box
+              bg={toastColorObject["danger"]}
+              px="2"
+              py="2"
+              rounded="sm"
+              mb={5}
+            >
+              <NativeBaseText style={{ color: "#FFFFFF" }}>
+                Amount Invalid
+              </NativeBaseText>
             </Box>
           ),
         });
@@ -136,8 +185,16 @@ export default function AddRecord({ navigation }) {
       if (transactionData.payload.paymentCategory == "") {
         toast.show({
           render: () => (
-            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>Select payment category</NativeBaseText>
+            <Box
+              bg={toastColorObject["danger"]}
+              px="2"
+              py="2"
+              rounded="sm"
+              mb={5}
+            >
+              <NativeBaseText style={{ color: "#FFFFFF" }}>
+                Select payment category
+              </NativeBaseText>
             </Box>
           ),
         });
@@ -165,13 +222,18 @@ export default function AddRecord({ navigation }) {
     return ref.current;
   };
 
-  const userPostTransaction = useSelector((state) => state.transactions.posttransaction);
+  const userPostTransaction = useSelector(
+    (state) => state.transactions.posttransaction
+  );
   const prevUserPostTransaction = usePrevious(userPostTransaction);
 
   useEffect(() => {
     if (prevUserPostTransaction) {
       if (prevUserPostTransaction.length !== userPostTransaction.length) {
-        if (userPostTransaction[userPostTransaction.length - 1]["status"] == "success") {
+        if (
+          userPostTransaction[userPostTransaction.length - 1]["status"] ==
+          "success"
+        ) {
           setDisplaySpinner(false);
           navigation.goBack();
         }
@@ -179,11 +241,24 @@ export default function AddRecord({ navigation }) {
     }
   });
   return (
-    <KeyboardAwareScrollView enableAutomaticScroll extraScrollHeight={10} enableOnAndroid={true} extraHeight={Platform.select({ android: 150 })} style={{ flexGrow: 1 }}>
+    <KeyboardAwareScrollView
+      enableAutomaticScroll
+      extraScrollHeight={10}
+      enableOnAndroid={true}
+      extraHeight={Platform.select({ android: 150 })}
+      style={{ flexGrow: 1 }}
+    >
       <View style={styles.container}>
         <View style={styles.upperBackGround}></View>
         <View style={styles.balanceUpBackGround}>
-          <AppText bold="true" styles={{ fontSize: 18, textTransform: "uppercase", color: "#FFFFFF" }}>
+          <AppText
+            bold="true"
+            styles={{
+              fontSize: 18,
+              textTransform: "uppercase",
+              color: "#FFFFFF",
+            }}
+          >
             Record Off-App Transaction
           </AppText>
           <View style={styles.recordForm}>
@@ -208,7 +283,12 @@ export default function AddRecord({ navigation }) {
                 >
                   <AppText>{getDateValue()}</AppText>
                 </AppButton>
-                <DateTimePickerModal isVisible={isDatePickerVisible} mode="date" onConfirm={handleConfirm} onCancel={hideDatePicker} />
+                <DateTimePickerModal
+                  isVisible={isDatePickerVisible}
+                  mode="date"
+                  onConfirm={handleConfirm}
+                  onCancel={hideDatePicker}
+                />
               </View>
 
               <View style={styles.formGroup}>
@@ -323,29 +403,73 @@ export default function AddRecord({ navigation }) {
                     selectedValue={transactionData.payload.paymentCategory}
                   >
                     <Picker.Item label="--- Select Category ---" value="" />
-                    <Picker.Item label="Income/Wage/Salary" value="INCOME/WAGE/SALARY" />
-                    <Picker.Item label="Gift/Flex/Flenjo" value="GIFT/FLEX/FLENJO" />
-                    <Picker.Item label="Food/Groceries/Shopping" value="FOOD/GROCERIES/SHOPPING" />
-                    <Picker.Item label="School/Education" value="SCHOOL/EDUCATION" />
-                    <Picker.Item label="Airtime/Internet/Cable Bill" value="AIRTIME/INTERNET/CABLE" />
-                    <Picker.Item label="Electricity/Water/Gas/Fuel" value="ELECTRICITY/WATER/GAS/FUEL" />
-                    <Picker.Item label="Vehicle/Transport" value="VEHICLE/TRANSPORT" />
-                    <Picker.Item label="Business/Official" value="BUSINESS/OFFICIAL" />
-                    <Picker.Item label="Savings/Investment" value="SAVINGS/INVESTMENT" />
-                    <Picker.Item label="Donations/Tithes/Offerings" value="DONATIONS/TITHES/OFFERINGS" />
-                    <Picker.Item label="Personal/Others" value="PERSONAL/OTHERS" />
+                    <Picker.Item
+                      label="Income/Wage/Salary"
+                      value="INCOME/WAGE/SALARY"
+                    />
+                    <Picker.Item
+                      label="Gift/Flex/Flenjo"
+                      value="GIFT/FLEX/FLENJO"
+                    />
+                    <Picker.Item
+                      label="Food/Groceries/Shopping"
+                      value="FOOD/GROCERIES/SHOPPING"
+                    />
+                    <Picker.Item
+                      label="School/Education"
+                      value="SCHOOL/EDUCATION"
+                    />
+                    <Picker.Item
+                      label="Airtime/Internet/Cable Bill"
+                      value="AIRTIME/INTERNET/CABLE"
+                    />
+                    <Picker.Item
+                      label="Electricity/Water/Gas/Fuel"
+                      value="ELECTRICITY/WATER/GAS/FUEL"
+                    />
+                    <Picker.Item
+                      label="Vehicle/Transport"
+                      value="VEHICLE/TRANSPORT"
+                    />
+                    <Picker.Item
+                      label="Business/Official"
+                      value="BUSINESS/OFFICIAL"
+                    />
+                    <Picker.Item
+                      label="Savings/Investment"
+                      value="SAVINGS/INVESTMENT"
+                    />
+                    <Picker.Item
+                      label="Donations/Tithes/Offerings"
+                      value="DONATIONS/TITHES/OFFERINGS"
+                    />
+                    <Picker.Item
+                      label="Personal/Others"
+                      value="PERSONAL/OTHERS"
+                    />
                   </Picker>
                 </View>
               </View>
 
               <View style={styles.formGroup}>
                 <AppText>
-                  <Text style={{ fontWeight: "700" }}>Description (optional)</Text>
+                  <Text style={{ fontWeight: "700" }}>
+                    Description (optional)
+                  </Text>
                 </AppText>
-                <TextInput style={{ ...styles.textInput, borderColor: "#266ddc" }} onChangeText={(text) => onValueChange("note", text)} />
+                <TextInput
+                  style={{ ...styles.textInput, borderColor: "#266ddc" }}
+                  onChangeText={(text) => onValueChange("note", text)}
+                />
               </View>
 
-              <View style={{ ...styles.formGroup, display: `${!displaySpinner ? "flex" : "none"}`, alignItems: "center" }}>
+              <View
+                style={{
+                  ...styles.formGroup,
+                  display: `${!displaySpinner ? "flex" : "none"}`,
+                  alignItems: "center",
+                }}
+              >
                 <PrimaryButton onPress={() => submitData()}>
                   <AppText bold="true" styles={{ color: "#fff", fontSize: 16 }}>
                     Save
@@ -353,7 +477,12 @@ export default function AddRecord({ navigation }) {
                 </PrimaryButton>
               </View>
 
-              <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
+              <View
+                style={{
+                  justifyContent: "center",
+                  display: `${displaySpinner ? "flex" : "none"}`,
+                }}
+              >
                 <Spinner color="blue.700" size="lg" />
               </View>
             </View>

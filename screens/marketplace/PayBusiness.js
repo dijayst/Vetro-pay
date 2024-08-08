@@ -1,25 +1,45 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { View, Text, StyleSheet, Image, Button, TouchableOpacity, Alert, Modal, TextInput, Switch } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Button,
+  TouchableOpacity,
+  Alert,
+  Modal,
+  TextInput,
+  Switch,
+} from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import AppText from "../../resources/AppText";
 import { PrimaryButton } from "../../resources/AppButton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { MaterialIcons } from "@expo/vector-icons";
-import { shortenNames } from "../../resources/MetaFunctions";
+import { shortenNames } from "../../resources/utils/MetaFunctions";
 import { postPaymentMarketplaceBusiness } from "../../containers/business/action";
 import { Spinner } from "native-base";
 import { SuccessfulSvgComponent } from "../../resources/Svg";
 
 export default function PayBusiness({ route, navigation }) {
   /** Get Route Params */
-  const { busId, busBillers, busBillersBoolean, busLogo, busName, busSignature, busVerified } = route.params;
+  const {
+    busId,
+    busBillers,
+    busBillersBoolean,
+    busLogo,
+    busName,
+    busSignature,
+    busVerified,
+  } = route.params;
 
   const [modalOpen, setModalOpen] = useState(false);
   const [makePaymentStage, setMakePaymentStage] = useState(1);
   const [anonymousPay, setAnonymousPay] = useState(false);
   const [sendMoneySuccessData, setSendMoneySuccessData] = useState({});
-  const [displayTransactionPinError, setDisplayTransactionPinError] = useState(false);
+  const [displayTransactionPinError, setDisplayTransactionPinError] =
+    useState(false);
   const [amountError, setAmountError] = useState(false);
   const [transactionGenericError, setTransactionGenericError] = useState("");
   const [displaySpinner, setDisplaySpinner] = useState(false);
@@ -47,18 +67,27 @@ export default function PayBusiness({ route, navigation }) {
     return ref.current;
   };
 
-  const marketplacePaymentData = useSelector((state) => state.business.marketpay);
+  const marketplacePaymentData = useSelector(
+    (state) => state.business.marketpay
+  );
   const prevMarketplacePaymentData = usePrevious(marketplacePaymentData);
 
   useEffect(() => {
     if (prevMarketplacePaymentData) {
       if (prevMarketplacePaymentData.length !== marketplacePaymentData.length) {
-        if (marketplacePaymentData[marketplacePaymentData.length - 1]["status"] == "success") {
-          setSendMoneySuccessData(marketplacePaymentData[marketplacePaymentData.length - 1]["data"]);
+        if (
+          marketplacePaymentData[marketplacePaymentData.length - 1]["status"] ==
+          "success"
+        ) {
+          setSendMoneySuccessData(
+            marketplacePaymentData[marketplacePaymentData.length - 1]["data"]
+          );
           setMakePaymentStage(4);
         } else {
           setDisplaySpinner(false);
-          setTransactionGenericError(marketplacePaymentData[marketplacePaymentData.length - 1]["message"]);
+          setTransactionGenericError(
+            marketplacePaymentData[marketplacePaymentData.length - 1]["message"]
+          );
         }
       }
     }
@@ -135,7 +164,10 @@ export default function PayBusiness({ route, navigation }) {
   };
 
   const proceedtoPaymentModalStageThreePartA = () => {
-    if (customerTransactionDetails.payload.amount !== "" && parseInt(customerTransactionDetails.payload.amount) >= 100) {
+    if (
+      customerTransactionDetails.payload.amount !== "" &&
+      parseInt(customerTransactionDetails.payload.amount) >= 100
+    ) {
       setMakePaymentStage(3);
     } else {
       setAmountError(true);
@@ -143,7 +175,13 @@ export default function PayBusiness({ route, navigation }) {
   };
 
   const completeTransaction = () => {
-    if (customerTransactionDetails.payload.transactionPin == "" || customerTransactionDetails.payload.transactionPin.replace(/\s\s+/g, " ") == " ") {
+    if (
+      customerTransactionDetails.payload.transactionPin == "" ||
+      customerTransactionDetails.payload.transactionPin.replace(
+        /\s\s+/g,
+        " "
+      ) == " "
+    ) {
       setDisplayTransactionPinError(true);
     } else {
       setDisplaySpinner(true);
@@ -165,9 +203,21 @@ export default function PayBusiness({ route, navigation }) {
     switch (makePaymentStage) {
       case 1:
         return (
-          <View style={{ ...styles.modalContent, borderColor: "#266ddc", borderWidth: 2 }}>
+          <View
+            style={{
+              ...styles.modalContent,
+              borderColor: "#266ddc",
+              borderWidth: 2,
+            }}
+          >
             {/** Modal Header */}
-            <View style={{ marginTop: 16, flexDirection: "row", justifyContent: "space-between" }}>
+            <View
+              style={{
+                marginTop: 16,
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
               <AppText bold="true" styles={{ fontSize: 18 }}>
                 Recipient Information
               </AppText>
@@ -184,7 +234,12 @@ export default function PayBusiness({ route, navigation }) {
             {/** End Modal Header */}
 
             <View style={{ marginTop: 24, paddingRight: 20 }}>
-              <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
                 <AppText styles={{ fontSize: 15 }}>
                   <Text style={{ fontWeight: "700" }}>Recipient Name </Text>
                 </AppText>
@@ -198,7 +253,16 @@ export default function PayBusiness({ route, navigation }) {
             <AppText styles={{ fontSize: 15, marginTop: 10 }}>
               <Text style={{ fontWeight: "700" }}>Amount </Text>
             </AppText>
-            <Text style={{ fontWeight: "500", color: "red", fontSize: 10, display: `${amountError ? "flex" : "none"}` }}>Amount cannot be less than NGN 100 </Text>
+            <Text
+              style={{
+                fontWeight: "500",
+                color: "red",
+                fontSize: 10,
+                display: `${amountError ? "flex" : "none"}`,
+              }}
+            >
+              Amount cannot be less than NGN 100{" "}
+            </Text>
 
             <View style={styles.formGroup}>
               <TextInput
@@ -252,7 +316,13 @@ export default function PayBusiness({ route, navigation }) {
                   <Picker.Item label={"--- None ---"} value="" />
                   {busBillersBoolean
                     ? busBillers.map((biller, index) => {
-                        return <Picker.Item key={index} label={`${biller.name}`.toUpperCase()} value={biller.billerId} />;
+                        return (
+                          <Picker.Item
+                            key={index}
+                            label={`${biller.name}`.toUpperCase()}
+                            value={biller.billerId}
+                          />
+                        );
                       })
                     : () => {
                         return <Picker.Item label="Null" value="" />;
@@ -278,7 +348,9 @@ export default function PayBusiness({ route, navigation }) {
             {/** Payer Reference */}
 
             {/** Pay as Anonymous */}
-            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
               <AppText bold="true" styles={{ fontSize: 15 }}>
                 Pay as Anonymous
               </AppText>
@@ -300,11 +372,26 @@ export default function PayBusiness({ route, navigation }) {
                 value={anonymousPay}
               />
             </View>
-            <Text style={{ color: "green", display: `${anonymousPay ? "flex" : "none"}`, fontSize: 12 }}>*You are paying as anonymous</Text>
+            <Text
+              style={{
+                color: "green",
+                display: `${anonymousPay ? "flex" : "none"}`,
+                fontSize: 12,
+              }}
+            >
+              *You are paying as anonymous
+            </Text>
 
             {/** End Pay as Anonymous */}
 
-            <View style={{ display: "flex", marginTop: 10, alignItems: "center", justifyContent: "center" }}>
+            <View
+              style={{
+                display: "flex",
+                marginTop: 10,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <View style={{ width: "100%" }}>
                 <Button
                   onPress={() => {
@@ -324,9 +411,21 @@ export default function PayBusiness({ route, navigation }) {
         return <View></View>;
       case 3:
         return (
-          <View style={{ ...styles.modalContent, borderColor: "#266ddc", borderWidth: 2 }}>
+          <View
+            style={{
+              ...styles.modalContent,
+              borderColor: "#266ddc",
+              borderWidth: 2,
+            }}
+          >
             {/** Modal Header */}
-            <View style={{ marginTop: 16, flexDirection: "row", justifyContent: "space-between" }}>
+            <View
+              style={{
+                marginTop: 16,
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
               <AppText bold="true" styles={{ fontSize: 18 }}>
                 Recipient Information
               </AppText>
@@ -343,7 +442,12 @@ export default function PayBusiness({ route, navigation }) {
             {/** End Modal Header */}
 
             <View style={{ marginTop: 24, paddingRight: 20 }}>
-              <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
                 <AppText styles={{ fontSize: 15 }}>
                   <Text style={{ fontWeight: "700" }}>Recipient Name </Text>
                 </AppText>
@@ -355,7 +459,12 @@ export default function PayBusiness({ route, navigation }) {
 
             {/** Amount  */}
             <View style={{ marginTop: 10, paddingRight: 20 }}>
-              <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
                 <AppText styles={{ fontSize: 15, marginTop: 10 }}>
                   <Text style={{ fontWeight: "700" }}>Amount </Text>
                 </AppText>
@@ -370,8 +479,21 @@ export default function PayBusiness({ route, navigation }) {
               <AppText bold="true" styles={{ fontSize: 18 }}>
                 Transaction Pin
               </AppText>
-              <AppText styles={{ fontSize: 14, color: "red", textAlign: "center", display: `${displayTransactionPinError ? "flex" : "none"}` }}>Input transaction pin!</AppText>
-              <AppText styles={{ fontSize: 14, color: "red", textAlign: "center" }}>{transactionGenericError}</AppText>
+              <AppText
+                styles={{
+                  fontSize: 14,
+                  color: "red",
+                  textAlign: "center",
+                  display: `${displayTransactionPinError ? "flex" : "none"}`,
+                }}
+              >
+                Input transaction pin!
+              </AppText>
+              <AppText
+                styles={{ fontSize: 14, color: "red", textAlign: "center" }}
+              >
+                {transactionGenericError}
+              </AppText>
               <TextInput
                 value={customerTransactionDetails.payload.transactionPin}
                 style={{ ...styles.textInput, borderColor: "#266ddc" }}
@@ -382,12 +504,32 @@ export default function PayBusiness({ route, navigation }) {
               />
             </View>
 
-            <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", marginTop: 10, display: `${!displaySpinner ? "flex" : "none"}` }}>
-              <Button color="red" title="<< Go Back" onPress={() => setMakePaymentStage(1)}></Button>
-              <Button title="Complete Transaction" onPress={() => completeTransaction()}></Button>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                marginTop: 10,
+                display: `${!displaySpinner ? "flex" : "none"}`,
+              }}
+            >
+              <Button
+                color="red"
+                title="<< Go Back"
+                onPress={() => setMakePaymentStage(1)}
+              ></Button>
+              <Button
+                title="Complete Transaction"
+                onPress={() => completeTransaction()}
+              ></Button>
             </View>
 
-            <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
+            <View
+              style={{
+                justifyContent: "center",
+                display: `${displaySpinner ? "flex" : "none"}`,
+              }}
+            >
               <Spinner color="blue.700" size="lg" />
             </View>
           </View>
@@ -395,9 +537,21 @@ export default function PayBusiness({ route, navigation }) {
 
       case 4:
         return (
-          <View style={{ ...styles.modalContent, borderColor: "#266ddc", borderWidth: 2 }}>
+          <View
+            style={{
+              ...styles.modalContent,
+              borderColor: "#266ddc",
+              borderWidth: 2,
+            }}
+          >
             {/** Modal Header */}
-            <View style={{ marginTop: 16, flexDirection: "row", justifyContent: "flex-end" }}>
+            <View
+              style={{
+                marginTop: 16,
+                flexDirection: "row",
+                justifyContent: "flex-end",
+              }}
+            >
               <MaterialIcons
                 color="grey"
                 name="close"
@@ -410,15 +564,27 @@ export default function PayBusiness({ route, navigation }) {
             </View>
             {/** End Modal Header */}
 
-            <View style={{ marginTop: 50, justifyContent: "center", alignItems: "center" }}>
+            <View
+              style={{
+                marginTop: 50,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <SuccessfulSvgComponent />
             </View>
 
-            <AppText bold="true" styles={{ fontSize: 18, marginTop: 16, textAlign: "center" }}>
+            <AppText
+              bold="true"
+              styles={{ fontSize: 18, marginTop: 16, textAlign: "center" }}
+            >
               Transaction Successful
             </AppText>
-            <AppText styles={{ fontSize: 15, marginTop: 16, textAlign: "center" }}>
-              Your fund transfer of {userCurrency} {sendMoneySuccessData.amount} to {sendMoneySuccessData.recipient} was Successful
+            <AppText
+              styles={{ fontSize: 15, marginTop: 16, textAlign: "center" }}
+            >
+              Your fund transfer of {userCurrency} {sendMoneySuccessData.amount}{" "}
+              to {sendMoneySuccessData.recipient} was Successful
             </AppText>
 
             <View style={{ marginTop: 24, alignItems: "center" }}>
@@ -432,9 +598,19 @@ export default function PayBusiness({ route, navigation }) {
                 </AppText>
               </PrimaryButton>
 
-              <View style={{ marginTop: 16, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+              <View
+                style={{
+                  marginTop: 16,
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 <MaterialIcons name="home" size={18} color="#266ddc" />
-                <AppText bold="true" styles={{ fontSize: 18, color: "#266ddc" }}>
+                <AppText
+                  bold="true"
+                  styles={{ fontSize: 18, color: "#266ddc" }}
+                >
                   {" "}
                   Go home
                 </AppText>
@@ -447,13 +623,30 @@ export default function PayBusiness({ route, navigation }) {
   return (
     <View style={styles.container}>
       <Modal transparent visible={modalOpen} animationType="slide">
-        <KeyboardAwareScrollView enableAutomaticScroll extraScrollHeight={10} enableOnAndroid={true} extraHeight={Platform.select({ android: 150 })} style={{ flexGrow: 1 }}>
-          <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.6)", height: 1000 }}>{renderModal()}</View>
+        <KeyboardAwareScrollView
+          enableAutomaticScroll
+          extraScrollHeight={10}
+          enableOnAndroid={true}
+          extraHeight={Platform.select({ android: 150 })}
+          style={{ flexGrow: 1 }}
+        >
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: "rgba(0, 0, 0, 0.6)",
+              height: 1000,
+            }}
+          >
+            {renderModal()}
+          </View>
         </KeyboardAwareScrollView>
       </Modal>
       <View style={styles.containerWindow}>
         <View style={styles.organizationDetails}>
-          <Image source={{ uri: busLogo }} style={{ width: 80, height: 80, resizeMode: "contain" }} />
+          <Image
+            source={{ uri: busLogo }}
+            style={{ width: 80, height: 80, resizeMode: "contain" }}
+          />
           <AppText styles={{ fontSize: 18, marginLeft: 10 }}>{busName}</AppText>
         </View>
 
@@ -489,7 +682,14 @@ export default function PayBusiness({ route, navigation }) {
         </AppText>
         <AppText styles={{ fontSize: 14 }}>N?A</AppText>
 
-        <View style={{ display: "flex", marginTop: 10, alignItems: "center", justifyContent: "center" }}>
+        <View
+          style={{
+            display: "flex",
+            marginTop: 10,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <View style={{ width: "100%" }}>
             <Button onPress={() => setModalOpen(true)} title="Proceed"></Button>
           </View>

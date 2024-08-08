@@ -1,7 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
-import { Dimensions, View, Text, StyleSheet, TextInput, Alert, FlatList, TouchableOpacity, Platform } from "react-native";
+import {
+  Dimensions,
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Alert,
+  FlatList,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
 import { Modal, Switch } from "react-native";
 import * as Contacts from "expo-contacts";
 import AppText from "../../resources/AppText";
@@ -11,8 +21,11 @@ import { SuccessfulSvgComponent } from "../../resources/Svg";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
 
-import { postSendMoneyPreVerify, postSendMoney } from "../../containers/transactions/action";
-import { shortenNames } from "../../resources/MetaFunctions";
+import {
+  postSendMoneyPreVerify,
+  postSendMoney,
+} from "../../containers/transactions/action";
+import { shortenNames } from "../../resources/utils/MetaFunctions";
 import { toastColorObject } from "../../resources/rStyledComponent";
 import { Picker as RNPicker } from "@react-native-picker/picker";
 import { Select } from "native-base";
@@ -35,7 +48,10 @@ export default function SendMoney({ navigation, route }) {
                 <TouchableOpacity
                   onPress={() => {
                     let newValue = numbers.number.replace(/\s/g, "");
-                    if (newValue.includes("+234") || newValue.slice(0, 3) == "234") {
+                    if (
+                      newValue.includes("+234") ||
+                      newValue.slice(0, 3) == "234"
+                    ) {
                       if (newValue.includes("+234")) {
                         newValue = newValue.replace("+234", "0");
                       } else {
@@ -48,15 +64,35 @@ export default function SendMoney({ navigation, route }) {
                   key={index}
                 >
                   <View>
-                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                      <View style={{ height: 40, width: 40, borderRadius: 20, backgroundColor: "#266ddc", marginRight: 10, justifyContent: "center", alignItems: "center" }}>
-                        <AppText bold styles={{ fontSize: 18, color: "#FFFFFF" }}>
-                          {isNaN(this.props.contact.firstName[0]) ? `${this.props.contact.firstName[0]}${this.props.contact.lastName?.[0] || ""}` : "#"}
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <View
+                        style={{
+                          height: 40,
+                          width: 40,
+                          borderRadius: 20,
+                          backgroundColor: "#266ddc",
+                          marginRight: 10,
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <AppText
+                          bold
+                          styles={{ fontSize: 18, color: "#FFFFFF" }}
+                        >
+                          {isNaN(this.props.contact.firstName[0])
+                            ? `${this.props.contact.firstName[0]}${
+                                this.props.contact.lastName?.[0] || ""
+                              }`
+                            : "#"}
                         </AppText>
                       </View>
                       <View>
                         <AppText bold>
-                          {this.props.contact.firstName} {this.props.contact.lastName}
+                          {this.props.contact.firstName}{" "}
+                          {this.props.contact.lastName}
                         </AppText>
                         <Text style={{ marginTop: 4 }}>{numbers.number}</Text>
                       </View>
@@ -79,8 +115,10 @@ export default function SendMoney({ navigation, route }) {
 
   const [outBoundTransfer, setOutBoundTransfer] = useState(false);
   const [sendMoneySuccessData, setSendMoneySuccessData] = useState({});
-  const [displayTransactionPinError, setDisplayTransactionPinError] = useState(false);
-  const [displayTransactionPinError2, setDisplayTransactionPinError2] = useState(false);
+  const [displayTransactionPinError, setDisplayTransactionPinError] =
+    useState(false);
+  const [displayTransactionPinError2, setDisplayTransactionPinError2] =
+    useState(false);
   const [displaySpinner, setDisplaySpinner] = useState(false);
 
   const userAuthentication = useSelector((state) => state.authentication.user);
@@ -116,32 +154,57 @@ export default function SendMoney({ navigation, route }) {
     return ref.current;
   };
 
-  const sendMoneyPreVerify = useSelector((state) => state.transactions.sendmoneypreverify);
+  const sendMoneyPreVerify = useSelector(
+    (state) => state.transactions.sendmoneypreverify
+  );
   const prevSendMoneyPreVerify = usePrevious(sendMoneyPreVerify);
 
-  const sendMoneyResponse = useSelector((state) => state.transactions.sendmoney);
+  const sendMoneyResponse = useSelector(
+    (state) => state.transactions.sendmoney
+  );
   const prevSendMoneyResponse = usePrevious(sendMoneyResponse);
 
   useEffect(() => {
     if (prevSendMoneyPreVerify) {
       if (prevSendMoneyPreVerify.length !== sendMoneyPreVerify.length) {
-        if (sendMoneyPreVerify[sendMoneyPreVerify.length - 1]["status"] == "failed") {
+        if (
+          sendMoneyPreVerify[sendMoneyPreVerify.length - 1]["status"] ==
+          "failed"
+        ) {
           setDisplaySpinner(false);
           toast.show({
             render: () => (
-              <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-                <NativeBaseText style={{ color: "#FFFFFF" }}>{`${sendMoneyPreVerify[sendMoneyPreVerify.length - 1].message}`}</NativeBaseText>
+              <Box
+                bg={toastColorObject["danger"]}
+                px="2"
+                py="2"
+                rounded="sm"
+                mb={5}
+              >
+                <NativeBaseText style={{ color: "#FFFFFF" }}>{`${
+                  sendMoneyPreVerify[sendMoneyPreVerify.length - 1].message
+                }`}</NativeBaseText>
               </Box>
             ),
           });
-        } else if (sendMoneyPreVerify[sendMoneyPreVerify.length - 1]["status"] == "success") {
+        } else if (
+          sendMoneyPreVerify[sendMoneyPreVerify.length - 1]["status"] ==
+          "success"
+        ) {
           setDisplaySpinner(false);
-          setSendMoneyValidatedData(sendMoneyPreVerify[sendMoneyPreVerify.length - 1]["data"]);
+          setSendMoneyValidatedData(
+            sendMoneyPreVerify[sendMoneyPreVerify.length - 1]["data"]
+          );
           setModalOpen(true);
-        } else if (sendMoneyPreVerify[sendMoneyPreVerify.length - 1]["status"] == "warning") {
+        } else if (
+          sendMoneyPreVerify[sendMoneyPreVerify.length - 1]["status"] ==
+          "warning"
+        ) {
           setDisplaySpinner(false);
           setOutBoundTransfer(true);
-          setSendMoneyValidatedData(sendMoneyPreVerify[sendMoneyPreVerify.length - 1]["data"]);
+          setSendMoneyValidatedData(
+            sendMoneyPreVerify[sendMoneyPreVerify.length - 1]["data"]
+          );
           setModalOpen(true);
         }
       }
@@ -149,11 +212,17 @@ export default function SendMoney({ navigation, route }) {
 
     if (prevSendMoneyResponse) {
       if (prevSendMoneyResponse.length !== sendMoneyResponse.length) {
-        if (sendMoneyResponse[sendMoneyResponse.length - 1]["status"] == "failed") {
+        if (
+          sendMoneyResponse[sendMoneyResponse.length - 1]["status"] == "failed"
+        ) {
           setDisplayTransactionPinError2(true);
           setDisplaySpinner(false);
-        } else if (sendMoneyResponse[sendMoneyResponse.length - 1]["status"] == "success") {
-          setSendMoneySuccessData(sendMoneyResponse[sendMoneyResponse.length - 1]["data"]);
+        } else if (
+          sendMoneyResponse[sendMoneyResponse.length - 1]["status"] == "success"
+        ) {
+          setSendMoneySuccessData(
+            sendMoneyResponse[sendMoneyResponse.length - 1]["data"]
+          );
           setDisplaySpinner(false);
           setSendMoneyStage(2);
         }
@@ -291,19 +360,41 @@ export default function SendMoney({ navigation, route }) {
       Number(sendMoneyData.payload.amount) == NaN ||
       Number(sendMoneyData.payload.amount) <= 0
     ) {
-      if (sendMoneyData.payload.phoneNumberUID == "" || sendMoneyData.payload.phoneNumberUID.replace(/\s\s+/g, " ") == " ") {
+      if (
+        sendMoneyData.payload.phoneNumberUID == "" ||
+        sendMoneyData.payload.phoneNumberUID.replace(/\s\s+/g, " ") == " "
+      ) {
         toast.show({
           render: () => (
-            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>Invalid recipient details</NativeBaseText>
+            <Box
+              bg={toastColorObject["danger"]}
+              px="2"
+              py="2"
+              rounded="sm"
+              mb={5}
+            >
+              <NativeBaseText style={{ color: "#FFFFFF" }}>
+                Invalid recipient details
+              </NativeBaseText>
             </Box>
           ),
         });
-      } else if (Number(sendMoneyData.payload.amount) == NaN || Number(sendMoneyData.payload.amount) <= 0) {
+      } else if (
+        Number(sendMoneyData.payload.amount) == NaN ||
+        Number(sendMoneyData.payload.amount) <= 0
+      ) {
         toast.show({
           render: () => (
-            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>Invalid amount</NativeBaseText>
+            <Box
+              bg={toastColorObject["danger"]}
+              px="2"
+              py="2"
+              rounded="sm"
+              mb={5}
+            >
+              <NativeBaseText style={{ color: "#FFFFFF" }}>
+                Invalid amount
+              </NativeBaseText>
             </Box>
           ),
         });
@@ -341,7 +432,10 @@ export default function SendMoney({ navigation, route }) {
   };
 
   const submitTransferDataPin = () => {
-    if (sendMoneyData.payload.transactionPin == "" || sendMoneyData.payload.transactionPin.replace(/\s\s+/g, " ") == " ") {
+    if (
+      sendMoneyData.payload.transactionPin == "" ||
+      sendMoneyData.payload.transactionPin.replace(/\s\s+/g, " ") == " "
+    ) {
       setDisplayTransactionPinError(true);
     } else {
       setDisplaySpinner(true);
@@ -390,9 +484,21 @@ export default function SendMoney({ navigation, route }) {
     switch (sendMoneyStage) {
       case 1:
         return (
-          <View style={{ ...styles.modalContent, borderColor: "#266ddc", borderWidth: 2 }}>
+          <View
+            style={{
+              ...styles.modalContent,
+              borderColor: "#266ddc",
+              borderWidth: 2,
+            }}
+          >
             {/** Modal Header */}
-            <View style={{ marginTop: 16, flexDirection: "row", justifyContent: "space-between" }}>
+            <View
+              style={{
+                marginTop: 16,
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
               <AppText bold="true" styles={{ fontSize: 18 }}>
                 Recipient Information
               </AppText>
@@ -410,7 +516,12 @@ export default function SendMoney({ navigation, route }) {
             {/** End Modal Header */}
 
             <View style={{ marginTop: 24, paddingRight: 20 }}>
-              <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
                 <AppText styles={{ fontSize: 15 }}>
                   <Text style={{ fontWeight: "700" }}>Recipient Name </Text>
                 </AppText>
@@ -421,7 +532,12 @@ export default function SendMoney({ navigation, route }) {
             </View>
 
             <View style={{ marginTop: 12, paddingRight: 20 }}>
-              <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
                 <AppText styles={{ fontSize: 15 }}>
                   <Text style={{ fontWeight: "700" }}>Amount: </Text>
                 </AppText>
@@ -432,9 +548,16 @@ export default function SendMoney({ navigation, route }) {
             </View>
 
             <View style={{ marginTop: 12, paddingRight: 20 }}>
-              <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
                 <AppText styles={{ fontSize: 15 }}>
-                  <Text style={{ fontWeight: "700" }}>Transaction Charge: </Text>
+                  <Text style={{ fontWeight: "700" }}>
+                    Transaction Charge:{" "}
+                  </Text>
                 </AppText>
                 <AppText bold="true" styles={{ fontSize: 15 }}>
                   {`${sendMoneyData.payload.currency} ${sendMoneyValidatedData.transactionCharge}`}
@@ -442,24 +565,54 @@ export default function SendMoney({ navigation, route }) {
               </View>
             </View>
 
-            <View style={{ marginTop: 12, display: `${outBoundTransfer ? "flex" : "none"}` }}>
+            <View
+              style={{
+                marginTop: 12,
+                display: `${outBoundTransfer ? "flex" : "none"}`,
+              }}
+            >
               <AppText bold="true" styles={{ color: "#ffaf40", fontSize: 15 }}>
                 Notice:
               </AppText>
               <AppText styles={{ textAlign: "left" }}>
-                (a). Mobile Number <Text style={{ fontWeight: "700" }}>{sendMoneyValidatedData.name}</Text> is not registered yet on VetroPay.
+                (a). Mobile Number{" "}
+                <Text style={{ fontWeight: "700" }}>
+                  {sendMoneyValidatedData.name}
+                </Text>{" "}
+                is not registered yet on VetroPay.
               </AppText>
               <AppText>(b). You may proceed with this transaction.</AppText>
-              <AppText>(c). credit Notice and directives on claiming fund will be sent to User via SMS. Fund will be reversed within 5days, if fund remains unclaimed.</AppText>
+              <AppText>
+                (c). credit Notice and directives on claiming fund will be sent
+                to User via SMS. Fund will be reversed within 5days, if fund
+                remains unclaimed.
+              </AppText>
             </View>
 
             <View style={{ marginTop: 24 }}>
               <AppText bold="true" styles={{ fontSize: 18 }}>
                 Transaction Pin
               </AppText>
-              <AppText styles={{ fontSize: 14, color: "red", textAlign: "center", display: `${displayTransactionPinError ? "flex" : "none"}` }}>Input transaction pin!</AppText>
-              <AppText styles={{ fontSize: 14, color: "red", textAlign: "center", display: `${displayTransactionPinError2 ? "flex" : "none"}` }}>
-                Invalid transaction pin. Your account may be suspended after 3 more invalid entry
+              <AppText
+                styles={{
+                  fontSize: 14,
+                  color: "red",
+                  textAlign: "center",
+                  display: `${displayTransactionPinError ? "flex" : "none"}`,
+                }}
+              >
+                Input transaction pin!
+              </AppText>
+              <AppText
+                styles={{
+                  fontSize: 14,
+                  color: "red",
+                  textAlign: "center",
+                  display: `${displayTransactionPinError2 ? "flex" : "none"}`,
+                }}
+              >
+                Invalid transaction pin. Your account may be suspended after 3
+                more invalid entry
               </AppText>
               <TextInput
                 style={{ ...styles.textInput, borderColor: "#266ddc" }}
@@ -470,7 +623,13 @@ export default function SendMoney({ navigation, route }) {
               />
             </View>
 
-            <View style={{ marginTop: 16, alignItems: "flex-end", display: `${!displaySpinner ? "flex" : "none"}` }}>
+            <View
+              style={{
+                marginTop: 16,
+                alignItems: "flex-end",
+                display: `${!displaySpinner ? "flex" : "none"}`,
+              }}
+            >
               <PrimaryButton onPress={() => submitTransferDataPin()}>
                 <AppText bold="true" styles={{ color: "#fff", fontSize: 16 }}>
                   Complete
@@ -478,16 +637,33 @@ export default function SendMoney({ navigation, route }) {
               </PrimaryButton>
             </View>
 
-            <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
+            <View
+              style={{
+                justifyContent: "center",
+                display: `${displaySpinner ? "flex" : "none"}`,
+              }}
+            >
               <Spinner color="blue.700" size="lg" />
             </View>
           </View>
         );
       case 2:
         return (
-          <View style={{ ...styles.modalContent, borderColor: "#266ddc", borderWidth: 2 }}>
+          <View
+            style={{
+              ...styles.modalContent,
+              borderColor: "#266ddc",
+              borderWidth: 2,
+            }}
+          >
             {/** Modal Header */}
-            <View style={{ marginTop: 16, flexDirection: "row", justifyContent: "flex-end" }}>
+            <View
+              style={{
+                marginTop: 16,
+                flexDirection: "row",
+                justifyContent: "flex-end",
+              }}
+            >
               <MaterialIcons
                 color="grey"
                 name="close"
@@ -496,7 +672,9 @@ export default function SendMoney({ navigation, route }) {
                   setSendMoneyData({
                     payload: {
                       country: userAuthentication["country"],
-                      currency: `${userAuthentication.country == "NIGERIA" ? "NGN" : "KES"}`,
+                      currency: `${
+                        userAuthentication.country == "NIGERIA" ? "NGN" : "KES"
+                      }`,
                       transactionCharge: "0.00",
                       phoneNumberUID: "",
                       amount: "",
@@ -516,15 +694,28 @@ export default function SendMoney({ navigation, route }) {
             </View>
             {/** End Modal Header */}
 
-            <View style={{ marginTop: 50, justifyContent: "center", alignItems: "center" }}>
+            <View
+              style={{
+                marginTop: 50,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <SuccessfulSvgComponent />
             </View>
 
-            <AppText bold="true" styles={{ fontSize: 18, marginTop: 16, textAlign: "center" }}>
+            <AppText
+              bold="true"
+              styles={{ fontSize: 18, marginTop: 16, textAlign: "center" }}
+            >
               Transaction Successful
             </AppText>
-            <AppText styles={{ fontSize: 15, marginTop: 16, textAlign: "center" }}>
-              Your fund transfer of {sendMoneyData.payload.currency} {sendMoneySuccessData.amount} to {sendMoneySuccessData.recipient} was Successful
+            <AppText
+              styles={{ fontSize: 15, marginTop: 16, textAlign: "center" }}
+            >
+              Your fund transfer of {sendMoneyData.payload.currency}{" "}
+              {sendMoneySuccessData.amount} to {sendMoneySuccessData.recipient}{" "}
+              was Successful
             </AppText>
 
             <View style={{ marginTop: 24, alignItems: "center" }}>
@@ -533,7 +724,9 @@ export default function SendMoney({ navigation, route }) {
                   setSendMoneyData({
                     payload: {
                       country: userAuthentication["country"],
-                      currency: `${userAuthentication.country == "NIGERIA" ? "NGN" : "KES"}`,
+                      currency: `${
+                        userAuthentication.country == "NIGERIA" ? "NGN" : "KES"
+                      }`,
                       transactionCharge: "0.00",
                       phoneNumberUID: "",
                       amount: "",
@@ -554,14 +747,23 @@ export default function SendMoney({ navigation, route }) {
               </PrimaryButton>
 
               <TouchableOpacity
-              onPress={() => {
-                setModalOpen(false)
-                dispatch(getUserTransaction(""));
-                navigation.navigate("HomeHome");
-              }}
-              style={{ marginTop: 16, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                onPress={() => {
+                  setModalOpen(false);
+                  dispatch(getUserTransaction(""));
+                  navigation.navigate("HomeHome");
+                }}
+                style={{
+                  marginTop: 16,
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 <MaterialIcons name="home" size={18} color="#266ddc" />
-                <AppText bold="true" styles={{ fontSize: 18, color: "#266ddc" }}>
+                <AppText
+                  bold="true"
+                  styles={{ fontSize: 18, color: "#266ddc" }}
+                >
                   {" "}
                   Go home
                 </AppText>
@@ -573,12 +775,32 @@ export default function SendMoney({ navigation, route }) {
   };
 
   return (
-    <KeyboardAwareScrollView enableAutomaticScroll extraScrollHeight={10} enableOnAndroid={true} extraHeight={Platform.select({ android: 150 })} style={{ flexGrow: 1 }}>
+    <KeyboardAwareScrollView
+      enableAutomaticScroll
+      extraScrollHeight={10}
+      enableOnAndroid={true}
+      extraHeight={Platform.select({ android: 150 })}
+      style={{ flexGrow: 1 }}
+    >
       <View style={styles.container}>
         {/** Recipient Information Modal */}
         <Modal transparent visible={modalOpen} animationType="slide">
-          <KeyboardAwareScrollView enableAutomaticScroll extraScrollHeight={10} enableOnAndroid={true} extraHeight={Platform.select({ android: 150 })} style={{ flexGrow: 1 }}>
-            <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.6)", height: 1000 }}>{renderModal()}</View>
+          <KeyboardAwareScrollView
+            enableAutomaticScroll
+            extraScrollHeight={10}
+            enableOnAndroid={true}
+            extraHeight={Platform.select({ android: 150 })}
+            style={{ flexGrow: 1 }}
+          >
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: "rgba(0, 0, 0, 0.6)",
+                height: 1000,
+              }}
+            >
+              {renderModal()}
+            </View>
           </KeyboardAwareScrollView>
         </Modal>
 
@@ -587,7 +809,12 @@ export default function SendMoney({ navigation, route }) {
         {/** PHONE NUMBER MODAL */}
         <Modal transparent visible={modalPhoneBookOpen} animationType="slide">
           <View style={styles.phoneBookModalContent}>
-            <MaterialIcons name="close" size={24} onPress={() => setModalPhoneBookOpen(false)} style={styles.contactsModalClose} />
+            <MaterialIcons
+              name="close"
+              size={24}
+              onPress={() => setModalPhoneBookOpen(false)}
+              style={styles.contactsModalClose}
+            />
 
             <View style={{ paddingHorizontal: 10 }}>
               <AppText bold="true" styles={{ fontSize: 16 }}>
@@ -595,13 +822,21 @@ export default function SendMoney({ navigation, route }) {
               </AppText>
 
               <View style={styles.formGroup}>
-                <TextInput style={{ ...styles.textInput, backgroundColor: "#F8F8F8" }} onChangeText={(text) => searchContact(text)} placeholder="Search Phone Book" />
+                <TextInput
+                  style={{ ...styles.textInput, backgroundColor: "#F8F8F8" }}
+                  onChangeText={(text) => searchContact(text)}
+                  placeholder="Search Phone Book"
+                />
               </View>
 
               {filteredContacts.noData ? (
                 <Text>No data</Text>
               ) : (
-                <FlatList data={filteredContacts.data} renderItem={({ item }) => _renderItem(item)} keyExtractor={(item, index) => index.toString()} />
+                <FlatList
+                  data={filteredContacts.data}
+                  renderItem={({ item }) => _renderItem(item)}
+                  keyExtractor={(item, index) => index.toString()}
+                />
               )}
             </View>
           </View>
@@ -610,7 +845,14 @@ export default function SendMoney({ navigation, route }) {
         <View style={styles.upperBackGround}></View>
 
         <View style={styles.balanceUpBackGround}>
-          <AppText bold="true" styles={{ fontSize: 18, textTransform: "uppercase", color: "#FFFFFF" }}>
+          <AppText
+            bold="true"
+            styles={{
+              fontSize: 18,
+              textTransform: "uppercase",
+              color: "#FFFFFF",
+            }}
+          >
             Send Money
           </AppText>
 
@@ -630,7 +872,9 @@ export default function SendMoney({ navigation, route }) {
                 >
                   <Picker
                     style={{ height: 45 }}
-                    onValueChange={(itemValue, itemIndex) => changeRecipientCountry(itemValue, itemIndex)}
+                    onValueChange={(itemValue, itemIndex) =>
+                      changeRecipientCountry(itemValue, itemIndex)
+                    }
                     selectedValue={sendMoneyData.payload.country}
                     itemStyle={{ height: 45 }}
                     borderColor={"transparent"}
@@ -643,14 +887,27 @@ export default function SendMoney({ navigation, route }) {
 
               <View style={styles.formGroup}>
                 <AppText>
-                  <Text style={{ fontWeight: "700" }}>Recipient Phone Number/Vetropay UID</Text>
+                  <Text style={{ fontWeight: "700" }}>
+                    Recipient Phone Number/Vetropay UID
+                  </Text>
                 </AppText>
-                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
                   <TextInput
-                    style={{ ...styles.textInput, borderColor: "#266ddc", width: Dimensions.get("window").width - 85 }}
+                    style={{
+                      ...styles.textInput,
+                      borderColor: "#266ddc",
+                      width: Dimensions.get("window").width - 85,
+                    }}
                     placeholder="Enter Phone Number or Vetropay UID"
                     keyboardType="numeric"
-                    onChangeText={(text) => onValueChange("phoneNumberUID", text)}
+                    onChangeText={(text) =>
+                      onValueChange("phoneNumberUID", text)
+                    }
                     value={sendMoneyData.payload.phoneNumberUID}
                   />
                   <TouchableOpacity
@@ -659,7 +916,16 @@ export default function SendMoney({ navigation, route }) {
                     }}
                     style={styles.openContactsButton}
                   >
-                    <View style={{ width: 35, height: 35, borderRadius: 17, backgroundColor: "#E6EAFE", justifyContent: "center", alignItems: "center" }}>
+                    <View
+                      style={{
+                        width: 35,
+                        height: 35,
+                        borderRadius: 17,
+                        backgroundColor: "#E6EAFE",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
                       <Feather name="user" size={24} color="#266ddc" />
                     </View>
                   </TouchableOpacity>
@@ -668,7 +934,9 @@ export default function SendMoney({ navigation, route }) {
 
               <View style={styles.formGroup}>
                 <AppText>
-                  <Text style={{ fontWeight: "700" }}>Amount ({sendMoneyData.payload.currency})</Text>
+                  <Text style={{ fontWeight: "700" }}>
+                    Amount ({sendMoneyData.payload.currency})
+                  </Text>
                 </AppText>
                 <TextInput
                   style={{ ...styles.textInput, borderColor: "#266ddc" }}
@@ -690,7 +958,13 @@ export default function SendMoney({ navigation, route }) {
                 />
               </View> */}
 
-              <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 10 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginBottom: 10,
+                }}
+              >
                 <AppText bold="true" styles={{ fontSize: 15 }}>
                   Optional Fields
                 </AppText>
@@ -703,7 +977,9 @@ export default function SendMoney({ navigation, route }) {
               </View>
 
               {/** Optional Fields */}
-              <View style={{ display: `${showOptionalFields ? "flex" : "none"}` }}>
+              <View
+                style={{ display: `${showOptionalFields ? "flex" : "none"}` }}
+              >
                 <View style={styles.formGroup}>
                   <AppText>
                     <Text style={{ fontWeight: "700" }}>Payment Category</Text>
@@ -734,14 +1010,38 @@ export default function SendMoney({ navigation, route }) {
                       borderColor={"transparent"}
                     >
                       <Picker.Item label="--- Select Category ---" value="" />
-                      <Picker.Item label="Gift/Shopping" value="GIFT/SHOPPING" />
-                      <Picker.Item label="School/Education" value="SCHOOL/EDUCATION" />
-                      <Picker.Item label="Airtime/Internet/Cable Bill" value="AIRTIME/INTERNET/CABLE" />
-                      <Picker.Item label="Electricity/Water/Gas/Fuel" value="ELECTRICITY/WATER/GAS/FUEL" />
-                      <Picker.Item label="Vehicle/Transport/Food" value="VEHICLE/TRANSPORT/FOOD" />
-                      <Picker.Item label="Business/Official" value="BUSINESS/OFFICIAL" />
-                      <Picker.Item label="Donations/Tithes/Offerings" value="DONATIONS/TITHES/OFFERINGS" />
-                      <Picker.Item label="Personal/Others" value="PERSONAL/OTHERS" />
+                      <Picker.Item
+                        label="Gift/Shopping"
+                        value="GIFT/SHOPPING"
+                      />
+                      <Picker.Item
+                        label="School/Education"
+                        value="SCHOOL/EDUCATION"
+                      />
+                      <Picker.Item
+                        label="Airtime/Internet/Cable Bill"
+                        value="AIRTIME/INTERNET/CABLE"
+                      />
+                      <Picker.Item
+                        label="Electricity/Water/Gas/Fuel"
+                        value="ELECTRICITY/WATER/GAS/FUEL"
+                      />
+                      <Picker.Item
+                        label="Vehicle/Transport/Food"
+                        value="VEHICLE/TRANSPORT/FOOD"
+                      />
+                      <Picker.Item
+                        label="Business/Official"
+                        value="BUSINESS/OFFICIAL"
+                      />
+                      <Picker.Item
+                        label="Donations/Tithes/Offerings"
+                        value="DONATIONS/TITHES/OFFERINGS"
+                      />
+                      <Picker.Item
+                        label="Personal/Others"
+                        value="PERSONAL/OTHERS"
+                      />
                     </Picker>
                   </View>
                 </View>
@@ -759,7 +1059,13 @@ export default function SendMoney({ navigation, route }) {
               </View>
               {/** End Optional Fields */}
 
-              <View style={{ ...styles.formGroup, alignItems: "center", display: `${!displaySpinner ? "flex" : "none"}` }}>
+              <View
+                style={{
+                  ...styles.formGroup,
+                  alignItems: "center",
+                  display: `${!displaySpinner ? "flex" : "none"}`,
+                }}
+              >
                 <PrimaryButton onPress={() => submitTransferData()}>
                   <AppText bold="true" styles={{ color: "#fff", fontSize: 16 }}>
                     Send
@@ -767,7 +1073,12 @@ export default function SendMoney({ navigation, route }) {
                 </PrimaryButton>
               </View>
 
-              <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
+              <View
+                style={{
+                  justifyContent: "center",
+                  display: `${displaySpinner ? "flex" : "none"}`,
+                }}
+              >
                 <Spinner color="blue.700" size="lg" />
               </View>
             </View>

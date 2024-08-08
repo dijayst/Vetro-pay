@@ -1,15 +1,32 @@
-import { StyleSheet, Image, View, StatusBar, TouchableOpacity, Dimensions, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Image,
+  View,
+  StatusBar,
+  TouchableOpacity,
+  Dimensions,
+  ScrollView,
+} from "react-native";
 import React, { Fragment } from "react";
 import { useSelector } from "react-redux";
 import AppText from "../../resources/AppText";
-import { MaterialCommunityIcons, AntDesign, Feather, MaterialIcons } from "@expo/vector-icons";
+import {
+  MaterialCommunityIcons,
+  AntDesign,
+  Feather,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { LineChart } from "react-native-chart-kit";
 import { Spinner } from "native-base";
 import { toastColorObject } from "../../resources/rStyledComponent";
 import { useToast, Box, Text as NativeBaseText } from "native-base";
-import { convertEpochToLocalDate } from "../../resources/MetaFunctions";
+import { convertEpochToLocalDate } from "../../resources/utils/MetaFunctions";
 
-export default function index({ navigation, selectedCurrency, bottomSheetRef }) {
+export default function index({
+  navigation,
+  selectedCurrency,
+  bottomSheetRef,
+}) {
   const toast = useToast();
   const usdtTransactions = useSelector((state) => state.blockchain.usdt);
 
@@ -17,7 +34,9 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
     toast.show({
       render: () => (
         <Box bg={toastColorObject["warning"]} px="2" py="2" rounded="sm" mb={5}>
-          <NativeBaseText style={{ color: "#FFFFFF" }}>Connecting...</NativeBaseText>
+          <NativeBaseText style={{ color: "#FFFFFF" }}>
+            Connecting...
+          </NativeBaseText>
         </Box>
       ),
     });
@@ -39,16 +58,53 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
 
   return (
     <Fragment>
-      <View style={{ backgroundColor: "#266ddc", borderBottomLeftRadius: 15, borderBottomRightRadius: 15, paddingBottom: 30 }}>
-        <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 15 }}>
+      <View
+        style={{
+          backgroundColor: "#266ddc",
+          borderBottomLeftRadius: 15,
+          borderBottomRightRadius: 15,
+          paddingBottom: 30,
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginHorizontal: 15,
+          }}
+        >
           <View>
-            <AppText bold="true" styles={{ fontSize: 14, color: "#f2f2f2", marginTop: StatusBar.currentHeight + 10 }}>
+            <AppText
+              bold="true"
+              styles={{
+                fontSize: 14,
+                color: "#f2f2f2",
+                marginTop: StatusBar.currentHeight + 10,
+              }}
+            >
               Balance
             </AppText>
-            <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", width: "100%" }}>
-              <MaterialIcons name="account-balance-wallet" size={24} color="#f2f2f2" />
-              <AppText bold="true" styles={{ fontSize: 18, color: "#f2f2f2", marginLeft: 5 }}>
-                ₮{usdtTransactions.processing ? "0.00" : Number(usdtTransactions?.balance?.balance).toFixed(2)}
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <MaterialIcons
+                name="account-balance-wallet"
+                size={24}
+                color="#f2f2f2"
+              />
+              <AppText
+                bold="true"
+                styles={{ fontSize: 18, color: "#f2f2f2", marginLeft: 5 }}
+              >
+                ₮
+                {usdtTransactions.processing
+                  ? "0.00"
+                  : Number(usdtTransactions?.balance?.balance).toFixed(2)}
               </AppText>
             </View>
           </View>
@@ -64,9 +120,19 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
             }}
             onPress={() => bottomSheetRef.current?.expand()}
           >
-            <Image source={{ uri: selectedCurrency.icon }} style={{ width: 30, height: 30, resizeMode: "contain" }} />
-            <AppText styles={{ marginHorizontal: 5 }}>{selectedCurrency.code}</AppText>
-            <AntDesign name="down" size={15} color="black" style={{ alignSelf: "flex-end", marginBottom: 5 }} />
+            <Image
+              source={{ uri: selectedCurrency.icon }}
+              style={{ width: 30, height: 30, resizeMode: "contain" }}
+            />
+            <AppText styles={{ marginHorizontal: 5 }}>
+              {selectedCurrency.code}
+            </AppText>
+            <AntDesign
+              name="down"
+              size={15}
+              color="black"
+              style={{ alignSelf: "flex-end", marginBottom: 5 }}
+            />
           </TouchableOpacity>
         </View>
         <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -126,7 +192,11 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
               }}
             >
               <View style={{ ...styles.activityButton, width: 60 }}>
-                <MaterialCommunityIcons name="bank-outline" size={24} color="#f2f2f2" />
+                <MaterialCommunityIcons
+                  name="bank-outline"
+                  size={24}
+                  color="#f2f2f2"
+                />
                 <AppText styles={styles.mainBoardIconText}>Withdraw</AppText>
               </View>
             </TouchableOpacity>
@@ -137,7 +207,16 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
       {/**USDT GRAPH */}
       <View style={{ justifyContent: "center", alignItems: "center" }}>
         <View style={styles.menuBoard}>
-          <View style={{ flexDirection: "row", justifyContent: "space-evenly", alignItems: "center", width: "100%", paddingHorizontal: 20, height: "100%" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              alignItems: "center",
+              width: "100%",
+              paddingHorizontal: 20,
+              height: "100%",
+            }}
+          >
             <TouchableOpacity
               style={{
                 backgroundColor: "#266ddc",
@@ -152,8 +231,17 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
                 }
               }}
             >
-              <AppText bold styles={{ color: "#f2f2f2", paddingHorizontal: usdtTransactions.processing ? 20 : 0 }}>
-                Buy{usdtTransactions.processing ? "" : ` - ₦${usdtTransactions.ngn_usd_current}/$`}
+              <AppText
+                bold
+                styles={{
+                  color: "#f2f2f2",
+                  paddingHorizontal: usdtTransactions.processing ? 20 : 0,
+                }}
+              >
+                Buy
+                {usdtTransactions.processing
+                  ? ""
+                  : ` - ₦${usdtTransactions.ngn_usd_current}/$`}
               </AppText>
             </TouchableOpacity>
 
@@ -172,8 +260,17 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
                 }
               }}
             >
-              <AppText bold styles={{ color: "#36454F", paddingHorizontal: usdtTransactions.processing ? 20 : 0 }}>
-                Sell{usdtTransactions.processing ? "" : ` - ₦${usdtTransactions.usd_ngn_current}/$`}
+              <AppText
+                bold
+                styles={{
+                  color: "#36454F",
+                  paddingHorizontal: usdtTransactions.processing ? 20 : 0,
+                }}
+              >
+                Sell
+                {usdtTransactions.processing
+                  ? ""
+                  : ` - ₦${usdtTransactions.usd_ngn_current}/$`}
               </AppText>
             </TouchableOpacity>
           </View>
@@ -220,31 +317,78 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
         ) : usdtTransactions?.transactions?.data.length < 1 ? (
           <View style={styles.waitingWindow}>
             <Image
-              source={{ uri: "https://res.cloudinary.com/ancla8techs4/image/upload/v1662574256/vetropay/google-docs-2038784-1721674_mnfrfa.png" }}
-              style={{ opacity: 0.5, height: 100, width: 100, resizeMode: "contain" }}
+              source={{
+                uri: "https://res.cloudinary.com/ancla8techs4/image/upload/v1662574256/vetropay/google-docs-2038784-1721674_mnfrfa.png",
+              }}
+              style={{
+                opacity: 0.5,
+                height: 100,
+                width: 100,
+                resizeMode: "contain",
+              }}
             />
-            <AppText styles={{ textAlign: "center", fontWeight: "400", marginTop: 10 }}>Transactions will show here.</AppText>
+            <AppText
+              styles={{ textAlign: "center", fontWeight: "400", marginTop: 10 }}
+            >
+              Transactions will show here.
+            </AppText>
           </View>
         ) : (
           <ScrollView style={{ marginBottom: 5 }}>
             {usdtTransactions?.transactions.data.map((data, index) => {
               return (
-                <View key={index} style={{ marginVertical: 10, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                <View
+                  key={index}
+                  style={{
+                    marginVertical: 10,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
                   <View>
-                    <AppText styles={{ fontSize: 12 }}>{convertEpochToLocalDate(data.block_timestamp)}</AppText>
-                    <View style={{ marginTop: 2, flexDirection: "row", alignItems: "center" }}>
+                    <AppText styles={{ fontSize: 12 }}>
+                      {convertEpochToLocalDate(data.block_timestamp)}
+                    </AppText>
+                    <View
+                      style={{
+                        marginTop: 2,
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
                       <MaterialCommunityIcons
-                        name={getUsdtTransactionNote(data.from, data.to)["type"] == "credit" ? "arrow-collapse-down" : "arrow-collapse-up"}
+                        name={
+                          getUsdtTransactionNote(data.from, data.to)["type"] ==
+                          "credit"
+                            ? "arrow-collapse-down"
+                            : "arrow-collapse-up"
+                        }
                         size={14}
                         color="black"
                       />
                       <AppText styles={{ fontSize: 14 }}>{data.type}</AppText>
                     </View>
-                    <AppText styles={{ fontSize: 12, color: "grey" }}>{getUsdtTransactionNote(data.from, data.to)["message"]}</AppText>
+                    <AppText styles={{ fontSize: 12, color: "grey" }}>
+                      {getUsdtTransactionNote(data.from, data.to)["message"]}
+                    </AppText>
                   </View>
-                  <AppText styles={{ color: `${getUsdtTransactionNote(data.from, data.to)["type"] == "credit" ? "#0bc8a5" : "red"}` }}>
+                  <AppText
+                    styles={{
+                      color: `${
+                        getUsdtTransactionNote(data.from, data.to)["type"] ==
+                        "credit"
+                          ? "#0bc8a5"
+                          : "red"
+                      }`,
+                    }}
+                  >
                     {" "}
-                    {getUsdtTransactionNote(data.from, data.to)["type"] == "credit" ? "+" : "-"} {Number(+data.value / 1000000).toFixed(2)} USDT
+                    {getUsdtTransactionNote(data.from, data.to)["type"] ==
+                    "credit"
+                      ? "+"
+                      : "-"}{" "}
+                    {Number(+data.value / 1000000).toFixed(2)} USDT
                   </AppText>
                 </View>
               );

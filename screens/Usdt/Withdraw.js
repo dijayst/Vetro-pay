@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { View, TextInput, StyleSheet, Pressable, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Pressable,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import AppText from "../../resources/AppText";
-import { numberWithCommas } from "../../resources/MetaFunctions";
+import { numberWithCommas } from "../../resources/utils/MetaFunctions";
 import { usePrevious } from "../../resources/utils";
 import { HR, toastColorObject } from "../../resources/rStyledComponent";
 import { useToast, Box, Text as NativeBaseText, Spinner } from "native-base";
-import { getTrxFees, getUsdtTransactions, postTrxTransaction } from "../../containers/blockchain/action";
+import {
+  getTrxFees,
+  getUsdtTransactions,
+  postTrxTransaction,
+} from "../../containers/blockchain/action";
 
 export default function Withdraw({ navigation }) {
   const toast = useToast();
@@ -34,7 +45,11 @@ export default function Withdraw({ navigation }) {
   }, []);
 
   useEffect(() => {
-    if (userUsdtAmount != "" && blockchainFees.length && blockchainFees.length != prevBlockchainFees?.length) {
+    if (
+      userUsdtAmount != "" &&
+      blockchainFees.length &&
+      blockchainFees.length != prevBlockchainFees?.length
+    ) {
       if (blockchainFees[blockchainFees.length - 1]?.status == "success") {
         setFee({
           known: true,
@@ -45,8 +60,16 @@ export default function Withdraw({ navigation }) {
         setDisplaySpinner(false);
         toast.show({
           render: () => (
-            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>{blockchainFees[blockchainFees.length - 1]?.message}</NativeBaseText>
+            <Box
+              bg={toastColorObject["danger"]}
+              px="2"
+              py="2"
+              rounded="sm"
+              mb={5}
+            >
+              <NativeBaseText style={{ color: "#FFFFFF" }}>
+                {blockchainFees[blockchainFees.length - 1]?.message}
+              </NativeBaseText>
             </Box>
           ),
         });
@@ -55,23 +78,41 @@ export default function Withdraw({ navigation }) {
   }, [blockchainFees]);
 
   useEffect(() => {
-    if (userUsdtAmount != "" && postedTransactions.length && postedTransactions.length != prevPostedTransactions?.length) {
-      if (postedTransactions[postedTransactions.length - 1]?.status == "success") {
+    if (
+      userUsdtAmount != "" &&
+      postedTransactions.length &&
+      postedTransactions.length != prevPostedTransactions?.length
+    ) {
+      if (
+        postedTransactions[postedTransactions.length - 1]?.status == "success"
+      ) {
         setDisplaySpinner(false);
-        Alert.alert("Transfer successful", `${userUsdtAmount} USDT withdraw 🎉\n\nCheck NGN Wallet 😉`, [
-          {
-            text: "Go Home",
-            onPress: () => {
-              dispatch(getUsdtTransactions());
-              navigation.goBack();
+        Alert.alert(
+          "Transfer successful",
+          `${userUsdtAmount} USDT withdraw 🎉\n\nCheck NGN Wallet 😉`,
+          [
+            {
+              text: "Go Home",
+              onPress: () => {
+                dispatch(getUsdtTransactions());
+                navigation.goBack();
+              },
             },
-          },
-        ]);
+          ]
+        );
       } else {
         toast.show({
           render: () => (
-            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>{postedTransactions[postedTransactions.length - 1]?.message}</NativeBaseText>
+            <Box
+              bg={toastColorObject["danger"]}
+              px="2"
+              py="2"
+              rounded="sm"
+              mb={5}
+            >
+              <NativeBaseText style={{ color: "#FFFFFF" }}>
+                {postedTransactions[postedTransactions.length - 1]?.message}
+              </NativeBaseText>
             </Box>
           ),
         });
@@ -83,30 +124,54 @@ export default function Withdraw({ navigation }) {
   const getTransactionFee = () => {
     if (Number(userUsdtAmount) > 0) {
       setDisplaySpinner(true);
-      dispatch(getTrxFees("withdraw", "USDT", usdtTransactions?.address?.base58));
+      dispatch(
+        getTrxFees("withdraw", "USDT", usdtTransactions?.address?.base58)
+      );
     }
   };
 
   const completeUsdtTransfer = () => {
-    if (transactionPin == "" || usdtTransactions?.balance?.balance < Number(userUsdtAmount)) {
+    if (
+      transactionPin == "" ||
+      usdtTransactions?.balance?.balance < Number(userUsdtAmount)
+    ) {
       let message;
       if (transactionPin === "") {
         message = "Transaction Pin not set";
-      } else if (usdtTransactions?.balance?.balance < Number(amount) + Number(VETROPAY_FEE)) {
+      } else if (
+        usdtTransactions?.balance?.balance <
+        Number(amount) + Number(VETROPAY_FEE)
+      ) {
         message = "Insufficient USDT balance.";
       }
 
       toast.show({
         render: () => (
-          <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-            <NativeBaseText style={{ color: "#FFFFFF" }}>{message}</NativeBaseText>
+          <Box
+            bg={toastColorObject["danger"]}
+            px="2"
+            py="2"
+            rounded="sm"
+            mb={5}
+          >
+            <NativeBaseText style={{ color: "#FFFFFF" }}>
+              {message}
+            </NativeBaseText>
           </Box>
         ),
       });
     } else {
       // SEND TRANSACTION
       setDisplaySpinner(true);
-      dispatch(postTrxTransaction("withdraw", "USDT", usdtTransactions?.address?.base58, userUsdtAmount, transactionPin));
+      dispatch(
+        postTrxTransaction(
+          "withdraw",
+          "USDT",
+          usdtTransactions?.address?.base58,
+          userUsdtAmount,
+          transactionPin
+        )
+      );
     }
   };
   return (
@@ -129,7 +194,12 @@ export default function Withdraw({ navigation }) {
 
           {userUsdtAmount <= usdtTransactions?.balance?.balance ? (
             <View style={styles.creditBox}>
-              <AppText>You will receive: ₦{userUsdtAmount > 0 ? numberWithCommas(userUsdtAmount * USD_RATE) : "0.00"}</AppText>
+              <AppText>
+                You will receive: ₦
+                {userUsdtAmount > 0
+                  ? numberWithCommas(userUsdtAmount * USD_RATE)
+                  : "0.00"}
+              </AppText>
             </View>
           ) : (
             <View style={{ ...styles.creditBox, backgroundColor: "#da534f" }}>
@@ -139,55 +209,103 @@ export default function Withdraw({ navigation }) {
 
           {!displaySpinner ? (
             <TouchableOpacity
-              disabled={Number(userUsdtAmount) < 1 || userUsdtAmount > usdtTransactions?.balance?.balance}
+              disabled={
+                Number(userUsdtAmount) < 1 ||
+                userUsdtAmount > usdtTransactions?.balance?.balance
+              }
               onPress={() => getTransactionFee()}
-              style={{ width: "100%", backgroundColor: "#266ddc", marginTop: 20, justifyContent: "center", height: 45, borderRadius: 5, alignItems: "center" }}
+              style={{
+                width: "100%",
+                backgroundColor: "#266ddc",
+                marginTop: 20,
+                justifyContent: "center",
+                height: 45,
+                borderRadius: 5,
+                alignItems: "center",
+              }}
             >
               <AppText styles={{ color: "#ffffff", fontSize: 16 }} bold>
                 Withdraw
               </AppText>
             </TouchableOpacity>
           ) : (
-            <View style={{ justifyContent: "center", alignItems: "center", marginTop: 20 }}>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: 20,
+              }}
+            >
               <Spinner size="lg" color="#266ddc" />
             </View>
           )}
         </View>
       ) : (
-        <View style={{ margin: 10, justifyContent: "center", alignItems: "center" }}>
+        <View
+          style={{ margin: 10, justifyContent: "center", alignItems: "center" }}
+        >
           <AppText bold styles={{ fontSize: 25, color: "grey", marginTop: 15 }}>
             -{userUsdtAmount} USDT
           </AppText>
           <AppText>≈ {userUsdtAmount} USD</AppText>
 
           <View style={styles.transferContainer}>
-            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
               <AppText bold styles={{ color: "#36454F" }}>
                 Expected Deposit
               </AppText>
-              <AppText styles={{ fontSize: 12 }}>₦{numberWithCommas(userUsdtAmount * USD_RATE)}</AppText>
+              <AppText styles={{ fontSize: 12 }}>
+                ₦{numberWithCommas(userUsdtAmount * USD_RATE)}
+              </AppText>
             </View>
           </View>
 
           <View style={styles.transferContainer}>
-            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
               <AppText bold styles={{ color: "#36454F" }}>
                 Network Fee
               </AppText>
               <AppText styles={{ fontSize: 12 }}>
-                {Number(fee.amount).toFixed(2)} TRX (${Number(fee.amount * TRON_VALUE_IN_USD).toFixed(2)})
+                {Number(fee.amount).toFixed(2)} TRX ($
+                {Number(fee.amount * TRON_VALUE_IN_USD).toFixed(2)})
               </AppText>
             </View>
             <HR style={{ marginVertical: 10, borderBottomColor: "grey" }} />
-            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
               <AppText bold styles={{ color: "#36454F" }}>
                 Max Total
               </AppText>
-              <AppText styles={{ fontSize: 12 }}>${(Number(fee.amount * TRON_VALUE_IN_USD) + Number(userUsdtAmount)).toFixed(2)}</AppText>
+              <AppText styles={{ fontSize: 12 }}>
+                $
+                {(
+                  Number(fee.amount * TRON_VALUE_IN_USD) +
+                  Number(userUsdtAmount)
+                ).toFixed(2)}
+              </AppText>
             </View>
           </View>
 
-          <AppText styles={{ fontSize: 12, color: "#5cb85c", marginTop: 10 }}>Network fee may cost less than estimated. Cheers!</AppText>
+          <AppText styles={{ fontSize: 12, color: "#5cb85c", marginTop: 10 }}>
+            Network fee may cost less than estimated. Cheers!
+          </AppText>
 
           <TextInput
             style={{ ...styles.textInput, marginTop: 15, width: "90%" }}
@@ -202,14 +320,28 @@ export default function Withdraw({ navigation }) {
           {!displaySpinner ? (
             <TouchableOpacity
               onPress={() => completeUsdtTransfer()}
-              style={{ width: "90%", backgroundColor: "#266ddc", marginTop: 20, justifyContent: "center", height: 45, borderRadius: 5, alignItems: "center" }}
+              style={{
+                width: "90%",
+                backgroundColor: "#266ddc",
+                marginTop: 20,
+                justifyContent: "center",
+                height: 45,
+                borderRadius: 5,
+                alignItems: "center",
+              }}
             >
               <AppText styles={{ color: "#ffffff", fontSize: 16 }} bold>
                 Complete
               </AppText>
             </TouchableOpacity>
           ) : (
-            <View style={{ justifyContent: "center", alignItems: "center", marginTop: 20 }}>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: 20,
+              }}
+            >
               <Spinner size="lg" color="#266ddc" />
             </View>
           )}

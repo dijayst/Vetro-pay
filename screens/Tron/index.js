@@ -1,15 +1,38 @@
-import { StyleSheet, Image, View, StatusBar, TouchableOpacity, Dimensions, ScrollView, Alert } from "react-native";
+import {
+  StyleSheet,
+  Image,
+  View,
+  StatusBar,
+  TouchableOpacity,
+  Dimensions,
+  ScrollView,
+  Alert,
+} from "react-native";
 import React, { Fragment } from "react";
 import { useSelector } from "react-redux";
 import AppText from "../../resources/AppText";
-import { MaterialCommunityIcons, AntDesign, Feather, MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
-import { convertEpochToLocalDate } from "../../resources/MetaFunctions";
+import {
+  MaterialCommunityIcons,
+  AntDesign,
+  Feather,
+  MaterialIcons,
+  FontAwesome5,
+} from "@expo/vector-icons";
+import { convertEpochToLocalDate } from "../../resources/utils/MetaFunctions";
 import { Spinner } from "native-base";
 import { toastColorObject } from "../../resources/rStyledComponent";
 import { useToast, Box, Text as NativeBaseText } from "native-base";
-import { calculateBandwithOrEnergy, customTrxWithCommas, numberWithCommas } from "../../resources/utils";
+import {
+  calculateBandwithOrEnergy,
+  customTrxWithCommas,
+  numberWithCommas,
+} from "../../resources/utils";
 
-export default function index({ navigation, selectedCurrency, bottomSheetRef }) {
+export default function index({
+  navigation,
+  selectedCurrency,
+  bottomSheetRef,
+}) {
   const toast = useToast();
   const trxTransactions = useSelector((state) => state.blockchain.trx);
 
@@ -17,7 +40,9 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
     toast.show({
       render: () => (
         <Box bg={toastColorObject["warning"]} px="2" py="2" rounded="sm" mb={5}>
-          <NativeBaseText style={{ color: "#FFFFFF" }}>Connecting...</NativeBaseText>
+          <NativeBaseText style={{ color: "#FFFFFF" }}>
+            Connecting...
+          </NativeBaseText>
         </Box>
       ),
     });
@@ -27,7 +52,10 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
     const transaction = data["raw_data"]["contract"][0];
     const transactionType = transaction?.type;
     if (transactionType == "TransferContract") {
-      if (transaction?.parameter?.value.owner_address == trxTransactions?.address?.hex) {
+      if (
+        transaction?.parameter?.value.owner_address ==
+        trxTransactions?.address?.hex
+      ) {
         return {
           type: "debit",
           amount: transaction?.parameter?.value?.amount / 1000000,
@@ -53,7 +81,10 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
     } else if (transactionType == "FreezeBalanceContract") {
       return {
         type: "debit",
-        amount: data["raw_data"]["contract"][0]["parameter"]["value"]["frozen_balance"] / 1000000,
+        amount:
+          data["raw_data"]["contract"][0]["parameter"]["value"][
+            "frozen_balance"
+          ] / 1000000,
         message: `To ${transaction?.parameter?.value.owner_address}`,
       };
     }
@@ -61,20 +92,67 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
 
   return (
     <Fragment>
-      <View style={{ backgroundColor: "#266ddc", borderBottomLeftRadius: 15, borderBottomRightRadius: 15, paddingBottom: 30 }}>
-        <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 15 }}>
+      <View
+        style={{
+          backgroundColor: "#266ddc",
+          borderBottomLeftRadius: 15,
+          borderBottomRightRadius: 15,
+          paddingBottom: 30,
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginHorizontal: 15,
+          }}
+        >
           <View>
-            <AppText bold="true" styles={{ fontSize: 14, color: "#f2f2f2", marginTop: StatusBar.currentHeight + 10 }}>
+            <AppText
+              bold="true"
+              styles={{
+                fontSize: 14,
+                color: "#f2f2f2",
+                marginTop: StatusBar.currentHeight + 10,
+              }}
+            >
               Balance
             </AppText>
-            <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", width: "100%" }}>
-              <MaterialIcons name="account-balance-wallet" size={24} color="#f2f2f2" style={{ alignSelf: "flex-start" }} />
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <MaterialIcons
+                name="account-balance-wallet"
+                size={24}
+                color="#f2f2f2"
+                style={{ alignSelf: "flex-start" }}
+              />
               <View>
-                <AppText bold="true" styles={{ fontSize: 18, color: "#f2f2f2", marginLeft: 5 }}>
-                  TRX {customTrxWithCommas(Number(trxTransactions?.balance?.balance || 0.0).toFixed(6))}
+                <AppText
+                  bold="true"
+                  styles={{ fontSize: 18, color: "#f2f2f2", marginLeft: 5 }}
+                >
+                  TRX{" "}
+                  {customTrxWithCommas(
+                    Number(trxTransactions?.balance?.balance || 0.0).toFixed(6)
+                  )}
                 </AppText>
-                <AppText bold="true" styles={{ fontSize: 13, color: "#f2f2f2", marginLeft: 5 }}>
-                  ≈ ${numberWithCommas(Number(trxTransactions?.balance?.balance * trxTransactions?.tron_value || 0).toFixed(2))}
+                <AppText
+                  bold="true"
+                  styles={{ fontSize: 13, color: "#f2f2f2", marginLeft: 5 }}
+                >
+                  ≈ $
+                  {numberWithCommas(
+                    Number(
+                      trxTransactions?.balance?.balance *
+                        trxTransactions?.tron_value || 0
+                    ).toFixed(2)
+                  )}
                 </AppText>
               </View>
             </View>
@@ -92,9 +170,19 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
             }}
             onPress={() => bottomSheetRef.current?.expand()}
           >
-            <Image source={{ uri: selectedCurrency.icon }} style={{ width: 30, height: 30, resizeMode: "contain" }} />
-            <AppText styles={{ marginHorizontal: 5 }}>{selectedCurrency.code}</AppText>
-            <AntDesign name="down" size={15} color="black" style={{ alignSelf: "flex-end", marginBottom: 5 }} />
+            <Image
+              source={{ uri: selectedCurrency.icon }}
+              style={{ width: 30, height: 30, resizeMode: "contain" }}
+            />
+            <AppText styles={{ marginHorizontal: 5 }}>
+              {selectedCurrency.code}
+            </AppText>
+            <AntDesign
+              name="down"
+              size={15}
+              color="black"
+              style={{ alignSelf: "flex-end", marginBottom: 5 }}
+            />
           </TouchableOpacity>
         </View>
         <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -175,9 +263,20 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
 
           <View style={{ width: "45%" }}>
             <AppText bold styles={{ fontSize: 12, color: "#0D2241" }}>
-              Bandwidth: {calculateBandwithOrEnergy(trxTransactions?.balance?.bandwidth, "bandwidth").available}
+              Bandwidth:{" "}
+              {
+                calculateBandwithOrEnergy(
+                  trxTransactions?.balance?.bandwidth,
+                  "bandwidth"
+                ).available
+              }
               {" / "}
-              {calculateBandwithOrEnergy(trxTransactions?.balance?.bandwidth, "bandwidth").total}
+              {
+                calculateBandwithOrEnergy(
+                  trxTransactions?.balance?.bandwidth,
+                  "bandwidth"
+                ).total
+              }
             </AppText>
             {/** Bandwidth Guauge */}
             <View>
@@ -188,8 +287,15 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
                   position: "absolute",
                   backgroundColor: "#0D2241",
                   width: `${
-                    (100 * calculateBandwithOrEnergy(trxTransactions?.balance?.bandwidth, "bandwidth").available) /
-                    calculateBandwithOrEnergy(trxTransactions?.balance?.bandwidth, "bandwidth").total
+                    (100 *
+                      calculateBandwithOrEnergy(
+                        trxTransactions?.balance?.bandwidth,
+                        "bandwidth"
+                      ).available) /
+                    calculateBandwithOrEnergy(
+                      trxTransactions?.balance?.bandwidth,
+                      "bandwidth"
+                    ).total
                   }%`,
                 }}
               ></View>
@@ -210,10 +316,21 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
         ) : trxTransactions?.transactions?.data.length < 1 ? (
           <View style={styles.waitingWindow}>
             <Image
-              source={{ uri: "https://res.cloudinary.com/ancla8techs4/image/upload/v1662574256/vetropay/google-docs-2038784-1721674_mnfrfa.png" }}
-              style={{ opacity: 0.5, height: 100, width: 100, resizeMode: "contain" }}
+              source={{
+                uri: "https://res.cloudinary.com/ancla8techs4/image/upload/v1662574256/vetropay/google-docs-2038784-1721674_mnfrfa.png",
+              }}
+              style={{
+                opacity: 0.5,
+                height: 100,
+                width: 100,
+                resizeMode: "contain",
+              }}
             />
-            <AppText styles={{ textAlign: "center", fontWeight: "400", marginTop: 10 }}>Transactions will show here.</AppText>
+            <AppText
+              styles={{ textAlign: "center", fontWeight: "400", marginTop: 10 }}
+            >
+              Transactions will show here.
+            </AppText>
           </View>
         ) : (
           <ScrollView style={{ marginBottom: 10 }}>
@@ -221,49 +338,134 @@ export default function index({ navigation, selectedCurrency, bottomSheetRef }) 
               .filter(
                 (data) =>
                   data["raw_data"]["contract"][0]?.type == "TransferContract" ||
-                  data["raw_data"]["contract"][0]?.type == "TriggerSmartContract" ||
-                  data["raw_data"]["contract"][0]?.type == "FreezeBalanceContract"
+                  data["raw_data"]["contract"][0]?.type ==
+                    "TriggerSmartContract" ||
+                  data["raw_data"]["contract"][0]?.type ==
+                    "FreezeBalanceContract"
               )
               .map((data, index) => {
-                if (data["raw_data"]["contract"][0]?.type == "FreezeBalanceContract") {
+                if (
+                  data["raw_data"]["contract"][0]?.type ==
+                  "FreezeBalanceContract"
+                ) {
                   return (
-                    <View key={index} style={{ marginVertical: 10, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                    <View
+                      key={index}
+                      style={{
+                        marginVertical: 10,
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
                       <View style={{ width: "100%" }}>
-                        <AppText styles={{ fontSize: 12 }}>{convertEpochToLocalDate(data.block_timestamp)}</AppText>
-                        <View style={{ marginTop: 2, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                          <View style={{ flexDirection: "row", alignItems: "center" }}>
-                            <MaterialCommunityIcons name={"arrow-collapse-up"} size={14} color="black" />
+                        <AppText styles={{ fontSize: 12 }}>
+                          {convertEpochToLocalDate(data.block_timestamp)}
+                        </AppText>
+                        <View
+                          style={{
+                            marginTop: 2,
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "center",
+                            }}
+                          >
+                            <MaterialCommunityIcons
+                              name={"arrow-collapse-up"}
+                              size={14}
+                              color="black"
+                            />
                             <AppText styles={{ fontSize: 14 }}>Freeze</AppText>
                           </View>
                           <View>
                             <AppText styles={{ color: "red" }}>
                               {" "}
-                              {"-"} {Number(geTrxTransactionNote(data)["amount"]).toFixed(6)} TRX
+                              {"-"}{" "}
+                              {Number(
+                                geTrxTransactionNote(data)["amount"]
+                              ).toFixed(6)}{" "}
+                              TRX
                             </AppText>
                           </View>
                         </View>
-                        <AppText styles={{ fontSize: 12, color: "grey" }}>{geTrxTransactionNote(data)["message"]}</AppText>
+                        <AppText styles={{ fontSize: 12, color: "grey" }}>
+                          {geTrxTransactionNote(data)["message"]}
+                        </AppText>
                       </View>
                     </View>
                   );
                 } else {
                   return (
-                    <View key={index} style={{ marginVertical: 10, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                    <View
+                      key={index}
+                      style={{
+                        marginVertical: 10,
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
                       <View style={{ width: "100%" }}>
-                        <AppText styles={{ fontSize: 12 }}>{convertEpochToLocalDate(data.block_timestamp)}</AppText>
-                        <View style={{ marginTop: 2, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                          <View style={{ flexDirection: "row", alignItems: "center" }}>
-                            <MaterialCommunityIcons name={geTrxTransactionNote(data)["type"] == "credit" ? "arrow-collapse-down" : "arrow-collapse-up"} size={14} color="black" />
-                            <AppText styles={{ fontSize: 14 }}>Transfer</AppText>
+                        <AppText styles={{ fontSize: 12 }}>
+                          {convertEpochToLocalDate(data.block_timestamp)}
+                        </AppText>
+                        <View
+                          style={{
+                            marginTop: 2,
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "center",
+                            }}
+                          >
+                            <MaterialCommunityIcons
+                              name={
+                                geTrxTransactionNote(data)["type"] == "credit"
+                                  ? "arrow-collapse-down"
+                                  : "arrow-collapse-up"
+                              }
+                              size={14}
+                              color="black"
+                            />
+                            <AppText styles={{ fontSize: 14 }}>
+                              Transfer
+                            </AppText>
                           </View>
                           <View>
-                            <AppText styles={{ color: `${geTrxTransactionNote(data)["type"] == "credit" ? "#0bc8a5" : "red"}` }}>
+                            <AppText
+                              styles={{
+                                color: `${
+                                  geTrxTransactionNote(data)["type"] == "credit"
+                                    ? "#0bc8a5"
+                                    : "red"
+                                }`,
+                              }}
+                            >
                               {" "}
-                              {geTrxTransactionNote(data)["type"] == "credit" ? "+" : "-"} {Number(geTrxTransactionNote(data)["amount"]).toFixed(6)} TRX
+                              {geTrxTransactionNote(data)["type"] == "credit"
+                                ? "+"
+                                : "-"}{" "}
+                              {Number(
+                                geTrxTransactionNote(data)["amount"]
+                              ).toFixed(6)}{" "}
+                              TRX
                             </AppText>
                           </View>
                         </View>
-                        <AppText styles={{ fontSize: 12, color: "grey" }}>{geTrxTransactionNote(data)["message"]}</AppText>
+                        <AppText styles={{ fontSize: 12, color: "grey" }}>
+                          {geTrxTransactionNote(data)["message"]}
+                        </AppText>
                       </View>
                     </View>
                   );

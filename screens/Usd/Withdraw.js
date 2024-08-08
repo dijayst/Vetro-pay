@@ -1,12 +1,21 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { View, TextInput, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import AppText from "../../resources/AppText";
-import { numberWithCommas } from "../../resources/MetaFunctions";
+import { numberWithCommas } from "../../resources/utils/MetaFunctions";
 import { usePrevious } from "../../resources/utils";
 import { toastColorObject } from "../../resources/rStyledComponent";
 import { useToast, Box, Text as NativeBaseText, Spinner } from "native-base";
-import { getUsdTransactions, withdrawFromUsdWallet } from "../../containers/blockchain/action";
+import {
+  getUsdTransactions,
+  withdrawFromUsdWallet,
+} from "../../containers/blockchain/action";
 import { Picker as RNPicker } from "@react-native-picker/picker";
 import { Select } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
@@ -29,27 +38,47 @@ export default function Withdraw({ navigation }) {
   const [displaySpinner, setDisplaySpinner] = useState(false);
   const [transactionPin, setTransactionPin] = useState("");
   const usdTransactions = useSelector((state) => state.blockchain.usd);
-  const withdrawUsdResponse = useSelector((state) => state.blockchain.withdrawusd);
+  const withdrawUsdResponse = useSelector(
+    (state) => state.blockchain.withdrawusd
+  );
   const prevWithdrawUsdResponse = usePrevious(withdrawUsdResponse);
 
   useEffect(() => {
-    if (userUsdAmount != "" && withdrawUsdResponse.length && withdrawUsdResponse.length != prevWithdrawUsdResponse?.length) {
-      if (withdrawUsdResponse[withdrawUsdResponse.length - 1]?.status == "success") {
+    if (
+      userUsdAmount != "" &&
+      withdrawUsdResponse.length &&
+      withdrawUsdResponse.length != prevWithdrawUsdResponse?.length
+    ) {
+      if (
+        withdrawUsdResponse[withdrawUsdResponse.length - 1]?.status == "success"
+      ) {
         setDisplaySpinner(false);
-        Alert.alert("Transfer successful", `Confirmation may be delayed for transfers to Bank. High priority transactions are fulfilled earlier. 🎉`, [
-          {
-            text: "Go Home",
-            onPress: () => {
-              dispatch(getUsdTransactions());
-              navigation.goBack();
+        Alert.alert(
+          "Transfer successful",
+          `Confirmation may be delayed for transfers to Bank. High priority transactions are fulfilled earlier. 🎉`,
+          [
+            {
+              text: "Go Home",
+              onPress: () => {
+                dispatch(getUsdTransactions());
+                navigation.goBack();
+              },
             },
-          },
-        ]);
+          ]
+        );
       } else {
         toast.show({
           render: () => (
-            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>{withdrawUsdResponse[withdrawUsdResponse.length - 1]?.message}</NativeBaseText>
+            <Box
+              bg={toastColorObject["danger"]}
+              px="2"
+              py="2"
+              rounded="sm"
+              mb={5}
+            >
+              <NativeBaseText style={{ color: "#FFFFFF" }}>
+                {withdrawUsdResponse[withdrawUsdResponse.length - 1]?.message}
+              </NativeBaseText>
             </Box>
           ),
         });
@@ -62,8 +91,16 @@ export default function Withdraw({ navigation }) {
     if (userDestinationAccount.payload.destination === "") {
       toast.show({
         render: () => (
-          <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-            <NativeBaseText style={{ color: "#FFFFFF" }}>Destination Account not set</NativeBaseText>
+          <Box
+            bg={toastColorObject["danger"]}
+            px="2"
+            py="2"
+            rounded="sm"
+            mb={5}
+          >
+            <NativeBaseText style={{ color: "#FFFFFF" }}>
+              Destination Account not set
+            </NativeBaseText>
           </Box>
         ),
       });
@@ -72,8 +109,16 @@ export default function Withdraw({ navigation }) {
       if (transactionPin == "" || transactionPin.length < 6) {
         toast.show({
           render: () => (
-            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>Invalid transaction pin</NativeBaseText>
+            <Box
+              bg={toastColorObject["danger"]}
+              px="2"
+              py="2"
+              rounded="sm"
+              mb={5}
+            >
+              <NativeBaseText style={{ color: "#FFFFFF" }}>
+                Invalid transaction pin
+              </NativeBaseText>
             </Box>
           ),
         });
@@ -107,48 +152,102 @@ export default function Withdraw({ navigation }) {
         if (userDestinationAccount.payload.bankName == "") {
           toast.show({
             render: () => (
-              <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-                <NativeBaseText style={{ color: "#FFFFFF" }}>Select Bank</NativeBaseText>
+              <Box
+                bg={toastColorObject["danger"]}
+                px="2"
+                py="2"
+                rounded="sm"
+                mb={5}
+              >
+                <NativeBaseText style={{ color: "#FFFFFF" }}>
+                  Select Bank
+                </NativeBaseText>
               </Box>
             ),
           });
-        } else if (userDestinationAccount.payload.accountNo == "" || userDestinationAccount.payload.accountNo.length < 6) {
+        } else if (
+          userDestinationAccount.payload.accountNo == "" ||
+          userDestinationAccount.payload.accountNo.length < 6
+        ) {
           toast.show({
             render: () => (
-              <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-                <NativeBaseText style={{ color: "#FFFFFF" }}>Input correct recipient account</NativeBaseText>
+              <Box
+                bg={toastColorObject["danger"]}
+                px="2"
+                py="2"
+                rounded="sm"
+                mb={5}
+              >
+                <NativeBaseText style={{ color: "#FFFFFF" }}>
+                  Input correct recipient account
+                </NativeBaseText>
               </Box>
             ),
           });
-        } else if (userDestinationAccount.payload.recipientName == "" || userDestinationAccount.payload.recipientName.length < 3) {
+        } else if (
+          userDestinationAccount.payload.recipientName == "" ||
+          userDestinationAccount.payload.recipientName.length < 3
+        ) {
           toast.show({
             render: () => (
-              <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-                <NativeBaseText style={{ color: "#FFFFFF" }}>Recipient account name cannot be less than 3 character</NativeBaseText>
+              <Box
+                bg={toastColorObject["danger"]}
+                px="2"
+                py="2"
+                rounded="sm"
+                mb={5}
+              >
+                <NativeBaseText style={{ color: "#FFFFFF" }}>
+                  Recipient account name cannot be less than 3 character
+                </NativeBaseText>
               </Box>
             ),
           });
         } else if (userDestinationAccount.payload.priority == "") {
           toast.show({
             render: () => (
-              <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-                <NativeBaseText style={{ color: "#FFFFFF" }}>Kindly select preferred priority</NativeBaseText>
+              <Box
+                bg={toastColorObject["danger"]}
+                px="2"
+                py="2"
+                rounded="sm"
+                mb={5}
+              >
+                <NativeBaseText style={{ color: "#FFFFFF" }}>
+                  Kindly select preferred priority
+                </NativeBaseText>
               </Box>
             ),
           });
         } else if (userUsdAmount < 50) {
           toast.show({
             render: () => (
-              <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-                <NativeBaseText style={{ color: "#FFFFFF" }}>USD Bank Withdrawal cannot be less than $50</NativeBaseText>
+              <Box
+                bg={toastColorObject["danger"]}
+                px="2"
+                py="2"
+                rounded="sm"
+                mb={5}
+              >
+                <NativeBaseText style={{ color: "#FFFFFF" }}>
+                  USD Bank Withdrawal cannot be less than $50
+                </NativeBaseText>
               </Box>
             ),
           });
         } else if (transactionPin == "" || transactionPin.length < 6) {
           toast.show({
             render: () => (
-              <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-                <NativeBaseText style={{ color: "#FFFFFF" }}>Invalid transaction pin</NativeBaseText>
+              <Box
+                bg={toastColorObject["danger"]}
+                px="2"
+                py="2"
+                rounded="sm"
+                mb={5}
+              >
+                <NativeBaseText style={{ color: "#FFFFFF" }}>
+                  Invalid transaction pin
+                </NativeBaseText>
               </Box>
             ),
           });
@@ -172,7 +271,13 @@ export default function Withdraw({ navigation }) {
   };
 
   return (
-    <KeyboardAwareScrollView enableAutomaticScroll extraScrollHeight={10} enableOnAndroid={true} extraHeight={Platform.select({ android: 150 })} style={{ flexGrow: 1 }}>
+    <KeyboardAwareScrollView
+      enableAutomaticScroll
+      extraScrollHeight={10}
+      enableOnAndroid={true}
+      extraHeight={Platform.select({ android: 150 })}
+      style={{ flexGrow: 1 }}
+    >
       <View style={styles.container}>
         <View style={{ margin: 10 }}>
           <AppText bold>Available Balance:</AppText>
@@ -335,25 +440,67 @@ export default function Withdraw({ navigation }) {
             <Fragment>
               <View style={styles.creditBox}>
                 <AppText>
-                  You will receive: {`${userDestinationAccount.payload.destination !== "USD" ? "₦" : "$"}`}
+                  You will receive:{" "}
+                  {`${
+                    userDestinationAccount.payload.destination !== "USD"
+                      ? "₦"
+                      : "$"
+                  }`}
                   {userUsdAmount > 0
                     ? userDestinationAccount.payload.destination === "USD"
                       ? numberWithCommas(userUsdAmount)
-                      : numberWithCommas(userUsdAmount * usdTransactions.usd_ngn_current)
+                      : numberWithCommas(
+                          userUsdAmount * usdTransactions.usd_ngn_current
+                        )
                     : "0.00"}
                 </AppText>
               </View>
               {userDestinationAccount.payload.destination === "USD" && (
-                <View style={{ backgroundColor: "lightblue", padding: 10, borderRadius: 10, flexDirection: "row", justifyContent: "center", marginTop: 10 }}>
-                  <AntDesign name="infocirlce" size={20} color="#198754" style={{ marginTop: 5 }} />
+                <View
+                  style={{
+                    backgroundColor: "lightblue",
+                    padding: 10,
+                    borderRadius: 10,
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    marginTop: 10,
+                  }}
+                >
+                  <AntDesign
+                    name="infocirlce"
+                    size={20}
+                    color="#198754"
+                    style={{ marginTop: 5 }}
+                  />
                   <View>
-                    <AppText bold styles={{ color: "#040404", lineHeight: 22, marginLeft: 10 }}>
+                    <AppText
+                      bold
+                      styles={{
+                        color: "#040404",
+                        lineHeight: 22,
+                        marginLeft: 10,
+                      }}
+                    >
                       $2,500 Maximum daily withdrawal.
                     </AppText>
-                    <AppText bold styles={{ color: "#040404", lineHeight: 22, marginLeft: 10 }}>
+                    <AppText
+                      bold
+                      styles={{
+                        color: "#040404",
+                        lineHeight: 22,
+                        marginLeft: 10,
+                      }}
+                    >
                       Processing fee (2-3 days) : $0 Free
                     </AppText>
-                    <AppText bold styles={{ color: "#040404", lineHeight: 22, marginLeft: 10 }}>
+                    <AppText
+                      bold
+                      styles={{
+                        color: "#040404",
+                        lineHeight: 22,
+                        marginLeft: 10,
+                      }}
+                    >
                       Processing fee (Same day / 24hrs): +$2.50
                     </AppText>
                   </View>
@@ -368,16 +515,33 @@ export default function Withdraw({ navigation }) {
 
           {!displaySpinner ? (
             <TouchableOpacity
-              disabled={Number(userUsdAmount) < 1 || userUsdAmount > usdTransactions?.balance}
+              disabled={
+                Number(userUsdAmount) < 1 ||
+                userUsdAmount > usdTransactions?.balance
+              }
               onPress={() => proceedToInitiateUsdWithdrawal()}
-              style={{ width: "100%", backgroundColor: "#266ddc", marginTop: 20, justifyContent: "center", height: 45, borderRadius: 5, alignItems: "center" }}
+              style={{
+                width: "100%",
+                backgroundColor: "#266ddc",
+                marginTop: 20,
+                justifyContent: "center",
+                height: 45,
+                borderRadius: 5,
+                alignItems: "center",
+              }}
             >
               <AppText styles={{ color: "#ffffff", fontSize: 16 }} bold>
                 Withdraw
               </AppText>
             </TouchableOpacity>
           ) : (
-            <View style={{ justifyContent: "center", alignItems: "center", marginTop: 20 }}>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: 20,
+              }}
+            >
               <Spinner size="lg" color="#266ddc" />
             </View>
           )}

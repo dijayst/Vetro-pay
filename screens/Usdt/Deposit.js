@@ -1,21 +1,32 @@
-import { View, TouchableOpacity, StyleSheet, TextInput, Alert } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  TextInput,
+  Alert,
+} from "react-native";
 import React, { Fragment, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import AppText from "../../resources/AppText";
 import { Picker as RNPicker } from "@react-native-picker/picker";
 import { Select } from "native-base";
-import { numberWithCommas } from "../../resources/MetaFunctions";
+import { numberWithCommas } from "../../resources/utils/MetaFunctions";
 import { toastColorObject } from "../../resources/rStyledComponent";
 import { useToast, Box, Text as NativeBaseText, Spinner } from "native-base";
 import { usePrevious } from "../../resources/utils";
-import { depositUsdtFromNgnWallet, getUsdtTransactions } from "../../containers/blockchain/action";
+import {
+  depositUsdtFromNgnWallet,
+  getUsdtTransactions,
+} from "../../containers/blockchain/action";
 
 export default function Deposit({ navigation }) {
   const toast = useToast();
   const dispatch = useDispatch();
   const Picker = Platform.OS == "android" ? RNPicker : Select;
   const usdtTransactions = useSelector((state) => state.blockchain.usdt);
-  const usdtDepositResponse = useSelector((state) => state.blockchain.depositusdt);
+  const usdtDepositResponse = useSelector(
+    (state) => state.blockchain.depositusdt
+  );
   const prevUsdDepositResponse = usePrevious(usdtDepositResponse);
   const [userUsdtDepositDetails, setUserUsdtDepositDetails] = useState({
     payload: {
@@ -26,23 +37,41 @@ export default function Deposit({ navigation }) {
   const [displaySpinner, setDisplaySpinner] = useState(false);
 
   useEffect(() => {
-    if (userUsdtDepositDetails.payload.amount != "" && usdtDepositResponse.length && usdtDepositResponse.length != prevUsdDepositResponse?.length) {
-      if (usdtDepositResponse[usdtDepositResponse.length - 1]?.status == "success") {
+    if (
+      userUsdtDepositDetails.payload.amount != "" &&
+      usdtDepositResponse.length &&
+      usdtDepositResponse.length != prevUsdDepositResponse?.length
+    ) {
+      if (
+        usdtDepositResponse[usdtDepositResponse.length - 1]?.status == "success"
+      ) {
         setDisplaySpinner(false);
-        Alert.alert("Deposit successful", `Equivalent USDT will be credited into your account. Thank you  🎉`, [
-          {
-            text: "Go Home",
-            onPress: () => {
-              dispatch(getUsdtTransactions());
-              navigation.goBack();
+        Alert.alert(
+          "Deposit successful",
+          `Equivalent USDT will be credited into your account. Thank you  🎉`,
+          [
+            {
+              text: "Go Home",
+              onPress: () => {
+                dispatch(getUsdtTransactions());
+                navigation.goBack();
+              },
             },
-          },
-        ]);
+          ]
+        );
       } else {
         toast.show({
           render: () => (
-            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>{usdtDepositResponse[usdtDepositResponse.length - 1]?.message}</NativeBaseText>
+            <Box
+              bg={toastColorObject["danger"]}
+              px="2"
+              py="2"
+              rounded="sm"
+              mb={5}
+            >
+              <NativeBaseText style={{ color: "#FFFFFF" }}>
+                {usdtDepositResponse[usdtDepositResponse.length - 1]?.message}
+              </NativeBaseText>
             </Box>
           ),
         });
@@ -52,20 +81,39 @@ export default function Deposit({ navigation }) {
   }, [usdtDepositResponse]);
 
   const proceedUsdtDeposit = () => {
-    if (userUsdtDepositDetails.payload.source == "" || Number(userUsdtDepositDetails.payload.amount) < 1000) {
+    if (
+      userUsdtDepositDetails.payload.source == "" ||
+      Number(userUsdtDepositDetails.payload.amount) < 1000
+    ) {
       if (userUsdtDepositDetails.payload.source == "") {
         toast.show({
           render: () => (
-            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>Payment method not set</NativeBaseText>
+            <Box
+              bg={toastColorObject["danger"]}
+              px="2"
+              py="2"
+              rounded="sm"
+              mb={5}
+            >
+              <NativeBaseText style={{ color: "#FFFFFF" }}>
+                Payment method not set
+              </NativeBaseText>
             </Box>
           ),
         });
       } else if (Number(userUsdtDepositDetails.payload.amount) < 1000) {
         toast.show({
           render: () => (
-            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-              <NativeBaseText style={{ color: "#FFFFFF" }}>Naira conversion cannot be less than ₦1000</NativeBaseText>
+            <Box
+              bg={toastColorObject["danger"]}
+              px="2"
+              py="2"
+              rounded="sm"
+              mb={5}
+            >
+              <NativeBaseText style={{ color: "#FFFFFF" }}>
+                Naira conversion cannot be less than ₦1000
+              </NativeBaseText>
             </Box>
           ),
         });
@@ -130,11 +178,21 @@ export default function Deposit({ navigation }) {
 
         <View style={styles.creditBox}>
           {userUsdtDepositDetails.payload.source !== "NGN" ? (
-            <AppText>You will receive: ${userUsdtDepositDetails.payload.amount > 0 ? numberWithCommas(userUsdtDepositDetails.payload.amount) : "0.00"}</AppText>
+            <AppText>
+              You will receive: $
+              {userUsdtDepositDetails.payload.amount > 0
+                ? numberWithCommas(userUsdtDepositDetails.payload.amount)
+                : "0.00"}
+            </AppText>
           ) : (
             <AppText>
               You will receive: $
-              {userUsdtDepositDetails.payload.amount > 0 ? numberWithCommas(userUsdtDepositDetails.payload.amount / Number(usdtTransactions.ngn_usd_current)) : "0.00"}
+              {userUsdtDepositDetails.payload.amount > 0
+                ? numberWithCommas(
+                    userUsdtDepositDetails.payload.amount /
+                      Number(usdtTransactions.ngn_usd_current)
+                  )
+                : "0.00"}
             </AppText>
           )}
         </View>
@@ -144,7 +202,15 @@ export default function Deposit({ navigation }) {
             <TouchableOpacity
               disabled={Number(userUsdtDepositDetails.payload.amount) < 1}
               onPress={() => proceedUsdtDeposit()}
-              style={{ width: "100%", backgroundColor: "#266ddc", marginTop: 20, justifyContent: "center", height: 45, borderRadius: 5, alignItems: "center" }}
+              style={{
+                width: "100%",
+                backgroundColor: "#266ddc",
+                marginTop: 20,
+                justifyContent: "center",
+                height: 45,
+                borderRadius: 5,
+                alignItems: "center",
+              }}
             >
               <AppText styles={{ color: "#ffffff", fontSize: 16 }} bold>
                 Deposit
@@ -152,7 +218,13 @@ export default function Deposit({ navigation }) {
             </TouchableOpacity>
           </Fragment>
         ) : (
-          <View style={{ justifyContent: "center", alignItems: "center", marginTop: 20 }}>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 20,
+            }}
+          >
             <Spinner size="lg" color="#266ddc" />
           </View>
         )}
