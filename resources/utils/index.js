@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from "react";
-
+import { Dimensions, PixelRatio } from "react-native";
 //export const ONE_BTC_TO_SATS = 100_000_000;
 export const ONE_BTC_TO_SATS = 100000000;
+export const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } =
+  Dimensions.get("window");
 
 export const usePrevious = (value) => {
   const ref = useRef();
@@ -49,6 +51,17 @@ export const calculateBandwithOrEnergy = (object, type) => {
     };
   }
 };
+
+export function normalizeFontSize(size) {
+  // Base dimensions for 5.5 to 6 inches, 1080p resolution
+  const BASE_WIDTH = 375;
+  const BASE_HEIGHT = 812;
+
+  const scale = SCREEN_WIDTH / BASE_WIDTH;
+
+  const newSize = size * scale;
+  return Math.round(PixelRatio.roundToNearestPixel(newSize));
+}
 
 export const nigeriaBanks = [
   { bankCode: "000", bankName: "VetroPay Africa" },

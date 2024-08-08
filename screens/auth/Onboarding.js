@@ -12,7 +12,10 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { Image } from "expo-image";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { onboarding as onboardingData } from "../../resources/utils";
+import {
+  normalizeFontSize,
+  onboarding as onboardingData,
+} from "../../resources/utils";
 import NextButton from "../../resources/NextOnboardingButton";
 import VETROPAY_LOGO_MARK from "../../assets/logo_mark.png";
 import AppText from "../../resources/AppText";
@@ -81,7 +84,7 @@ const Onboarding = () => {
           <AppText
             bolder
             styles={{
-              fontSize: 16,
+              fontSize: normalizeFontSize(16),
               color: "#266ddc",
             }}
           >
@@ -98,6 +101,7 @@ const Onboarding = () => {
         style={{
           alignItems: "center",
           marginTop: 30,
+          flex: 1,
         }}
       >
         <FlatList
@@ -185,7 +189,7 @@ const Onboarding = () => {
                     bolder
                     styles={{
                       color: "#0d0d0d",
-                      fontSize: 24,
+                      fontSize: normalizeFontSize(24),
                     }}
                   >
                     {item.title}
@@ -200,7 +204,7 @@ const Onboarding = () => {
                       light
                       styles={{
                         color: "gray",
-                        fontSize: 14,
+                        fontSize: normalizeFontSize(14),
                       }}
                     >
                       {item.description}
@@ -218,7 +222,8 @@ const Onboarding = () => {
     return (
       <View
         style={{
-          marginTop: Platform.OS === "ios" ? -200 : -230,
+          marginTop: 10,
+          marginBottom: 20,
         }}
       >
         <NextButton
