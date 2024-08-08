@@ -7,6 +7,7 @@ import {useNavigation} from "@react-navigation/native";
 
 const SCEEN_wIDTH=Dimensions.get('window').width
 export default function Slider() {
+  const navigation=useNavigation();
   const carouselRef = useRef(null);
   
   const [slideindex, setslideindex] = useState(0)
@@ -18,7 +19,7 @@ export default function Slider() {
   
  
        if (index === Slide.length-1 )
-         {navigation.navigate("signup") 
+         {navigation.navigate("Login") 
         console.log("yeppp")} 
       else{
  

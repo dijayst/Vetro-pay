@@ -5,6 +5,9 @@ import Slide from "../slide/Slide"
 import AuthHome from "../screens/auth/AuthHome";
 import Login from "../screens/auth/Login";
 import Register from "../screens/auth/Register";
+import Welcome from "../screens/auth/Welcome";
+import Calculator from "../screens/auth/Calculator";
+import FXrate from "../screens/auth/FXrate";
 
 const Stack = createStackNavigator();
 
@@ -45,6 +48,37 @@ export default function AuthStack() {
             gestureDirection: "horizontal",
           }}
           component={Login}
+        />
+
+        <Stack.Screen
+          name="Welcome"
+          options={{
+            ...TransitionPresets.SlideFromRightIOS,
+            headerShown: false,
+            gestureDirection: "horizontal",
+          }}
+          component={Welcome}
+        />
+        
+        <Stack.Screen
+          name="Calculator"
+          options={{
+            ...TransitionPresets.SlideFromRightIOS,
+            headerShown: false,
+            gestureDirection: "horizontal",
+          }}
+          component={Calculator}
+        />
+
+
+<Stack.Screen
+          name="FXrate"
+          options={{
+            ...TransitionPresets.SlideFromRightIOS,
+            headerShown: false,
+            gestureDirection: "horizontal",
+          }}
+          component={FXrate}
         />
 
         <Stack.Screen
