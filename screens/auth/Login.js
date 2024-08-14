@@ -1,4 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+  useCallback,
+  Fragment,
+} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   View,
@@ -28,14 +35,22 @@ import { toastColorObject } from "../../resources/rStyledComponent";
 import { Picker as RNPicker } from "@react-native-picker/picker";
 import { Select } from "native-base";
 import VETROPAY_LOGO from "../../assets/logomark_full_horizontal.png";
+import chip_extraction from "../../assets/chip_extraction.png";
+import sim_card from "../../assets/sim_card.png";
+import GLO from "../../assets/GLO.png";
+import MTN from "../../assets/MTN.png";
+import calculate from "../../assets/calculate.png";
+import currency_exchange from "../../assets/currency_exchange.png";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import Bottomnav from "./Bottomnav";
-import BottomSheet, { BottomSheetModalProvider, BottomSheetBackdrop, } from '@gorhom/bottom-sheet';
-
+import BottomSheet, {
+  BottomSheetModalProvider,
+  BottomSheetBackdrop,
+} from "@gorhom/bottom-sheet";
 
 export default function Login({ navigation, route }) {
-  
   const toast = useToast();
+  const openTelcoModalRef = useRef(null);
+  const openExtraModalRef = useRef(null);
   const Picker = Platform.OS == "android" ? RNPicker : Select;
   const [storedFirstName, setStoredFirstName] = useState("");
   const [deeplinkUrl, setDeepLinkUrl] = useState(null);
@@ -55,6 +70,9 @@ export default function Login({ navigation, route }) {
     },
   });
   const [displaySpinner, setDisplaySpinner] = useState(false);
+  const [openTelcoModal, setOpenTelcoModal] = useState(true);
+  const [openExtraModal, setOpenExtraModal] = useState(true);
+  const bottomSheetModalSnapPoints = useMemo(() => ["1%", "50%", "70%"], []);
 
   if (Platform.OS == "android") {
     SecureStore.getItemAsync("firstName", SecureStore.WHEN_UNLOCKED).then(
@@ -242,6 +260,26 @@ export default function Login({ navigation, route }) {
     checkDeviceHardware();
   });
 
+  const handleOpenTelcoModal = () => {
+    openTelcoModalRef.current?.expand();
+    setOpenTelcoModal(true);
+  };
+
+  const closeTelcoModal = () => {
+    setOpenTelcoModal(!openTelcoModal);
+    openTelcoModalRef.current?.close();
+  };
+
+  const handleOpenExtraModal = () => {
+    openExtraModalRef.current?.expand();
+    setOpenExtraModal(true);
+  };
+
+  const closeExtraModal = () => {
+    setOpenExtraModal(!openExtraModal);
+    openExtraModal.current?.close();
+  };
+
   const checkDeviceHardware = async () => {
     let compatible = await LocalAuthentication.hasHardwareAsync();
     if (compatible) {
@@ -383,133 +421,166 @@ export default function Login({ navigation, route }) {
     );
   };
 
+  const bottomSheetComponent = () => {
+    return (
+      <View style={styles.bottomsheetContainer}>
+        <TouchableOpacity
+          style={styles.bottomActionCTAContainer}
+          onPress={() => handleOpenTelcoModal()}
+        >
+          <Image
+            source={sim_card}
+            style={{ height: 22, width: 22, resizeMode: "contain" }}
+          />
+          <AppText medium styles={styles.bottomActionCTAText}>
+            Telco Balance
+          </AppText>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.bottomActionCTAContainer}
+          onPress={() => handleOpenExtraModal()}
+        >
+          <Image
+            source={chip_extraction}
+            style={{ height: 22, width: 22, resizeMode: "contain" }}
+          />
+          <AppText medium styles={styles.bottomActionCTAText}>
+            Extras
+          </AppText>
+        </TouchableOpacity>
+
+        {/** REFRENCED MODAL IS AVAILABLE AT THE TAIL END OF THE FILE */}
+      </View>
+    );
+  };
+
   const serveWithSavedData = () => {
     return (
-      <View style={styles.viewContainer}>
-        <AppText bold styles={{ fontSize: 25 }}>
-          Welcome, {storedFirstName}
-        </AppText>
-        <AppText regular styles={{ ...styles.loginIntro, marginTop: 7 }}>
-          Sign in with password or Biometrics to continue.
-        </AppText>
-
-        <View style={{ marginTop: 32 }}>
-          <AppText bold styles={{ fontSize: 16 }}>
-            Password
+      <Fragment>
+        <View style={styles.viewContainer}>
+          <AppText bold styles={{ fontSize: 25 }}>
+            Welcome, {storedFirstName}
           </AppText>
+          <AppText regular styles={{ ...styles.loginIntro, marginTop: 7 }}>
+            Sign in with password or Biometrics to continue.
+          </AppText>
+
+          <View style={{ marginTop: 32 }}>
+            <AppText bold styles={{ fontSize: 16 }}>
+              Password
+            </AppText>
+            <View
+              style={{
+                ...styles.textInput,
+                marginTop: 8,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <TextInput
+                style={{ flexBasis: "80%" }}
+                placeholder="Enter Password"
+                placeholderTextColor="gray"
+                textContentType="password"
+                secureTextEntry={!showPassword}
+                autoComplete="off"
+                onChangeText={(text) => onValueChange("password", text)}
+              />
+              {loginData.payload.password.length > 0 && (
+                <TouchableOpacity
+                  onPress={() => setShowPassword((prevState) => !prevState)}
+                >
+                  <FontAwesome5
+                    name={showPassword ? "eye-slash" : "eye"}
+                    size={15}
+                    color="gray"
+                  />
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+
           <View
             style={{
-              ...styles.textInput,
-              marginTop: 8,
-              flexDirection: "row",
-              justifyContent: "space-between",
               alignItems: "center",
+              flexDirection: "row",
+              justifyContent: "space-around",
+              display: `${!displaySpinner ? "flex" : "none"}`,
             }}
           >
-            <TextInput
-              style={{ flexBasis: "80%" }}
-              placeholder="Enter Password"
-              placeholderTextColor="gray"
-              textContentType="password"
-              secureTextEntry={!showPassword}
-              autoComplete="off"
-              onChangeText={(text) => onValueChange("password", text)}
-            />
-            {loginData.payload.password.length > 0 && (
+            <AppButton
+              styles={{ ...styles.loginButton, width: "80%" }}
+              onPress={() => loginUserFunctionII()}
+            >
+              <AppText styles={styles.buttonText}>Sign in</AppText>
+            </AppButton>
+            {biometricHardwareType.includes(2) && (
               <TouchableOpacity
-                onPress={() => setShowPassword((prevState) => !prevState)}
+                style={styles.thumbButton}
+                onPress={() => handleLoginPress()}
               >
-                <FontAwesome5
-                  name={showPassword ? "eye-slash" : "eye"}
-                  size={15}
-                  color="gray"
+                <Image
+                  style={{ height: 30, width: 30, resizeMode: "contain" }}
+                  source={require("../../assets/face.png")}
                 />
               </TouchableOpacity>
             )}
+
+            {biometricHardwareType.includes(1) &&
+              !biometricHardwareType.includes(2) && (
+                <AppButton
+                  styles={styles.thumbButton}
+                  onPress={() => handleLoginPress()}
+                >
+                  <MaterialCommunityIcons
+                    name="fingerprint"
+                    size={24}
+                    color="white"
+                  />
+                </AppButton>
+              )}
+
+            {biometricHardwareType.length == 0 && (
+              <AppButton styles={styles.thumbButton}>
+                <MaterialIcons name="lock" size={24} color="white" />
+              </AppButton>
+            )}
           </View>
-        </View>
 
-        <View
-          style={{
-            alignItems: "center",
-            flexDirection: "row",
-            justifyContent: "space-around",
-            display: `${!displaySpinner ? "flex" : "none"}`,
-          }}
-        >
-          <AppButton
-            styles={{ ...styles.loginButton, width: "80%" }}
-            onPress={() => loginUserFunctionII()}
+          <View
+            style={{
+              justifyContent: "center",
+              display: `${displaySpinner ? "flex" : "none"}`,
+            }}
           >
-            <AppText styles={styles.buttonText}>Sign in</AppText>
-          </AppButton>
-          {biometricHardwareType.includes(2) && (
-            <TouchableOpacity
-              style={styles.thumbButton}
-              onPress={() => handleLoginPress()}
-            >
-              <Image
-                style={{ height: 30, width: 30, resizeMode: "contain" }}
-                source={require("../../assets/face.png")}
-              />
-            </TouchableOpacity>
-          )}
+            <Spinner color="blue.700" size="lg" />
+          </View>
 
-          {biometricHardwareType.includes(1) &&  !biometricHardwareType.includes(2) && (
-            <AppButton
-              styles={styles.thumbButton}
-              onPress={() => handleLoginPress()}
-            >
-              <MaterialCommunityIcons
-                name="fingerprint"
-                size={24}
-                color="white"
-              />
-            </AppButton>
-          )}
+          <AppText
+            bold="true"
+            styles={{
+              ...styles.loginIntro,
+              marginTop: 25,
+              textAlign: "center",
+              color: "#266ddc",
+              fontSize: 16,
+            }}
+          >
+            <Text onPress={() => clearUserDeviceDetails()}>
+              Not You? <Text style={{ color: "#FF3B30" }}>Remove Account</Text>
+            </Text>
+          </AppText>
 
-         
-          {biometricHardwareType.length == 0 && (
-            <AppButton styles={styles.thumbButton}>
-              <MaterialIcons name="lock" size={24} color="white" />
-            </AppButton>
-          )}
+          {forgotPasswordSignUpComponent({ newUser: false })}
         </View>
-
-        <View
-          style={{
-            justifyContent: "center",
-            display: `${displaySpinner ? "flex" : "none"}`,
-          }}
-        >
-          <Spinner color="blue.700" size="lg" />
-        </View>
-
-        <AppText
-          bold="true"
-          styles={{
-            ...styles.loginIntro,
-            marginTop: 25,
-            textAlign: "center",
-            color: "#266ddc",
-            fontSize: 16,
-          }}
-        >
-          <Text onPress={() => clearUserDeviceDetails()}>
-            Not You? <Text style={{ color: "#FF3B30" }}>Remove Account</Text>
-          </Text>
-        </AppText>
-
-        {forgotPasswordSignUpComponent({ newUser: false })}
-       
-      </View>
-
+        {bottomSheetComponent()}
+      </Fragment>
     );
   };
 
   const serveasNew = () => {
     return (
-      
       <View style={styles.viewContainer}>
         <AppText bold styles={{ fontSize: 25 }}>
           Log in to your account,
@@ -627,6 +698,8 @@ export default function Login({ navigation, route }) {
     <BottomSheetBackdrop {...props} opacity={0.5} />
   );
 
+  const handleSheetChanges = useCallback((index) => {}, []);
+
   return (
     <KeyboardAwareScrollView
       contentContainerStyle={{ flexGrow: 1 }}
@@ -636,40 +709,306 @@ export default function Login({ navigation, route }) {
       extraHeight={Platform.select({ android: 150 })}
       showsVerticalScrollIndicator={false}
     >
-      <View style={styles.container}>
-        <Image
-          source={VETROPAY_LOGO}
-          style={{
-            marginTop: 40,
-            height: 50,
-            width: 150,
-            resizeMode: "contain",
-            alignSelf: "center",
-          }}
-        />
-        <OfflineNotice variant={netInfo.isConnected} />
-        {/* {storedFirstName !== null && serveWithSavedData()}
+      <BottomSheetModalProvider>
+        <View style={styles.container}>
+          <Image
+            source={VETROPAY_LOGO}
+            style={{
+              marginTop: 40,
+              height: 50,
+              width: 150,
+              resizeMode: "contain",
+              alignSelf: "center",
+            }}
+          />
+          <OfflineNotice variant={netInfo.isConnected} />
+          {/* {storedFirstName !== null && serveWithSavedData()}
         {storedFirstName == null && serveasNew()} */}
 
-        {serveWithSavedData()}
+          {serveWithSavedData()}
 
-        {/* {storedFirstName == null &&
+          {/* {storedFirstName == null &&
           forgotPasswordSignUpComponent({ newUser: true })} */}
-     
-     <BottomSheetModalProvider style={styles.bottomsheet}>
-     
-          <Bottomnav renderBackdrop={renderBackdrop}/>
-          </BottomSheetModalProvider>
-      </View>
+        </View>
+
+        {/** BOTTOM SHEET MODAL */}
+        <Fragment>
+          <BottomSheet
+            backdropComponent={renderBackdrop}
+            onChange={handleSheetChanges}
+            ref={openTelcoModalRef}
+            index={0}
+            snapPoints={bottomSheetModalSnapPoints}
+            onClose={() => setOpenTelcoModal(false)}
+            enablePanDownToClose
+            handleIndicatorStyle={{ backgroundColor: "#C0C0C0", marginTop: 16 }}
+          >
+            <View
+              style={{
+                flex: 1,
+                padding: 20,
+                height: "100%",
+                flex: 1,
+                borderTopLeftRadius: 16,
+                borderTopRightRadius: 16,
+                paddingLeft: 20,
+                paddingRight: 20,
+                paddingTop: 16,
+                height: 200,
+                backgroundColor: "#F9FAFA",
+              }}
+            >
+              <AppText
+                bold
+                styles={{ fontSize: 20, fontWeight: "500", marginTop: 4 }}
+              >
+                Telco Balance
+              </AppText>
+              {/** TELCO ELEMENT CONTAINER */}
+              <View
+                style={{
+                  flexDirection: "column",
+                  gap: 8,
+                  height: 150,
+                  backgroundColor: "#F4F4F4",
+                  marginTop: 8,
+                  padding: 20,
+                  gap: 6,
+                  borderRadius: 8,
+                }}
+              >
+                {/** UPPER ROW INFORMATION */}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {/** MOBILE INFO */}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 8,
+                      alignItems: "center",
+                    }}
+                  >
+                    {/** MOBILE OPERATOR LOGO */}
+                    <Image
+                      source={MTN}
+                      style={{
+                        height: 40,
+                        width: 40,
+                        resizeMode: "contain",
+                      }}
+                    />
+                    {/** END MOBILE OPERATOR LOGO */}
+
+                    {/** MOBILE PHONE NUMBER */}
+                    <AppText
+                      bold
+                      style={{
+                        fontSize: 14,
+                        color: "#121212",
+                      }}
+                    >
+                      0801 000 0000
+                    </AppText>
+                    {/** END MOBILE PHONE NUMBER */}
+                  </View>
+                  {/** END MOBILE INFO */}
+
+                  {/** SIM ICON */}
+                  <View style={{ flexDirection: "row", gap: 4 }}>
+                    <Image
+                      source={sim_card}
+                      style={{
+                        height: 22,
+                        width: 22,
+                        resizeMode: "contain",
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        marginTop: 3,
+                        color: "#266DDC",
+                        fontWeight: "500",
+                      }}
+                    >
+                      SIM 1
+                    </Text>
+                  </View>
+                  {/** END SIM ICON */}
+                </View>
+                {/** END UPPER ROW INFORMATION */}
+
+                <View
+                  style={{
+                    marginTop: 12,
+                    flexDirection: "row",
+                    gap: 8,
+                    alignItems: "center",
+                    justifyContent: "space-around",
+                  }}
+                >
+                  {/** CHECK AIRTIME BALANCE */}
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#266DDC",
+                      height: 40,
+                      width: "45%",
+                      borderRadius: 4,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <AppText
+                      bold
+                      styles={{
+                        fontSize: 12,
+                        color: "#FFFFFF",
+                      }}
+                      numberOfLines={1}
+                    >
+                      Check Airtime Balance
+                    </AppText>
+                  </TouchableOpacity>
+                  {/** END CHECK AIRTIME BALANCE */}
+
+                  {/** CHECK DATA BALANCE */}
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#F4F4F4",
+                      height: 40,
+                      width: "45%",
+                      borderRadius: 4,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderColor: "#266DDC",
+                      borderWidth: 1.5,
+                      borderRadius: 4,
+                    }}
+                  >
+                    <AppText
+                      bold
+                      styles={{
+                        fontSize: 12,
+                        color: "#266DDC",
+                      }}
+                      numberOfLines={1}
+                    >
+                      Check Data Balance
+                    </AppText>
+                  </TouchableOpacity>
+                  {/** CHECK DATA BALANCE */}
+                </View>
+              </View>
+              {/** END TELCO ELEMENT CONTAINER */}
+            </View>
+          </BottomSheet>
+
+          <BottomSheet
+            backdropComponent={renderBackdrop}
+            onChange={handleSheetChanges}
+            ref={openExtraModalRef}
+            index={0}
+            snapPoints={bottomSheetModalSnapPoints}
+            onClose={() => setOpenExtraModal(false)}
+            enablePanDownToClose
+            handleIndicatorStyle={{ backgroundColor: "#C0C0C0", marginTop: 16 }}
+          >
+            <View style={{ flex: 1, padding: 20, height: "100%" }}>
+              <AppText
+                bold
+                styles={{ fontSize: 20, fontWeight: "500", color: "#000000" }}
+              >
+                Extras
+              </AppText>
+              <View style={{ flexDirection: "row", gap: 8, marginTop: 16 }}>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#F4F4F4",
+                    height: 100,
+                    width: 156,
+                    borderRadius: 4,
+                    flexDirection: "column",
+                    paddingTop: 17,
+                    paddingLeft: 38,
+                    paddingRight: 42,
+                    paddingBottom: 17,
+                    borderColor: "#266DDC",
+                    borderWidth: 1,
+                  }}
+                  onPress={() => navigation.navigate("Calculator")}
+                >
+                  <Image
+                    source={calculate}
+                    style={{
+                      height: 40,
+                      width: 40,
+                      resizeMode: "contain",
+                      marginLeft: 12,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 10,
+                      padding: 9,
+                      color: "#266DDC",
+                      fontWeight: "500",
+                    }}
+                    numberOfLines={1}
+                  >
+                    Calculator
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#F4F4F4",
+                    height: 100,
+                    width: 156,
+                    borderRadius: 4,
+                    flexDirection: "column",
+                    paddingTop: 17,
+                    paddingLeft: 42,
+                    paddingRight: 42,
+                    paddingBottom: 17,
+                  }}
+                  onPress={() => navigation.navigate("FXrate")}
+                >
+                  <Image
+                    source={currency_exchange}
+                    style={{
+                      height: 40,
+                      width: 40,
+                      resizeMode: "contain",
+                      marginLeft: 12,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 11,
+                      padding: 9,
+                      color: "#266DDC",
+                      fontWeight: "500",
+                    }}
+                    numberOfLines={1}
+                  >
+                    FX Rates
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </BottomSheet>
+        </Fragment>
+        {/** END BOTTOM SHEET MODAL */}
+      </BottomSheetModalProvider>
     </KeyboardAwareScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  bottomsheet: {
-    flex: 1,
-    backgroundColor: "#f2f2f2",
-  },
   container: {
     backgroundColor: "#FFFFFF",
     flex: 1,
@@ -720,5 +1059,28 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "500",
     fontSize: 16,
+  },
+  bottomsheetContainer: {
+    height: 56,
+    marginBottom: 50,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 4,
+  },
+  bottomActionCTAText: {
+    color: "#266DDC",
+    lineHeight: 26,
+    fontSize: 14,
+    marginLeft: 4,
+  },
+  bottomActionCTAContainer: {
+    backgroundColor: "#D4E2F8",
+    borderRadius: 4,
+    height: 44,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "40%",
+    flexDirection: "row",
   },
 });
