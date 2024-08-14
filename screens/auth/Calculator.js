@@ -1,6 +1,5 @@
 import { View, Text, TouchableOpacity,StyleSheet,Image, TextInput } from 'react-native'
 import React from 'react'
-
 import division from "../../assets/division.png";
 import modulus from "../../assets/modulus.png";
 import multiplication from "../../assets/multiplication.png";
@@ -12,18 +11,23 @@ import equalsign from "../../assets/equalssign.png";
 
 export default function Calculator({navigation}) {
   return (
-    <View style={{paddingLeft:20,paddingRight:20,paddingTop:20}}>
+    <View style={{paddingLeft:20,paddingTop:20,}} >
       
-      <Image
+
+      <TouchableOpacity style={styles.backButton}  onPress={() => navigation.goBack()}>
+        <Image
           source={back}
-          style={{ height: 20, width: 26, resizeMode: "contain" }}
-          onPress={() => navigation.goBack()}
+          style={{ height: 24, width: 24, resizeMode: "contain" }}
+         
         />
+      </TouchableOpacity>
+
+      
       <TextInput placeholder='100 x 10 x 10' style={styles.input}
       
   placeholderTextColor={"#266DDC"}/>
-      <Text style={{marginLeft:120,color:"#000000",fontWeight:"500",fontSize:56,marginTop:-28}}> 10000</Text>
-      <View style={{borderColor:"#D9D9D9",width:315,borderWidth:1,marginTop:14}}></View>
+      <Text style={{marginLeft:170,color:"#000000",fontWeight:"500",fontSize:56,marginTop:-28}}> 10000</Text>
+      <View style={{borderColor:"#D9D9D9",width:350,borderWidth:1,marginTop:14}}></View>
       <View style={{ flexDirection: "column",gap:4,marginTop:14 }}>
       <View style={{ flexDirection: "row",gap:4 }}>
         <TouchableOpacity style={styles.button}>
@@ -156,7 +160,7 @@ export default function Calculator({navigation}) {
           <Text>0</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
-          <Text>.</Text>
+          <Text style={{color:"#000000"}}>.</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
         <Image
@@ -186,16 +190,16 @@ const styles = StyleSheet.create({
     fontSize:12,
     borderRadius:8,
     borderColor:"#266DDC",
-    marginLeft:200
+    marginLeft:247
   },
     button:{
-     
-    color:"#808080",
+    
+    color:"#000000",
     fontWeight:"400",
     fontSize:20,
-    width:60,
+    width:67,
     height:57,
-    padding:16,
+    padding:18,
     borderRadius:4
 }})
 //onPress={() => {  calculator ? setcalculator({...calculator,calculator:false}) : setcalculator({...calculator,calculator:true}) }}

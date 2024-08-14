@@ -29,8 +29,12 @@ import { Picker as RNPicker } from "@react-native-picker/picker";
 import { Select } from "native-base";
 import VETROPAY_LOGO from "../../assets/logomark_full_horizontal.png";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import Bottomnav from "./Bottomnav";
+import BottomSheet, { BottomSheetModalProvider, BottomSheetBackdrop, } from '@gorhom/bottom-sheet';
+
 
 export default function Login({ navigation, route }) {
+  
   const toast = useToast();
   const Picker = Platform.OS == "android" ? RNPicker : Select;
   const [storedFirstName, setStoredFirstName] = useState("");
@@ -439,20 +443,6 @@ export default function Login({ navigation, route }) {
           >
             <AppText styles={styles.buttonText}>Sign in</AppText>
           </AppButton>
-
-          {biometricHardwareType.includes(1) && (
-            <AppButton
-              styles={styles.thumbButton}
-              onPress={() => handleLoginPress()}
-            >
-              <MaterialCommunityIcons
-                name="fingerprint"
-                size={24}
-                color="white"
-              />
-            </AppButton>
-          )}
-
           {biometricHardwareType.includes(2) && (
             <TouchableOpacity
               style={styles.thumbButton}
@@ -465,6 +455,20 @@ export default function Login({ navigation, route }) {
             </TouchableOpacity>
           )}
 
+          {biometricHardwareType.includes(1) &&  !biometricHardwareType.includes(2) && (
+            <AppButton
+              styles={styles.thumbButton}
+              onPress={() => handleLoginPress()}
+            >
+              <MaterialCommunityIcons
+                name="fingerprint"
+                size={24}
+                color="white"
+              />
+            </AppButton>
+          )}
+
+         
           {biometricHardwareType.length == 0 && (
             <AppButton styles={styles.thumbButton}>
               <MaterialIcons name="lock" size={24} color="white" />
@@ -497,12 +501,15 @@ export default function Login({ navigation, route }) {
         </AppText>
 
         {forgotPasswordSignUpComponent({ newUser: false })}
+       
       </View>
+
     );
   };
 
   const serveasNew = () => {
     return (
+      
       <View style={styles.viewContainer}>
         <AppText bold styles={{ fontSize: 25 }}>
           Log in to your account,
@@ -616,6 +623,10 @@ export default function Login({ navigation, route }) {
     );
   };
 
+  const renderBackdrop = (props) => (
+    <BottomSheetBackdrop {...props} opacity={0.5} />
+  );
+
   return (
     <KeyboardAwareScrollView
       contentContainerStyle={{ flexGrow: 1 }}
@@ -644,14 +655,23 @@ export default function Login({ navigation, route }) {
 
         {/* {storedFirstName == null &&
           forgotPasswordSignUpComponent({ newUser: true })} */}
+     
+     <BottomSheetModalProvider style={styles.bottomsheet}>
+     
+          <Bottomnav renderBackdrop={renderBackdrop}/>
+          </BottomSheetModalProvider>
       </View>
     </KeyboardAwareScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  bottomsheet: {
+    flex: 1,
     backgroundColor: "#f2f2f2",
+  },
+  container: {
+    backgroundColor: "#FFFFFF",
     flex: 1,
     justifyContent: "center",
   },

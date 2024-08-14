@@ -7,10 +7,13 @@ import Approot from "./AppRoot";
 
 export default function App() {
   return (
-    <Provider store={store}>
+   <Provider store={store}>
       <NativeBaseProvider>
         <Approot />
       </NativeBaseProvider>
     </Provider>
+
+
   );
 }
+
