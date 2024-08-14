@@ -31,8 +31,12 @@
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to scan barcodes of for faster payment.",
         "NSMicrophoneUsageDescription": "This app does not require access to the microphone.",
-        "NSFaceIDUsageDescription": "This app uses the Face ID as an alt method to authenticate user berfore logging user in",
-        "NSContactsUsageDescription": "This app uses contact list to make purchase airtime faster"
+        "NSFaceIDUsageDescription": "This app uses the Face ID as an alternative method to authenticate user before logging user in",
+        "NSContactsUsageDescription": "This app uses contact list to make purchase airtime faster",
+        "LSApplicationQueriesSchemes": [
+          "tel",
+          "telprompt"
+        ]
       },
       "bundleIdentifier": "com.anclatechs.vetropaymobile",
       "buildNumber": "1.0.19"
@@ -45,7 +49,8 @@
         "USE_BIOMETRIC",
         "USE_FINGERPRINT",
         "READ_CONTACTS",
-        "CAMERA"
+        "CAMERA",
+        "CALL_PHONE"
       ],
       "blockedPermissions": [
         "android.permission.REQUEST_INSTALL_PACKAGES"

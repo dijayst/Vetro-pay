@@ -46,6 +46,7 @@ import BottomSheet, {
   BottomSheetModalProvider,
   BottomSheetBackdrop,
 } from "@gorhom/bottom-sheet";
+import RNImmediatePhoneCall from "react-native-immediate-phone-call";
 
 export default function Login({ navigation, route }) {
   const toast = useToast();
@@ -862,6 +863,21 @@ export default function Login({ navigation, route }) {
                       alignItems: "center",
                       justifyContent: "center",
                     }}
+                    onPress={() => {
+                      /**
+                       * LEAVE DOCUMENTATION HERE TO HIGHLIGHT "react-native-phone-call" VS "react-native-immediate-phone-call"
+                       * 
+                      const args = {
+                        number: "*310#".replace("*", "%2a").replace("#", "%23"), // String value with the number to call
+                        prompt: false, // Optional boolean property. Determines if the user should be prompted prior to the call
+                        skipCanOpen: true, // Skip the canOpenURL check
+                      };
+                      call(args).catch(console.error)
+                       */
+
+                      let number = "*310#";
+                      RNImmediatePhoneCall.immediatePhoneCall(number);
+                    }}
                   >
                     <AppText
                       bold
@@ -888,6 +904,10 @@ export default function Login({ navigation, route }) {
                       borderColor: "#266DDC",
                       borderWidth: 1.5,
                       borderRadius: 4,
+                    }}
+                    onPress={() => {
+                      let number = "*312#";
+                      RNImmediatePhoneCall.immediatePhoneCall(number);
                     }}
                   >
                     <AppText
