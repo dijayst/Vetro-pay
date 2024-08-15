@@ -925,6 +925,168 @@ export default function Login({ navigation, route }) {
                 </View>
               </View>
               {/** END TELCO ELEMENT CONTAINER */}
+
+
+
+
+              <View
+                style={{
+                  flexDirection: "column",
+                  gap: 8,
+                  height: 150,
+                  backgroundColor: "#F4F4F4",
+                  marginTop: 8,
+                  padding: 20,
+                  gap: 6,
+                  borderRadius: 8,
+                }}
+              >
+                {/** UPPER ROW INFORMATION */}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {/** MOBILE INFO */}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 8,
+                      alignItems: "center",
+                    }}
+                  >
+                    {/** MOBILE OPERATOR LOGO */}
+                    <Image
+                      source={GLO}
+                      style={{
+                        height: 40,
+                        width: 40,
+                        resizeMode: "contain",
+                      }}
+                    />
+                    {/** END MOBILE OPERATOR LOGO */}
+
+                    {/** MOBILE PHONE NUMBER */}
+                    <AppText
+                      bold
+                      style={{
+                        fontSize: 14,
+                        color: "#121212",
+                      }}
+                    >
+                      0801 000 0000
+                    </AppText>
+                    {/** END MOBILE PHONE NUMBER */}
+                  </View>
+                  {/** END MOBILE INFO */}
+
+                  {/** SIM ICON */}
+                  <View style={{ flexDirection: "row", gap: 4 }}>
+                    <Image
+                      source={sim_card}
+                      style={{
+                        height: 22,
+                        width: 22,
+                        resizeMode: "contain",
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        marginTop: 3,
+                        color: "#266DDC",
+                        fontWeight: "500",
+                      }}
+                    >
+                      SIM 2
+                    </Text>
+                  </View>
+                  {/** END SIM ICON */}
+                </View>
+                {/** END UPPER ROW INFORMATION */}
+
+                <View
+                  style={{
+                    marginTop: 12,
+                    flexDirection: "row",
+                    gap: 8,
+                    alignItems: "center",
+                    justifyContent: "space-around",
+                  }}
+                >
+                  {/** CHECK AIRTIME BALANCE */}
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#266DDC",
+                      height: 40,
+                      width: "45%",
+                      borderRadius: 4,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                    onPress={() => {
+                      /**
+                       * LEAVE DOCUMENTATION HERE TO HIGHLIGHT "react-native-phone-call" VS "react-native-immediate-phone-call"
+                       * 
+                      const args = {
+                        number: "*310#".replace("*", "%2a").replace("#", "%23"), // String value with the number to call
+                        prompt: false, // Optional boolean property. Determines if the user should be prompted prior to the call
+                        skipCanOpen: true, // Skip the canOpenURL check
+                      };
+                      call(args).catch(console.error)
+                       */
+
+                      let number = "*310#";
+                      RNImmediatePhoneCall.immediatePhoneCall(number);
+                    }}
+                  >
+                    <AppText
+                      bold
+                      styles={{
+                        fontSize: 12,
+                        color: "#FFFFFF",
+                      }}
+                      numberOfLines={1}
+                    >
+                      Check Airtime Balance
+                    </AppText>
+                  </TouchableOpacity>
+                  {/** END CHECK AIRTIME BALANCE */}
+
+                  {/** CHECK DATA BALANCE */}
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#F4F4F4",
+                      height: 40,
+                      width: "45%",
+                      borderRadius: 4,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderColor: "#266DDC",
+                      borderWidth: 1.5,
+                      borderRadius: 4,
+                    }}
+                    onPress={() => {
+                      let number = "*312#";
+                      RNImmediatePhoneCall.immediatePhoneCall(number);
+                    }}
+                  >
+                    <AppText
+                      bold
+                      styles={{
+                        fontSize: 12,
+                        color: "#266DDC",
+                      }}
+                      numberOfLines={1}
+                    >
+                      Check Data Balance
+                    </AppText>
+                  </TouchableOpacity>
+                  {/** CHECK DATA BALANCE */}
+                </View>
+              </View>
             </View>
           </BottomSheet>
 
@@ -945,7 +1107,7 @@ export default function Login({ navigation, route }) {
               >
                 Extras
               </AppText>
-              <View style={{ flexDirection: "row", gap: 8, marginTop: 16 }}>
+              <View style={{ flexDirection: "row", gap: 8, marginTop: 16 ,justifyContent:"center",alignItems:"center"}}>
                 <TouchableOpacity
                   style={{
                     backgroundColor: "#F4F4F4",
@@ -953,12 +1115,11 @@ export default function Login({ navigation, route }) {
                     width: 156,
                     borderRadius: 4,
                     flexDirection: "column",
-                    paddingTop: 17,
-                    paddingLeft: 38,
-                    paddingRight: 42,
-                    paddingBottom: 17,
                     borderColor: "#266DDC",
                     borderWidth: 1,
+                    justifyContent:"center",
+                    alignItems:"center"
+                 
                   }}
                   onPress={() => navigation.navigate("Calculator")}
                 >
@@ -973,7 +1134,7 @@ export default function Login({ navigation, route }) {
                   />
                   <Text
                     style={{
-                      fontSize: 10,
+                      fontSize: 16,
                       padding: 9,
                       color: "#266DDC",
                       fontWeight: "500",
@@ -990,10 +1151,8 @@ export default function Login({ navigation, route }) {
                     width: 156,
                     borderRadius: 4,
                     flexDirection: "column",
-                    paddingTop: 17,
-                    paddingLeft: 42,
-                    paddingRight: 42,
-                    paddingBottom: 17,
+                    justifyContent:"center",
+                    alignItems:"center"
                   }}
                   onPress={() => navigation.navigate("FXrate")}
                 >
@@ -1008,7 +1167,7 @@ export default function Login({ navigation, route }) {
                   />
                   <Text
                     style={{
-                      fontSize: 11,
+                      fontSize: 16,
                       padding: 9,
                       color: "#266DDC",
                       fontWeight: "500",

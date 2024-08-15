@@ -2,14 +2,12 @@ import { View, Text, StyleSheet, Image, TouchableOpacity,Modal,FlatList } from '
 import React, { useState } from 'react'
 import back from "../../assets/back.png";
 import AppText from "../../resources/AppText";
-import { AppButton } from "../../resources/AppButton";
-import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import expand_more from "../../assets/expand_more.png";
 
 export default function FXrate() {
 
-  const [selectedValue, setSelectedValue] = useState('Select an item');
+  const [selectedValue, setSelectedValue] = useState('USD');
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const options = ['USD', 'NGN', 'Pounds',];
 
@@ -93,6 +91,7 @@ export default function FXrate() {
         </TouchableOpacity>
       </Modal>
     </View>
+    
            
           </View>
         </View>
@@ -235,7 +234,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     marginTop: 16,
-    fontSize: 22,
+    fontSize: 28,
     color: "#121212",
     fontWeight: "500",
   },
@@ -251,28 +250,33 @@ const styles = StyleSheet.create({
     marginTop:40
   },
   card: {
-    padding: 14,
+    
     backgroundColor: "#F4F4F4",
     width: 171,
     height: 119,
-    marginBottom: 8,
+    gap:8,
     borderRadius:8
   },
   cardTitle: {
+    marginTop:16,
     color: "#000000",
     fontSize: 16,
     fontWeight: "500",
+    marginLeft:10
   },
   cardSubtitle: {
     color: "#414141",
     fontWeight: "400",
     fontSize: 12,
+    marginLeft:10
   },
   row: {
     flexDirection: "row",
+    justifyContent:"center",
     alignItems: "center",
-    gap: 4,
     marginTop: 8,
+    gap: 4,
+    
   },
   priceTag: {
     backgroundColor: "#FDEBAB",
@@ -289,15 +293,16 @@ const styles = StyleSheet.create({
   },
 
   container2: {
-    flex: 1,
+    
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
+   
   },
   dropdown: {
     width: 53,
     height:20,
-    padding: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 4,
     backgroundColor: '#E9F0FB',
   },
@@ -305,6 +310,8 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight:"500",
     color: '#266DDC',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   modalOverlay: {
     flex: 1,

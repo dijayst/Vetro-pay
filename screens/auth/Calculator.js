@@ -1,15 +1,61 @@
 import { View, Text, TouchableOpacity,StyleSheet,Image, TextInput } from 'react-native'
-import React from 'react'
-import division from "../../assets/division.png";
-import modulus from "../../assets/modulus.png";
-import multiplication from "../../assets/multiplication.png";
-import Addition from "../../assets/Addition.png";
-import subtraction from "../../assets/subtraction.png";
-import Vector from "../../assets/Vector.png";
+import React,{useState} from 'react'
 import back from "../../assets/back.png";
-import equalsign from "../../assets/equalssign.png";
+import AppText from '../../resources/AppText';
 
 export default function Calculator({navigation}) {
+  
+  const [input, setInput] = useState('');
+  const [result, setResult] = useState('');
+
+  const handlePress = (value) => {
+    if (value === '=') {
+      calculateResult();
+    } else if (value === 'AC') {
+      setInput('');
+      setResult('');
+    } else {
+      setInput(input + value);
+    }
+  };
+
+  const calculateResult = () => {
+    try {
+      // Replace multiplication and division symbols with JavaScript-compatible operators
+      const formattedInput = input.replace(/X/g, '*').replace(/÷/g, '/');
+      setResult(eval(formattedInput).toString());
+    } catch (error) {
+      setResult('Error');
+    }
+  };
+
+  const renderButton = (value, imageSource = null) => {
+    // Define imageStyle inside the renderButton function
+    const imageStyle = imageSource === require("../../assets/equalssign.png")
+      ? styles.equalsSignImage
+      : imageSource === require("../../assets/subtraction.png")
+      ? styles.subtractionButtonImage
+      : imageSource === require("../../assets/multiplication.png")
+      ? styles.multplicationImage
+      : imageSource === require("../../assets/modulus.png")
+      ? styles.modulusImage
+      : imageSource === require("../../assets/ac.png")
+      ? styles.ACImage
+      : styles.buttonImage;
+
+    return (
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => handlePress(value)}
+      >
+        {imageSource ? (
+          <Image source={imageSource} style={imageStyle} />
+        ) : (
+          <Text style={styles.buttonText}>{value}</Text>
+        )}
+      </TouchableOpacity>
+    );
+  };
   return (
     <View style={{paddingLeft:20,paddingTop:20,}} >
       
@@ -23,153 +69,43 @@ export default function Calculator({navigation}) {
       </TouchableOpacity>
 
       
-      <TextInput placeholder='100 x 10 x 10' style={styles.input}
-      
-  placeholderTextColor={"#266DDC"}/>
-      <Text style={{marginLeft:170,color:"#000000",fontWeight:"500",fontSize:56,marginTop:-28}}> 10000</Text>
+      <TextInput value={input} placeholder='100 x 10 x 10' style={styles.input}placeholderTextColor={"#266DDC"}/>
+       
+ <Text style={styles.resultText}>{result}</Text>
       <View style={{borderColor:"#D9D9D9",width:350,borderWidth:1,marginTop:14}}></View>
-      <View style={{ flexDirection: "column",gap:4,marginTop:14 }}>
-      <View style={{ flexDirection: "row",gap:4 }}>
-        <TouchableOpacity style={styles.button}>
-          <Text>2nd</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>rad</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>sin</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>cos</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>tan</Text>
-        </TouchableOpacity>
-      </View>
-       <View style={{ flexDirection: "row",gap:4 }}>
-        <TouchableOpacity style={styles.button}>
-          <Text>AC</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>Ig</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>In</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>(</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>)</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={{ flexDirection: "row",gap:4 }}>
-        <TouchableOpacity style={styles.button}>
-          <Text>AC</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>AC</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-        <Image
-          source={Vector}
-          style={{ height: 20, width: 20, resizeMode: "contain" }}
-        />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-        <Image
-          source={modulus}
-          style={{ height: 20, width: 26, resizeMode: "contain" }}
-        />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-        <Image
-          source={Addition}
-          style={{ height: 20, width: 26, resizeMode: "contain" }}
-        />
-        </TouchableOpacity>
-      </View>
-      <View style={{ flexDirection: "row",gap:4 }}>
-        <TouchableOpacity style={styles.button}>
-          <Text>x!</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>7</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>8</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>9</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-        <Image
-          source={multiplication}
-          style={{ height: 16, width: 16, resizeMode: "contain" }}
-        />
-        </TouchableOpacity>
-      </View>
-      <View style={{ flexDirection: "row",gap:4 }}>
-        <TouchableOpacity style={styles.button}>
-          <Text>AC</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>4</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>5</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>6</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-        <Image
-          source={subtraction}
-          style={{ height: 26, width: 26, resizeMode: "contain" }}
-        />
-        </TouchableOpacity>
-      </View>
-      <View style={{ flexDirection: "row",gap:4 }}>
-        <TouchableOpacity style={styles.button}>
-          <Text>AC</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>1</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>2</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>3</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-        <Image
-          source={Addition}
-          style={{ height: 26, width: 26, resizeMode: "contain" }}
-        />
-        </TouchableOpacity>
-      </View>
-      <View style={{ flexDirection: "row",gap:4 }}>
-        <TouchableOpacity style={styles.button}>
-          <Text>AC</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>e</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text>0</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text style={{color:"#000000"}}>.</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-        <Image
-          source={equalsign}
-          style={{ height: 36, width: 36, resizeMode: "contain" }}
-        />
-        </TouchableOpacity>
-      </View>
-      
+      <View style={styles.keypadContainer}>
+      <View style={styles.row}>
+          {renderButton('AC', require("../../assets/ac.png"))}
+          {renderButton('AC', require("../../assets/Vector.png"))} 
+          {renderButton('%', require("../../assets/modulus.png"))}
+          {renderButton('/', require("../../assets/divisionsign.png"))}
+        </View> 
+
+        <View style={styles.row}>
+          {renderButton('7')}
+          {renderButton('8')} 
+          {renderButton('9')}
+          {renderButton('*', require("../../assets/multiplication.png"))}
+        </View> 
+        <View style={styles.row}>
+          {renderButton('4')}
+          {renderButton('5')} 
+          {renderButton('6')}
+          {renderButton('-', require("../../assets/subtraction.png"))}
+        </View>
+        <View style={styles.row}>
+          {renderButton('1')}
+          {renderButton('2')} 
+          {renderButton('3')}
+          {renderButton('+', require("../../assets/Addition.png"))}
+        </View>
+        <View style={styles.row}>
+        {renderButton('AC', require("../../assets/ac.png"))}
+         {renderButton('0')} 
+          {renderButton('.')}
+          {renderButton('=', require("../../assets/equalssign.png"))}
+        </View>
+         
       
     </View>
          </View>
@@ -181,25 +117,71 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
     },
-    
+    resultText: {
+      marginLeft: 170,
+      color: "#000000",
+      fontWeight: "500",
+      marginTop: 8,
+      fontSize: 50,
+    },
+    row: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      fontSize:90,
+      fontWeight:"500",
+      marginVertical: 10,    
+    },
+    keypadContainer: {
+      flexDirection:"column",
+      
+    },
   input: {
-    padding: 20,
-    borderWidth: 0,
-    height:56,
     marginTop:88,
-    fontSize:12,
-    borderRadius:8,
-    borderColor:"#266DDC",
-    marginLeft:247
+    fontSize:16,
+    color:"#266DDC",
+    marginLeft:247,
+    justifyContent:"center",
+    alignItems:"center"
   },
     button:{
+    width:81,
+    height:64,
+   justifyContent:"center",
+   alignItems:"center",
     
-    color:"#000000",
-    fontWeight:"400",
-    fontSize:20,
-    width:67,
-    height:57,
-    padding:18,
-    borderRadius:4
-}})
-//onPress={() => {  calculator ? setcalculator({...calculator,calculator:false}) : setcalculator({...calculator,calculator:true}) }}
+}
+,
+buttonImage: {
+  width: 30,
+  height: 22,
+},
+buttonText:{
+  color:"#000000",
+  fontWeight:"500",
+  fontSize:24
+},
+equalsSignImage: {
+  width: 56, 
+  height: 56, 
+  borderRadius:15
+ 
+},
+modulusImage:{
+  height:26,
+  width:26
+},
+multplicationImage:{
+  height:28,
+  width:26
+},
+subtractionButtonImage:{
+  height:6,
+  width:26
+},
+
+ACImage:{
+  height:16,
+  width:26
+},
+
+})
