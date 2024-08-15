@@ -1,7 +1,6 @@
 import { View, Text, TouchableOpacity,StyleSheet,Image, TextInput } from 'react-native'
 import React,{useState} from 'react'
 import back from "../../assets/back.png";
-import AppText from '../../resources/AppText';
 
 export default function Calculator({navigation}) {
   
@@ -21,7 +20,6 @@ export default function Calculator({navigation}) {
 
   const calculateResult = () => {
     try {
-      // Replace multiplication and division symbols with JavaScript-compatible operators
       const formattedInput = input.replace(/X/g, '*').replace(/÷/g, '/');
       setResult(eval(formattedInput).toString());
     } catch (error) {
@@ -57,7 +55,7 @@ export default function Calculator({navigation}) {
     );
   };
   return (
-    <View style={{paddingLeft:20,paddingTop:20,}} >
+    <View  >
       
 
       <TouchableOpacity style={styles.backButton}  onPress={() => navigation.goBack()}>
@@ -72,7 +70,7 @@ export default function Calculator({navigation}) {
       <TextInput value={input} placeholder='100 x 10 x 10' style={styles.input}placeholderTextColor={"#266DDC"}/>
        
  <Text style={styles.resultText}>{result}</Text>
-      <View style={{borderColor:"#D9D9D9",width:350,borderWidth:1,marginTop:14}}></View>
+      <View style={{borderColor:"#D9D9D9",width:"90%",borderWidth:1,marginTop:14,marginLeft:20}}></View>
       <View style={styles.keypadContainer}>
       <View style={styles.row}>
           {renderButton('AC', require("../../assets/ac.png"))}
@@ -118,7 +116,7 @@ const styles = StyleSheet.create({
       flex: 1,
     },
     resultText: {
-      marginLeft: 170,
+      marginLeft: 230,
       color: "#000000",
       fontWeight: "500",
       marginTop: 8,
@@ -129,17 +127,20 @@ const styles = StyleSheet.create({
       justifyContent: 'space-around',
       fontSize:90,
       fontWeight:"500",
-      marginVertical: 10,    
+      marginVertical: 10,   
+     
     },
     keypadContainer: {
       flexDirection:"column",
-      
+      justifyContent:"center",
+      alignItems:"center",
+     
     },
   input: {
     marginTop:88,
     fontSize:16,
     color:"#266DDC",
-    marginLeft:247,
+    marginLeft:287,
     justifyContent:"center",
     alignItems:"center"
   },
@@ -148,12 +149,17 @@ const styles = StyleSheet.create({
     height:64,
    justifyContent:"center",
    alignItems:"center",
+    margin:8,
+   
+
+   
     
 }
 ,
 buttonImage: {
   width: 30,
   height: 22,
+  
 },
 buttonText:{
   color:"#000000",
@@ -183,5 +189,10 @@ ACImage:{
   height:16,
   width:26
 },
+backButton:{
+  marginLeft:20,
+  marginTop:20
+
+}
 
 })
