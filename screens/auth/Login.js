@@ -1100,7 +1100,7 @@ export default function Login({ navigation, route }) {
             enablePanDownToClose
             handleIndicatorStyle={{ backgroundColor: "#C0C0C0", marginTop: 16 }}
           >
-            <View style={{ flex: 1, padding: 20, height: "100%" }}>
+            <View style={{ flex: 1, padding: 20, height: "100%",backgroundColor: "#F9FAFA", }}>
               <AppText
                 bold
                 styles={{ fontSize: 20, fontWeight: "500", color: "#000000" }}
@@ -1115,8 +1115,6 @@ export default function Login({ navigation, route }) {
                     width: 156,
                     borderRadius: 4,
                     flexDirection: "column",
-                    borderColor: "#266DDC",
-                    borderWidth: 1,
                     justifyContent:"center",
                     alignItems:"center"
                  

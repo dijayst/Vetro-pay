@@ -1,12 +1,19 @@
 import { View, Text, TouchableOpacity,StyleSheet,Image, TextInput } from 'react-native'
 import React,{useState} from 'react'
 import back from "../../assets/back.png";
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function Calculator({navigation}) {
   
   const [input, setInput] = useState('');
   const [result, setResult] = useState('');
+  const [history, setHistory] = useState([]); 
+  const [isHistoryVisible, setIsHistoryVisible] = useState(false);
 
+  
+  const HistoryVisibility = () => {
+    setIsHistoryVisible(!isHistoryVisible);
+  };
   const handlePress = (value) => {
     if (value === '=') {
       calculateResult();
@@ -21,11 +28,15 @@ export default function Calculator({navigation}) {
   const calculateResult = () => {
     try {
       const formattedInput = input.replace(/X/g, '*').replace(/÷/g, '/');
-      setResult(eval(formattedInput).toString());
+      const calculatedResult = eval(formattedInput).toString(); // Calculate the result
+      setResult(calculatedResult);
+      setHistory([...history, { input, result: calculatedResult }]); // Use calculatedResult directly
+
     } catch (error) {
       setResult('Error');
     }
   };
+
 
   const renderButton = (value, imageSource = null) => {
     // Define imageStyle inside the renderButton function
@@ -54,11 +65,15 @@ export default function Calculator({navigation}) {
       </TouchableOpacity>
     );
   };
-  return (
-    <View  >
-      
 
-      <TouchableOpacity style={styles.backButton}  onPress={() => navigation.goBack()}>
+
+ 
+  return (
+    <View style={{paddingHorizontal: 20,flex:1}}>
+      
+<View style={{flexDirection:"row",justifyContent:"space-between",marginTop:20}}>
+  
+<TouchableOpacity style={styles.backButton}  onPress={() => navigation.goBack()}>
         <Image
           source={back}
           style={{ height: 24, width: 24, resizeMode: "contain" }}
@@ -67,45 +82,69 @@ export default function Calculator({navigation}) {
       </TouchableOpacity>
 
       
-      <TextInput value={input} placeholder='100 x 10 x 10' style={styles.input}placeholderTextColor={"#266DDC"}/>
-       
- <Text style={styles.resultText}>{result}</Text>
-      <View style={{borderColor:"#D9D9D9",width:"90%",borderWidth:1,marginTop:14,marginLeft:20}}></View>
-      <View style={styles.keypadContainer}>
-      <View style={styles.row}>
-          {renderButton('AC', require("../../assets/ac.png"))}
-          {renderButton('AC', require("../../assets/Vector.png"))} 
-          {renderButton('%', require("../../assets/modulus.png"))}
-          {renderButton('/', require("../../assets/divisionsign.png"))}
-        </View> 
+<FontAwesome name="history" size={24} color="black" onPress={HistoryVisibility} />
+</View>
+{
+  isHistoryVisible?
+  <View style={{ marginTop:16,borderWidth:1,borderColor:"#D9D9D9",borderRadius:5, }}>
+  <Text style={{ fontSize: 18, fontWeight: 'bold' }}>History:</Text>
+  {history.map((item, index) => (
+    <Text key={index} style={{ fontSize: 16 }}>
+      {item.input} = {item.result}
+    </Text>
+  ))}
+</View>
+:
+<View>
 
-        <View style={styles.row}>
-          {renderButton('7')}
-          {renderButton('8')} 
-          {renderButton('9')}
-          {renderButton('*', require("../../assets/multiplication.png"))}
-        </View> 
-        <View style={styles.row}>
-          {renderButton('4')}
-          {renderButton('5')} 
-          {renderButton('6')}
-          {renderButton('-', require("../../assets/subtraction.png"))}
-        </View>
-        <View style={styles.row}>
-          {renderButton('1')}
-          {renderButton('2')} 
-          {renderButton('3')}
-          {renderButton('+', require("../../assets/Addition.png"))}
-        </View>
-        <View style={styles.row}>
-        {renderButton('AC', require("../../assets/ac.png"))}
-         {renderButton('0')} 
-          {renderButton('.')}
-          {renderButton('=', require("../../assets/equalssign.png"))}
-        </View>
-         
-      
-    </View>
+<View style={{flexDirection:"column",alignItems:"flex-end",marginTop:88}}>
+<TextInput value={input}  style={styles.input}placeholderTextColor={"#266DDC"}/>
+
+<Text style={styles.resultText}>{result}</Text>
+
+
+</View>
+
+
+   <View style={{borderColor:"#D9D9D9",width:"97%",borderWidth:0.7,marginTop:14,}}></View>
+
+<View style={styles.keypadContainer}>
+<View style={styles.row}>
+   {renderButton('AC', require("../../assets/ac.png"))}
+   {renderButton('AC', require("../../assets/Vector.png"))} 
+   {renderButton('%', require("../../assets/modulus.png"))}
+   {renderButton('/', require("../../assets/divisionsign.png"))}
+ </View> 
+
+ <View style={styles.row}>
+   {renderButton('7')}
+   {renderButton('8')} 
+   {renderButton('9')}
+   {renderButton('*', require("../../assets/multiplication.png"))}
+ </View> 
+ <View style={styles.row}>
+   {renderButton('4')}
+   {renderButton('5')} 
+   {renderButton('6')}
+   {renderButton('-', require("../../assets/subtraction.png"))}
+ </View>
+ <View style={styles.row}>
+   {renderButton('1')}
+   {renderButton('2')} 
+   {renderButton('3')}
+   {renderButton('+', require("../../assets/Addition.png"))}
+ </View>
+ <View style={styles.row}>
+ {renderButton('AC', require("../../assets/ac.png"))}
+  {renderButton('0')} 
+   {renderButton('.')}
+   {renderButton('=', require("../../assets/equalssign.png"))}
+ </View>
+  
+
+</View>
+</View>
+}
          </View>
   )
 }
@@ -116,10 +155,8 @@ const styles = StyleSheet.create({
       flex: 1,
     },
     resultText: {
-      marginLeft: 230,
       color: "#000000",
       fontWeight: "500",
-      marginTop: 8,
       fontSize: 50,
     },
     row: {
@@ -137,10 +174,8 @@ const styles = StyleSheet.create({
      
     },
   input: {
-    marginTop:88,
     fontSize:16,
     color:"#266DDC",
-    marginLeft:287,
     justifyContent:"center",
     alignItems:"center"
   },
@@ -170,8 +205,8 @@ equalsSignImage: {
   width: 56, 
   height: 56, 
   borderRadius:15
- 
 },
+
 modulusImage:{
   height:26,
   width:26
@@ -189,10 +224,5 @@ ACImage:{
   height:16,
   width:26
 },
-backButton:{
-  marginLeft:20,
-  marginTop:20
-
-}
 
 })
