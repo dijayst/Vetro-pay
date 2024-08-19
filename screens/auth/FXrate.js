@@ -60,7 +60,7 @@ export default function FXrate() {
         <Text style={styles.dropdownText}>{selectedValue}</Text>
         <Image
         source={expand_more}
-        style={{ height: 14, width: 14, resizeMode: "contain",marginLeft:28,marginTop:-13 }}
+        style={{ height: 14, width: 14, resizeMode: "contain", }}
       />
       </TouchableOpacity>
 
@@ -116,7 +116,7 @@ export default function FXrate() {
         <Text style={styles.dropdownText}>{selectedValue}</Text>
         <Image
         source={expand_more}
-        style={{ height: 14, width: 14, resizeMode: "contain",marginLeft:28,marginTop:-13 }}
+        style={{ height: 14, width: 14, resizeMode: "contain", }}
       />
       </TouchableOpacity>
 
@@ -173,7 +173,7 @@ export default function FXrate() {
         <Text style={styles.dropdownText}>{selectedValue}</Text>
         <Image
         source={expand_more}
-        style={{ height: 14, width: 14, resizeMode: "contain",marginLeft:28,marginTop:-13 }}
+        style={{ height: 14, width: 14, resizeMode: "contain", }}
       />
       </TouchableOpacity>
 
@@ -208,7 +208,7 @@ export default function FXrate() {
           </View>
         </View>
       </View>
-<TouchableOpacity style={{width:350,height:56,backgroundColor:"#266DDC",paddingTop:15,paddingLeft:154,borderRadius:8,marginTop:220}}><Text style={{color:"#FFFFFF",fontWeight:"600",fontSize:16}}>Done</Text></TouchableOpacity>
+<TouchableOpacity style={{width:350,height:56,backgroundColor:"#266DDC",borderRadius:8,marginTop:220,justifyContent:"center",alignItems:"center"}}><Text style={{color:"#FFFFFF",fontWeight:"600",fontSize:16}}>Done</Text></TouchableOpacity>
           
     </View>
   )
@@ -219,7 +219,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     backgroundColor:"#FFFFFF",
-
   },
   backButton: {
     marginTop: 50,
@@ -250,7 +249,7 @@ const styles = StyleSheet.create({
     marginTop:40
   },
   card: {
-    
+    paddingHorizontal:15,
     backgroundColor: "#F4F4F4",
     width: 171,
     height: 119,
@@ -262,17 +261,17 @@ const styles = StyleSheet.create({
     color: "#000000",
     fontSize: 16,
     fontWeight: "500",
-    marginLeft:10
+    alignItems:"flex-start"
   },
   cardSubtitle: {
     color: "#414141",
     fontWeight: "400",
     fontSize: 12,
-    marginLeft:10
+    alignItems:"flex-start"
   },
   row: {
     flexDirection: "row",
-    justifyContent:"center",
+    justifyContent:"space-between",
     alignItems: "center",
     marginTop: 8,
     gap: 4,
@@ -301,9 +300,10 @@ const styles = StyleSheet.create({
   dropdown: {
     width: 53,
     height:20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection:"row",
+    justifyContent: "space-between",
     borderRadius: 4,
+    paddingHorizontal:5,
     backgroundColor: '#E9F0FB',
   },
   dropdownText: {

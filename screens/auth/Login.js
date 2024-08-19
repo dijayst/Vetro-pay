@@ -752,10 +752,7 @@ export default function Login({ navigation, route }) {
                 flex: 1,
                 borderTopLeftRadius: 16,
                 borderTopRightRadius: 16,
-                paddingLeft: 20,
-                paddingRight: 20,
-                paddingTop: 16,
-                height: 200,
+                 height: 200,
                 backgroundColor: "#F9FAFA",
               }}
             >
@@ -1127,7 +1124,7 @@ export default function Login({ navigation, route }) {
                       height: 40,
                       width: 40,
                       resizeMode: "contain",
-                      marginLeft: 12,
+                      
                     }}
                   />
                   <Text
@@ -1160,7 +1157,7 @@ export default function Login({ navigation, route }) {
                       height: 40,
                       width: 40,
                       resizeMode: "contain",
-                      marginLeft: 12,
+                   
                     }}
                   />
                   <Text
@@ -1249,7 +1246,7 @@ const styles = StyleSheet.create({
     color: "#266DDC",
     lineHeight: 26,
     fontSize: 14,
-    marginLeft: 4,
+   
   },
   bottomActionCTAContainer: {
     backgroundColor: "#D4E2F8",
