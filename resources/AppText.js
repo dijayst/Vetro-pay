@@ -24,8 +24,8 @@ export default function AppText(props) {
   return (
     <Text
       style={{
-        ...props.styles,
         fontFamily: determineFontFamily(props),
+        ...props.styles,
       }}
     >
       {props.children}
