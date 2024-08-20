@@ -1,4 +1,3 @@
-
 import {
   View,
   Text,
@@ -7,16 +6,19 @@ import {
   Image,
   TextInput,
 } from "react-native";
-import React, { useState, } from "react";
+import React, { useState,useEffect } from "react";
 import back from "../../assets/back.png";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import AppText from "../../resources/AppText";
 import { useNavigation } from "@react-navigation/native";
 //import * as SQLite from 'expo-sqlite';
+import { openDatabase } from 'react-native-sqlite-storage';
 
-//const db = SQLite.openDatabase('calculatorHistory.db');
 
+const db = openDatabase({
+  name: "calculatorHistory.db",
+});
 export default function Calculator() {
   const navigation = useNavigation();
   const [input, setInput] = useState("");
@@ -27,15 +29,63 @@ export default function Calculator() {
 
 
 
+/*
+  const createTables = () => {
+    db.transaction(txn => {
+      txn.executeSql(
+       'CREATE TABLE IF NOT EXISTS history (id INTEGER PRIMARY KEY AUTOINCREMENT, input TEXT, result TEXT);',
+    
+        [],
+        (sqlTxn, res) => {
+          console.log("table created successfully");
+        },
+        error => {
+          console.log("error on creating table " + error.message);
+        },
+      );
+    });
+    loadHistory();
+  };
+*/
 
 
+  useEffect(() => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS history (id INTEGER PRIMARY KEY AUTOINCREMENT, input TEXT, result TEXT);',
+        [],
+        () => {
+          console.log("Table created successfully");
+        },
+        error => {
+          console.log("Error creating table: " + error.message);
+        }
+      );
+    });
+    loadHistory();
+  }, []);
 
- 
+
+  const loadHistory = () => {
+    db.transaction(tx => {
+      tx.executeSql('SELECT * FROM history;', [], (_, { rows }) => {
+        if (rows._array) {
+          setHistory(rows._array);
+        }
+      },
+      error => {
+        console.log("Error loading history: " + error.message);
+      });
+    });
+  };
+
 
   const HistoryVisibility = () => {
     setIsHistoryVisible(!isHistoryVisible);
+    if (!isHistoryVisible) {
+      loadHistory();
+    }
   };
-  
 
   const handlePress = (value) => {
     if (value === "=") {
@@ -52,40 +102,48 @@ export default function Calculator() {
     }
   };
   
-  
-const calculateResult = () => {
-  try {
-    // Replace symbols for JavaScript evaluation
-    const formattedInput = input.replace(/X/g, "*").replace(/÷/g, "/");
-    // Evaluate the expression
-    const calculatedResult = eval(formattedInput);
 
-    // Format the result
-    let result = calculatedResult;
-    if (typeof result === 'number') {
-      // Convert to integer if result is whole
-      if (result % 1 === 0) {
-        result = result.toFixed(0); // No decimal places for integers
-      } else {
-        result = parseFloat(result.toFixed(4)); // Limit to 4 decimal places
-      }
+
+
+  const calculateResult = () => {
+    try {
+      const formattedInput = input.replace(/X/g, "*").replace(/÷/g, "/");
+      const calculatedResult = eval(formattedInput).toString();
+      setResult(calculatedResult);
+
+      db.transaction(tx => {
+        tx.executeSql(
+          'INSERT INTO history (input, result) VALUES (?, ?);',
+          [input, calculatedResult],
+          () => {
+            console.log("History saved successfully");
+            setHistory([...history, { input, result: calculatedResult }]);
+          },
+          error => {
+            console.log("Error saving history: " + error.message);
+          }
+        );
+      });
+    } catch (error) {
+      setResult("Error");
     }
-
-    // Update state with the formatted result
-    setResult(result);
-    setHistory([...history, { input, result }]); // Add to history
-  } catch (error) {
-    setResult("Error");
-  }
-};
+  };
 
 
 
   const clearHistory = () => {
-         setHistory([]);
-       
+    db.transaction(tx => {
+      tx.executeSql('DELETE FROM history;', [],
+        () => {
+          console.log("History cleared successfully");
+          setHistory([]);
+        },
+        error => {
+          console.log("Error clearing history: " + error.message);
+        }
+      );
+    });
   };
-  
 
 
 
@@ -109,7 +167,7 @@ const calculateResult = () => {
   };
 
   return (
-    <View style={styles.calculatorContainer}>
+    <View style={{ paddingHorizontal: 20, flex: 1 }}>
       <View
         style={{
           flexDirection: "row",
@@ -119,14 +177,8 @@ const calculateResult = () => {
       >
         <TouchableOpacity
           style={styles.backButton}
-          
-          onPress={() => {
-            if (isHistoryVisible) {
-              setIsHistoryVisible(false);
-            } else {
-              navigation.goBack(); 
-            }
-          }}>
+          onPress={() => navigation.navigate("Calculator")}
+        >
           <Image
             source={back}
             style={{ height: 24, width: 24, resizeMode: "contain" }}
@@ -244,11 +296,6 @@ const calculateResult = () => {
 }
 
 const styles = StyleSheet.create({
-  calculatorContainer:{
-    flex: 1,
-    paddingHorizontal: 20,
-  
-  },
   container: {
     flex: 1,
   },
@@ -291,8 +338,8 @@ const styles = StyleSheet.create({
     margin: 8,
   },
   buttonImage: {
-    width: 26,
-    height: 24,
+    width: "56%",
+    height: "56%",
     resizeMode: "contain",
   },
   buttonText: {
