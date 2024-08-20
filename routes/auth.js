@@ -8,8 +8,8 @@ import Onboarding from "../screens/auth/Onboarding";
 import AuthHome from "../screens/auth/AuthHome";
 import Login from "../screens/auth/Login";
 import Register from "../screens/auth/Register";
-import Welcome from "../screens/auth/Welcome";
 import Calculator from "../screens/auth/Calculator";
+import Welcome from "../screens/auth/Welcome";
 import FXrate from "../screens/auth/FXrate";
 
 const Stack = createStackNavigator();

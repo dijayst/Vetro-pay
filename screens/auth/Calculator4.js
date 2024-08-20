@@ -1,4 +1,3 @@
-
 import {
   View,
   Text,
@@ -14,9 +13,12 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import AppText from "../../resources/AppText";
 import { useNavigation } from "@react-navigation/native";
 //import * as SQLite from 'expo-sqlite';
+import { openDatabase } from 'react-native-sqlite-storage';
 
-//const db = SQLite.openDatabase('calculatorHistory.db');
 
+const db = openDatabase({
+  name: "calculatorHistory.db",
+});
 export default function Calculator() {
   const navigation = useNavigation();
   const [input, setInput] = useState("");
@@ -27,25 +29,63 @@ export default function Calculator() {
 
 
 
+/*
+  const createTables = () => {
+    db.transaction(txn => {
+      txn.executeSql(
+       'CREATE TABLE IF NOT EXISTS history (id INTEGER PRIMARY KEY AUTOINCREMENT, input TEXT, result TEXT);',
+    
+        [],
+        (sqlTxn, res) => {
+          console.log("table created successfully");
+        },
+        error => {
+          console.log("error on creating table " + error.message);
+        },
+      );
+    });
+    loadHistory();
+  };
+*/
 
 
-  const [currentPage, setCurrentPage] = useState(1); // State to track which page is displayed
+  useEffect(() => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS history (id INTEGER PRIMARY KEY AUTOINCREMENT, input TEXT, result TEXT);',
+        [],
+        () => {
+          console.log("Table created successfully");
+        },
+        error => {
+          console.log("Error creating table: " + error.message);
+        }
+      );
+    });
+    loadHistory();
+  }, []);
 
-  const goToPageTwo = () => {
-    setCurrentPage(2); // Set to page 2
+
+  const loadHistory = () => {
+    db.transaction(tx => {
+      tx.executeSql('SELECT * FROM history;', [], (_, { rows }) => {
+        if (rows._array) {
+          setHistory(rows._array);
+        }
+      },
+      error => {
+        console.log("Error loading history: " + error.message);
+      });
+    });
   };
 
-  const goBackToPageOne = () => {
-    setCurrentPage(1); // Set to page 1
-  };
-
-
- 
 
   const HistoryVisibility = () => {
     setIsHistoryVisible(!isHistoryVisible);
+    if (!isHistoryVisible) {
+      loadHistory();
+    }
   };
-  
 
   const handlePress = (value) => {
     if (value === "=") {
@@ -64,26 +104,46 @@ export default function Calculator() {
   
 
 
+
   const calculateResult = () => {
     try {
       const formattedInput = input.replace(/X/g, "*").replace(/÷/g, "/");
       const calculatedResult = eval(formattedInput).toString();
       setResult(calculatedResult);
-  
-      setHistory([...history, { input, result: calculatedResult }]);
+
+      db.transaction(tx => {
+        tx.executeSql(
+          'INSERT INTO history (input, result) VALUES (?, ?);',
+          [input, calculatedResult],
+          () => {
+            console.log("History saved successfully");
+            setHistory([...history, { input, result: calculatedResult }]);
+          },
+          error => {
+            console.log("Error saving history: " + error.message);
+          }
+        );
+      });
     } catch (error) {
       setResult("Error");
     }
   };
-  
 
 
 
   const clearHistory = () => {
-         setHistory([]);
-       
+    db.transaction(tx => {
+      tx.executeSql('DELETE FROM history;', [],
+        () => {
+          console.log("History cleared successfully");
+          setHistory([]);
+        },
+        error => {
+          console.log("Error clearing history: " + error.message);
+        }
+      );
+    });
   };
-  
 
 
 
@@ -117,14 +177,8 @@ export default function Calculator() {
       >
         <TouchableOpacity
           style={styles.backButton}
-          
-          onPress={() => {
-            if (isHistoryVisible) {
-              setIsHistoryVisible(false);
-            } else {
-              navigation.goBack(); 
-            }
-          }}>
+          onPress={() => navigation.navigate("Calculator")}
+        >
           <Image
             source={back}
             style={{ height: 24, width: 24, resizeMode: "contain" }}
@@ -284,8 +338,8 @@ const styles = StyleSheet.create({
     margin: 8,
   },
   buttonImage: {
-    width: 24,
-    height: 24,
+    width: "56%",
+    height: "56%",
     resizeMode: "contain",
   },
   buttonText: {
