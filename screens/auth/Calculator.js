@@ -7,7 +7,7 @@ import {
   Image,
   TextInput,
 } from "react-native";
-import React, { useState,useEffect } from "react";
+import React, { useState, } from "react";
 import back from "../../assets/back.png";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -28,16 +28,6 @@ export default function Calculator() {
 
 
 
-
-  const [currentPage, setCurrentPage] = useState(1); // State to track which page is displayed
-
-  const goToPageTwo = () => {
-    setCurrentPage(2); // Set to page 2
-  };
-
-  const goBackToPageOne = () => {
-    setCurrentPage(1); // Set to page 1
-  };
 
 
  
@@ -68,7 +58,11 @@ export default function Calculator() {
     try {
       const formattedInput = input.replace(/X/g, "*").replace(/÷/g, "/");
       const calculatedResult = eval(formattedInput).toString();
-      setResult(calculatedResult);
+
+       // Check if the result has a decimal point
+    //if (calculatedResult.includes('.')) {    calculatedResult = parseFloat(calculatedResult).toFixed(4); }
+   
+    setResult(calculatedResult);
   
       setHistory([...history, { input, result: calculatedResult }]);
     } catch (error) {
@@ -284,7 +278,7 @@ const styles = StyleSheet.create({
     margin: 8,
   },
   buttonImage: {
-    width: 24,
+    width: 26,
     height: 24,
     resizeMode: "contain",
   },
