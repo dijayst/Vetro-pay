@@ -1,4 +1,3 @@
-
 import {
   View,
   Text,
@@ -6,16 +5,16 @@ import {
   StyleSheet,
   Image,
   TextInput,
+  Alert,
 } from "react-native";
-import React, { useState, } from "react";
-import back from "../../assets/back.png";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import React, { useEffect, useState } from "react";
+import Octicons from "@expo/vector-icons/Octicons";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import AppText from "../../resources/AppText";
 import { useNavigation } from "@react-navigation/native";
-//import * as SQLite from 'expo-sqlite';
-
-//const db = SQLite.openDatabase('calculatorHistory.db');
+import { normalizeFontSize } from "../../resources/utils";
 
 export default function Calculator() {
   const navigation = useNavigation();
@@ -23,72 +22,139 @@ export default function Calculator() {
   const [result, setResult] = useState("");
   const [history, setHistory] = useState([]);
   const [isHistoryVisible, setIsHistoryVisible] = useState(false);
-  const [isResultCalculated, setIsResultCalculated] = useState(false); // New state variable
-
-
-
-
-
-
- 
+  const [sessionAns, setSessionAns] = useState(null);
 
   const HistoryVisibility = () => {
     setIsHistoryVisible(!isHistoryVisible);
   };
-  
+
+  useEffect(() => {
+    if (sessionAns != null) {
+      setInput(sessionAns);
+      setResult("");
+    }
+  }, [sessionAns]);
 
   const handlePress = (value) => {
     if (value === "=") {
-      calculateResult();
-      setIsResultCalculated(true);
+      let result = calculateResult();
+      if (result != null) {
+        setSessionAns(result);
+      }
     } else if (value === "AC") {
       setInput("");
       setResult("");
-      setIsResultCalculated(false);
     } else if (value === "backspace") {
-      setInput(input.slice(0, -1));
+      let updatedEntry = input.slice(0, -1);
+      setInput(updatedEntry);
+      calculateResult(updatedEntry);
     } else {
-      setInput(input + value);
+      let updatedEntry = input + value;
+      setInput(updatedEntry);
+      calculateResult(updatedEntry);
     }
   };
-  
-  
-const calculateResult = () => {
-  try {
-    // Replace symbols for JavaScript evaluation
-    const formattedInput = input.replace(/X/g, "*").replace(/÷/g, "/");
-    // Evaluate the expression
-    const calculatedResult = eval(formattedInput);
 
-    // Format the result
-    let result = calculatedResult;
-    if (typeof result === 'number') {
-      // Convert to integer if result is whole
-      if (result % 1 === 0) {
-        result = result.toFixed(0); // No decimal places for integers
+  const updateCalculatorHistory = (calculatableInput, lastCharIsNumber) => {
+    /**
+     * This Function is necessary because we calculate expressions in real time
+     * without waiting for users to click on the 'equals to' symbol. Going along
+     * this route without a filtering techning to what is saved in the History would
+     * mean every continue expression while being type is going to be recorded.
+     *
+     * E.g
+     * 5 + 2
+     * 5 + 20
+     * 5 + 205
+     * 5 + 2057
+     * Would all be recorded even though the user intends to reach 5 + 2057 which is the
+     * final expression.
+     *
+     * Thus;
+     * 1. This Function focuses on complete expressions: Only expressions containing an operator and ending with a number are considered for history.
+     * 2. Overwrite continuations: Intelligently handles scenarios where the user is progressively building a number by appending digits.
+     *
+     * In the context of the  history management, you'd notice the use calculatableInput.slice(0, -1) to compare the current expression with the last
+     * history entry, excluding the last character. This is important for two main reasons:
+     *
+     * A. Handling continuations:
+     *    - When a user is progressively building a number by appending digits (e.g., "5 + 2", "5 + 20", "5 + 205"),
+     *    we want to recognize these as continuations of the same expression and overwrite the previous history entry
+     *    rather than creating a new one for each intermediate step. By comparing the current expression
+     *    (excluding the last character) with the start of the previous entry, we can identify if they represent the same underlying calculation.
+     * B. Focusing on complete values:
+     *    - We only want to store expressions in the history that represent complete calculations, meaning they contain an operator and end
+     *    with a numerical value.If the last character is an operator, it might indicate an incomplete expression, so we exclude it from the
+     *    comparison to avoid potential false positives when checking for continuations.
+     */
+
+    if (/[+\-*/%]/.test(calculatableInput) && lastCharIsNumber) {
+      if (
+        history.length > 0 &&
+        history[history.length - 1].input.startsWith(
+          calculatableInput.slice(0, -1)
+        )
+      ) {
+        // Overwrite the last history entry if it's a continuation
+        history[history.length - 1] = { input: calculatableInput, result };
       } else {
-        result = parseFloat(result.toFixed(4)); // Limit to 4 decimal places
+        // Add a new history entry
+        setHistory([...history, { input: calculatableInput, result }]);
       }
     }
+  };
 
-    // Update state with the formatted result
-    setResult(result);
-    setHistory([...history, { input, result }]); // Add to history
-  } catch (error) {
-    setResult("Error");
-  }
-};
+  const calculateResult = (hotInput) => {
+    try {
+      let formattedInput;
+      let lastCharIsNumber;
+      let calculatableInput;
+      // Replace symbols for JavaScript evaluation
+      if (hotInput) {
+        lastCharIsNumber = /\d$/.test(hotInput);
+        formattedInput = hotInput.replace(/X/g, "*").replace(/÷/g, "/");
+      } else {
+        lastCharIsNumber = /\d$/.test(input);
+        formattedInput = input.replace(/X/g, "*").replace(/÷/g, "/");
+      }
 
+      // Replace '%' with '*0.01'
+      formattedInput = formattedInput.replace(/%/g, "*0.01");
 
+      // Dismiss the last arithmetic sign if the expression doesn't end with a value
+      if (/[+\-*/]$/.test(formattedInput)) {
+        formattedInput = formattedInput.slice(0, -1);
+      }
+
+      calculatableInput = formattedInput;
+
+      // Evaluate the expression
+      const calculatedResult = eval(formattedInput);
+
+      // Format the result
+      let result = calculatedResult;
+      if (typeof result === "number") {
+        // Convert to integer if result is whole
+        if (result % 1 === 0) {
+          result = `${result.toFixed(0)}`; // No decimal places for integers
+        } else {
+          result = `${parseFloat(result.toFixed(8))}`; // Limit to 4 decimal places
+        }
+      }
+
+      // Update state with the formatted result
+      setResult(result);
+      updateCalculatorHistory(calculatableInput, lastCharIsNumber);
+      return result;
+    } catch (error) {
+      setResult("Error");
+      return null;
+    }
+  };
 
   const clearHistory = () => {
-         setHistory([]);
-       
+    setHistory([]);
   };
-  
-
-
-
 
   const renderButton = (value, imageSource = null) => {
     // Define imageStyle inside the renderButton function
@@ -119,26 +185,20 @@ const calculateResult = () => {
       >
         <TouchableOpacity
           style={styles.backButton}
-          
           onPress={() => {
             if (isHistoryVisible) {
               setIsHistoryVisible(false);
             } else {
-              navigation.goBack(); 
+              navigation.goBack();
             }
-          }}>
-          <Image
-            source={back}
-            style={{ height: 24, width: 24, resizeMode: "contain" }}
-          />
+          }}
+        >
+          <MaterialIcons name="keyboard-backspace" size={24} color="black" />
         </TouchableOpacity>
 
-        <FontAwesome
-          name="history"
-          size={24}
-          color="#0d0d0d"
-          onPress={HistoryVisibility}
-        />
+        <TouchableOpacity onPress={HistoryVisibility}>
+          <Octicons name="history" size={24} color="#0d0d0d" />
+        </TouchableOpacity>
       </View>
       {isHistoryVisible ? (
         <View
@@ -179,32 +239,29 @@ const calculateResult = () => {
           ))}
         </View>
       ) : (
-        <View>
-          <View
-            style={[
-              styles.inputContainer,
-              isResultCalculated && styles.inputContainerResultCalculated, // Conditional style
-            ]}
-          >
+        <View style={{ flex: 1 }}>
+          <View style={styles.inputContainer}>
             <TextInput
               value={input}
               style={styles.input}
               placeholderTextColor={"#266DDC"}
+              showSoftInputOnFocus={false}
             />
 
             <Text style={styles.resultText}>{result}</Text>
           </View>
 
-          <View
-            style={{
-              borderColor: "#D9D9D9",
-              width: "97%",
-              borderWidth: 0.7,
-              marginTop: 14,
-            }}
-          ></View>
-
           <View style={styles.keypadContainer}>
+            {/** HR */}
+            <View
+              style={{
+                borderColor: "#D9D9D9",
+                width: "97%",
+                borderWidth: 0.7,
+              }}
+            ></View>
+            {/** HR */}
+
             <View style={styles.row}>
               {renderButton("AC", require("../../assets/ac.png"))}
               {renderButton("backspace", require("../../assets/Backspace.png"))}
@@ -231,7 +288,21 @@ const calculateResult = () => {
               {renderButton("+", require("../../assets/Addition.png"))}
             </View>
             <View style={styles.row}>
-              {renderButton("AC", require("../../assets/ac.png"))}
+              <TouchableOpacity
+                onPress={() => {
+                  Alert.alert(
+                    "Unlock Advanced Calculations",
+                    "Scientific mode is on its way! You'll be notified once its avaialble."
+                  );
+                }}
+                style={styles.button}
+              >
+                <SimpleLineIcons
+                  name="size-fullscreen"
+                  size={24}
+                  color="#266ddc"
+                />
+              </TouchableOpacity>
               {renderButton("0")}
               {renderButton(".")}
               {renderButton("=", require("../../assets/equalssign.png"))}
@@ -244,21 +315,18 @@ const calculateResult = () => {
 }
 
 const styles = StyleSheet.create({
-  calculatorContainer:{
+  calculatorContainer: {
     flex: 1,
     paddingHorizontal: 20,
-  
   },
   container: {
     flex: 1,
   },
   inputContainer: {
-    flexDirection: "column",
+    flex: 1,
     alignItems: "flex-end",
-    marginTop: 88,
-  },
-  inputContainerResultCalculated: {
-    marginTop: 20, // Adjust this value to move the input field up
+    justifyContent: "flex-end",
+    flexBasis: "40%",
   },
   resultText: {
     color: "#000000",
@@ -266,33 +334,36 @@ const styles = StyleSheet.create({
     fontSize: 50,
   },
   row: {
+    width: "100%",
     flexDirection: "row",
     justifyContent: "space-around",
     fontSize: 90,
     fontWeight: "500",
-    marginVertical: 10,
+    marginBottom: 5,
   },
   keypadContainer: {
+    marginBottom: 10,
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    resizeMode: "contain",
+    height: "auto",
+    maxHeight: "50%",
   },
   input: {
-    fontSize: 16,
-    color: "#266DDC",
-    justifyContent: "center",
-    alignItems: "center",
+    fontSize: 25,
+    fontWeight: "400",
+    color: "#36454F",
   },
   button: {
-    width: 81,
-    height: 64,
+    minWidth: normalizeFontSize(70),
+    height: normalizeFontSize(70),
     justifyContent: "center",
     alignItems: "center",
-    margin: 8,
   },
   buttonImage: {
-    width: 26,
-    height: 24,
+    maxWidth: normalizeFontSize(27),
+    height: normalizeFontSize(50),
     resizeMode: "contain",
   },
   buttonText: {
