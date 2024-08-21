@@ -7,7 +7,7 @@ import {
   TextInput,
   Alert,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Octicons from "@expo/vector-icons/Octicons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -15,8 +15,20 @@ import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import AppText from "../../resources/AppText";
 import { useNavigation } from "@react-navigation/native";
 import { normalizeFontSize } from "../../resources/utils";
+import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 
-export default function Calculator() {
+export default function CalcParent() {
+  return (
+    <Fragment>
+      <SQLiteProvider databaseName="calculator.db">
+        <Calculator />
+      </SQLiteProvider>
+    </Fragment>
+  );
+}
+
+export function Calculator() {
+  const db = useSQLiteContext();
   const navigation = useNavigation();
   const [input, setInput] = useState("");
   const [result, setResult] = useState("");
@@ -55,7 +67,11 @@ export default function Calculator() {
     }
   };
 
-  const updateCalculatorHistory = (calculatableInput, lastCharIsNumber) => {
+  const updateCalculatorHistory = (
+    calculatableInput,
+    lastCharIsNumber,
+    result
+  ) => {
     /**
      * This Function is necessary because we calculate expressions in real time
      * without waiting for users to click on the 'equals to' symbol. Going along
@@ -99,6 +115,22 @@ export default function Calculator() {
         history[history.length - 1] = { input: calculatableInput, result };
       } else {
         // Add a new history entry
+        /**
+         * TO Be stored in the DB:
+         * - DateTime
+         * - Expression
+         * - Result
+         *
+         *  ----- Today ---
+         * 35 + 45 = 80
+         *
+         * --- Yesterday ---
+         *
+         * --- 2 days ago ---
+         *
+         *
+         */
+
         setHistory([...history, { input: calculatableInput, result }]);
       }
     }
@@ -144,7 +176,7 @@ export default function Calculator() {
 
       // Update state with the formatted result
       setResult(result);
-      updateCalculatorHistory(calculatableInput, lastCharIsNumber);
+      updateCalculatorHistory(calculatableInput, lastCharIsNumber, result);
       return result;
     } catch (error) {
       setResult("Error");
@@ -153,6 +185,9 @@ export default function Calculator() {
   };
 
   const clearHistory = () => {
+    /**
+     * DELETE FROM artithmetic-operation
+     */
     setHistory([]);
   };
 
