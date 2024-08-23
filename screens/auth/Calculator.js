@@ -25,7 +25,7 @@ import moment from 'moment';
 
 
 export default function Calculator() {
- 
+
  const db = SQLite.openDatabase('calculator.db');
   const navigation = useNavigation();
   const [input, setInput] = useState("");
@@ -310,12 +310,20 @@ saveHistory("5 + 5", "10", moment().subtract(2, 'days').format('YYYY-MM-DD HH:mm
   
     return Object.keys(groupedHistory).map((date, index) => (
       <View key={index}>
-        <AppText 
+        <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+        <View style={{marginTop:-10,fontWeight:"500",fontSize:24,color:"black"}}><Text>- - - - - - - - - -</Text></View>
+ <AppText 
         bold 
-         styles={{ fontSize: 16, marginBottom: 8,}}
+         styles={{ fontSize: 16, marginBottom: 8,fontWeight:"300"}}
         >
           {date}
         </AppText>
+
+            <View
+              style={{marginTop:-10,fontWeight:"500",fontSize:24,color:"black"}}
+            ><Text>- - - - - - - - - -</Text></View>
+        </View>
+       
         {groupedHistory[date].map((item, idx) => (
           <AppText
             key={idx}
