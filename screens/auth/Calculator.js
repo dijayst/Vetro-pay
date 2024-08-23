@@ -1,9 +1,11 @@
+
+
+
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
-  Image,
   TextInput,
   Alert,
 } from "react-native";
@@ -15,20 +17,28 @@ import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import AppText from "../../resources/AppText";
 import { useNavigation } from "@react-navigation/native";
 import { normalizeFontSize } from "../../resources/utils";
+import Ionicons from '@expo/vector-icons/Ionicons';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import * as SQLite from "expo-sqlite/legacy";
+import moment from 'moment';
+/*
 import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 
 export default function CalcParent() {
   return (
     <Fragment>
-      <SQLiteProvider databaseName="calculator.db">
+      <SQLiteProvider databaseName="calculator.db"  onInit={initializeDatabase}>
         <Calculator />
       </SQLiteProvider>
     </Fragment>
   );
-}
+}*/
 
-export function Calculator() {
-  const db = useSQLiteContext();
+export default function Calculator() {
+ // const db = useSQLiteContext();
+ 
+ const db = SQLite.openDatabase('calculator.db');
   const navigation = useNavigation();
   const [input, setInput] = useState("");
   const [result, setResult] = useState("");
@@ -36,10 +46,68 @@ export function Calculator() {
   const [isHistoryVisible, setIsHistoryVisible] = useState(false);
   const [sessionAns, setSessionAns] = useState(null);
 
+  
+  useEffect(() => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS history (id INTEGER PRIMARY KEY AUTOINCREMENT, expression TEXT, result TEXT, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);'
+       
+      );
+    });
+
+
+    
+    fetchHistory(); // Load history when the component mounts
+  }, []);
+
+
+
+  const fetchHistory = () => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM history ORDER BY timestamp DESC;',
+        [],
+        (_, { rows }) => {
+          const fetchedHistory = rows._array.map(item => ({
+            input: item.expression,
+            result: item.result,
+            timestamp: item.timestamp,
+          }));
+          console.log('Fetched history:', rows._array); // Check what rows._array contains
+          setHistory(fetchedHistory);
+          setHistory(rows._array);
+        },
+        (tx, error) => {
+          console.error('Failed to fetch history:', error);
+        }
+      );
+    });
+    
+  };
+ 
+
+
+  
   const HistoryVisibility = () => {
     setIsHistoryVisible(!isHistoryVisible);
   };
-
+  const saveHistory = (expression, result) => {
+    const timestamp = moment().format('YYYY-MM-DD HH:mm:ss'); // Get current timestamp
+    db.transaction(tx => {
+      tx.executeSql(
+        'INSERT INTO history (expression, result, timestamp) VALUES (?, ?, ?);',
+        [expression, result, timestamp],
+        () => {
+          console.log('History saved successfully');
+          fetchHistory(); // Refresh history after saving
+        },
+        (tx, error) => {
+          console.error('Failed to save history:', error);
+        }
+      );
+    });
+  };
+  
   useEffect(() => {
     if (sessionAns != null) {
       setInput(sessionAns);
@@ -52,6 +120,8 @@ export function Calculator() {
       let result = calculateResult();
       if (result != null) {
         setSessionAns(result);
+        saveHistory(input, result); // Save history when result is calculated
+    
       }
     } else if (value === "AC") {
       setInput("");
@@ -61,6 +131,7 @@ export function Calculator() {
       setInput(updatedEntry);
       calculateResult(updatedEntry);
     } else {
+      
       let updatedEntry = input + value;
       setInput(updatedEntry);
       calculateResult(updatedEntry);
@@ -107,7 +178,7 @@ export function Calculator() {
     if (/[+\-*/%]/.test(calculatableInput) && lastCharIsNumber) {
       if (
         history.length > 0 &&
-        history[history.length - 1].input.startsWith(
+        history[history.length - 1]?.input?.startsWith(
           calculatableInput.slice(0, -1)
         )
       ) {
@@ -138,75 +209,163 @@ export function Calculator() {
 
   const calculateResult = (hotInput) => {
     try {
-      let formattedInput;
-      let lastCharIsNumber;
-      let calculatableInput;
-      // Replace symbols for JavaScript evaluation
-      if (hotInput) {
-        lastCharIsNumber = /\d$/.test(hotInput);
-        formattedInput = hotInput.replace(/X/g, "*").replace(/÷/g, "/");
-      } else {
-        lastCharIsNumber = /\d$/.test(input);
-        formattedInput = input.replace(/X/g, "*").replace(/÷/g, "/");
-      }
+        let formattedInput;
+        let lastCharIsNumber;
+        let calculatableInput;
 
-      // Replace '%' with '*0.01'
-      formattedInput = formattedInput.replace(/%/g, "*0.01");
-
-      // Dismiss the last arithmetic sign if the expression doesn't end with a value
-      if (/[+\-*/]$/.test(formattedInput)) {
-        formattedInput = formattedInput.slice(0, -1);
-      }
-
-      calculatableInput = formattedInput;
-
-      // Evaluate the expression
-      const calculatedResult = eval(formattedInput);
-
-      // Format the result
-      let result = calculatedResult;
-      if (typeof result === "number") {
-        // Convert to integer if result is whole
-        if (result % 1 === 0) {
-          result = `${result.toFixed(0)}`; // No decimal places for integers
+        // Replace symbols for JavaScript evaluation
+        if (hotInput) {
+            lastCharIsNumber = /\d$/.test(hotInput);
+            formattedInput = hotInput.replace(/X/g, "*").replace(/÷/g, "/");
         } else {
-          result = `${parseFloat(result.toFixed(8))}`; // Limit to 4 decimal places
+            lastCharIsNumber = /\d$/.test(input);
+            formattedInput = input.replace(/X/g, "*").replace(/÷/g, "/");
         }
-      }
 
-      // Update state with the formatted result
-      setResult(result);
-      updateCalculatorHistory(calculatableInput, lastCharIsNumber, result);
-      return result;
+        // Replace '%' with '*0.01'
+        formattedInput = formattedInput.replace(/%/g, "*0.01");
+
+        // Dismiss the last arithmetic sign if the expression doesn't end with a value
+        if (/[+\-*/]$/.test(formattedInput)) {
+            formattedInput = formattedInput.slice(0, -1);
+        }
+
+        calculatableInput = formattedInput;
+
+        // Debugging: Log the final input to be evaluated
+        console.log('Formatted Input for evaluation:', formattedInput);
+
+        // Evaluate the expression
+        const calculatedResult = eval(formattedInput);
+
+        // Format the result
+        let result = calculatedResult;
+        if (typeof result === "number") {
+            // Convert to integer if result is whole
+            if (result % 1 === 0) {
+                result = `${result.toFixed(0)}`; // No decimal places for integers
+            } else {
+                result = `${parseFloat(result.toFixed(8))}`; // Limit to 4 decimal places
+            }
+        }
+
+        // Update state with the formatted result
+        setResult(result);
+        updateCalculatorHistory(calculatableInput, lastCharIsNumber, result);
+        return result;
     } catch (error) {
-      setResult("Error");
-      return null;
+        console.error("Calculation error:", error);
+        setResult("Error");
+        return null;
     }
-  };
+};
+
 
   const clearHistory = () => {
     /**
      * DELETE FROM artithmetic-operation
      */
+
+    db.transaction((tx) => {
+      tx.executeSql(`DELETE FROM history;`, [], () => {
+        console.log("History cleared successfully");
+        setHistory([]);
+      },
+      error => {
+        console.log("Error clearing history: " + error.message);
+      });
+    });
     setHistory([]);
   };
 
-  const renderButton = (value, imageSource = null) => {
+  const renderButton = (value,  iconName = null, iconLibrary = null) => {
     // Define imageStyle inside the renderButton function
-    const imageStyle = styles.buttonImage;
-
+   // const imageStyle = styles.buttonImage;
+//<Ionicons name="backspace-outline" size={24} color="black" />
     return (
       <TouchableOpacity
         style={styles.button}
         onPress={() => handlePress(value)}
       >
-        {imageSource ? (
-          <Image source={imageSource} style={styles.buttonImage} />
-        ) : (
-          <AppText styles={styles.buttonText}>{value}</AppText>
+        {
+        iconName ? (
+        iconLibrary === "Ionicons" ? (
+          <Ionicons name={iconName} size={30} color="#266DDC" />
+        ) : iconLibrary === "AntDesign" ? (
+          <AntDesign name={iconName} size={30} color="#266DDC" />
+        ) : iconLibrary === "MaterialIcons" ? (
+           <MaterialIcons name="percent" size={24} color="#266DDC" />
+        ) : iconLibrary === "FontAwesome6" ? (
+          <FontAwesome6 name={iconName} size={24} color="#266DDC" /> 
+        ) : iconLibrary === "Octicons" ? (
+          <Octicons name={iconName} size={24} color="#266DDC" />
+        ) : 
+        iconLibrary === "FontAwesome" ? (
+          <FontAwesome name={iconName} size={24} color="red" /> 
+        ) : 
+        null
+      ) : (
+          <AppText styles={value==="=" ?styles.equalsbutton:value==="AC"?styles.ACbutton:styles.buttonText}>{value}</AppText>
         )}
       </TouchableOpacity>
     );
+  };
+
+
+  
+
+  const renderHistory = () => {
+    const groupedHistory = groupHistoryByDate(history);
+  
+    return Object.keys(groupedHistory).map((date, index) => (
+      <View key={index}>
+        <AppText bold styles={{ fontSize: 16, marginBottom: 8 }}>
+          {date}
+        </AppText>
+        {groupedHistory[date].map((item, idx) => (
+          <AppText
+            key={idx}
+            styles={{
+              color: "gray",
+              fontSize: 17,
+              lineHeight: 20,
+              marginBottom: 4,
+            }}
+          >
+             
+             {item.expression} = {item.result}
+       
+          </AppText>
+        ))}
+      </View>
+    ));
+  };
+  
+
+  const groupHistoryByDate = (historyArray) => {
+    const grouped = {};
+
+    historyArray.forEach(item => {
+      const date = moment(item.timestamp).startOf('day');
+      const today = moment().startOf('day');
+      const yesterday = moment().subtract(1, 'days').startOf('day');
+
+      let label;
+      if (date.isSame(today, 'd')) {
+        label = "Today";
+      } else if (date.isSame(yesterday, 'd')) {
+        label = "Yesterday";
+      } else {
+        label = date.format("MMM DD, YYYY");
+      }
+
+      if (!grouped[label]) {
+        grouped[label] = [];
+      }
+      grouped[label].push(item);
+    });
+
+    return grouped;
   };
 
   return (
@@ -259,19 +418,9 @@ export function Calculator() {
               <AntDesign name="delete" size={24} color="red" />
             </TouchableOpacity>
           </View>
-          {history.map((item, index) => (
-            <AppText
-              key={index}
-              styles={{
-                color: "gray",
-                fontSize: 17,
-                lineHeight: 20,
-                marginBottom: 4,
-              }}
-            >
-              {item.input} = {item.result}
-            </AppText>
-          ))}
+          
+
+{renderHistory()}
         </View>
       ) : (
         <View style={{ flex: 1 }}>
@@ -298,29 +447,29 @@ export function Calculator() {
             {/** HR */}
 
             <View style={styles.row}>
-              {renderButton("AC", require("../../assets/ac.png"))}
-              {renderButton("backspace", require("../../assets/Backspace.png"))}
-              {renderButton("%", require("../../assets/modulus.png"))}
-              {renderButton("/", require("../../assets/divisionsign.png"))}
+              {renderButton("AC")}
+              {renderButton("backspace","backspace-outline","Ionicons")}
+              {renderButton("%","percent","MaterialIcons" )}
+              {renderButton("/","divide","FontAwesome6" )}
             </View>
 
             <View style={styles.row}>
               {renderButton("7")}
               {renderButton("8")}
               {renderButton("9")}
-              {renderButton("*", require("../../assets/multiplication.png"))}
+              {renderButton("*","xmark","FontAwesome6")}
             </View>
             <View style={styles.row}>
               {renderButton("4")}
               {renderButton("5")}
               {renderButton("6")}
-              {renderButton("-", require("../../assets/subtraction.png"))}
+              {renderButton("-", "dash","Octicons")}
             </View>
             <View style={styles.row}>
               {renderButton("1")}
               {renderButton("2")}
               {renderButton("3")}
-              {renderButton("+", require("../../assets/Addition.png"))}
+              {renderButton("+","add","FontAwesome6")}
             </View>
             <View style={styles.row}>
               <TouchableOpacity
@@ -340,7 +489,10 @@ export function Calculator() {
               </TouchableOpacity>
               {renderButton("0")}
               {renderButton(".")}
-              {renderButton("=", require("../../assets/equalssign.png"))}
+               <View style={styles.equalsButtonContainer}>
+              
+               {renderButton("=")}           
+  </View>
             </View>
           </View>
         </View>
@@ -403,6 +555,26 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#000000",
+    fontWeight: "500",
+    fontSize: 24,
+  },
+  
+  equalsButtonContainer:{
+    borderRadius:150,
+    width:56,height:56,
+    backgroundColor:"#266DDC",
+    justifyContent:"center",
+    alignItems:"center",
+   
+  },
+  
+  equalsbutton: {
+    color:"#FFFFFF",
+    fontWeight: "500",
+    fontSize: 24,
+  },
+  ACbutton: {
+    color:"#266DDC",
     fontWeight: "500",
     fontSize: 24,
   },
