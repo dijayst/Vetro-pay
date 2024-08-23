@@ -22,21 +22,9 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import * as SQLite from "expo-sqlite/legacy";
 import moment from 'moment';
-/*
-import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 
-export default function CalcParent() {
-  return (
-    <Fragment>
-      <SQLiteProvider databaseName="calculator.db"  onInit={initializeDatabase}>
-        <Calculator />
-      </SQLiteProvider>
-    </Fragment>
-  );
-}*/
 
 export default function Calculator() {
- // const db = useSQLiteContext();
  
  const db = SQLite.openDatabase('calculator.db');
   const navigation = useNavigation();
@@ -91,8 +79,9 @@ export default function Calculator() {
   const HistoryVisibility = () => {
     setIsHistoryVisible(!isHistoryVisible);
   };
-  const saveHistory = (expression, result) => {
-    const timestamp = moment().format('YYYY-MM-DD HH:mm:ss'); // Get current timestamp
+
+  const saveHistory = (expression, result, customTimestamp = null) => {
+    const timestamp = customTimestamp || moment().format('YYYY-MM-DD HH:mm:ss'); // Use current timestamp if customTimestamp is not provided
     db.transaction(tx => {
       tx.executeSql(
         'INSERT INTO history (expression, result, timestamp) VALUES (?, ?, ?);',
@@ -106,7 +95,9 @@ export default function Calculator() {
         }
       );
     });
-  };
+};
+saveHistory("5 + 5", "10", moment().subtract(2, 'days').format('YYYY-MM-DD HH:mm:ss'));
+
   
   useEffect(() => {
     if (sessionAns != null) {
@@ -319,7 +310,10 @@ export default function Calculator() {
   
     return Object.keys(groupedHistory).map((date, index) => (
       <View key={index}>
-        <AppText bold styles={{ fontSize: 16, marginBottom: 8 }}>
+        <AppText 
+        bold 
+         styles={{ fontSize: 16, marginBottom: 8,}}
+        >
           {date}
         </AppText>
         {groupedHistory[date].map((item, idx) => (
