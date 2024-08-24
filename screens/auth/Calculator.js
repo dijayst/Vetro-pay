@@ -310,16 +310,16 @@ export default function Calculator() {
   
     return Object.keys(groupedHistory).map((date, index) => (
       <View key={index}>
-        <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center",marginTop:5,gap:5
+        <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center",marginTop:5,gap:10
         }}>
         <View style={{
                 borderColor: "#D9D9D9",
-                width: "30%",
-                borderWidth: 0.7,marginTop:-10
+                width: 80,
+                borderWidth: 0.7,
               }}></View>
  <AppText 
-        bold 
-         styles={{ fontSize: 16, marginBottom: 8}}
+         
+         styles={{ fontSize: 14, marginVertical:8,paddingHorizontal:7,paddingVertical:5,backgroundColor:"#D3D3D3",borderRadius:5}}
         >
           {date}
         </AppText>
@@ -327,8 +327,8 @@ export default function Calculator() {
             <View
               style={{
                 borderColor: "#D9D9D9",
-                width: "30%",
-                borderWidth: 0.7,marginTop:-10
+                width: 80,
+                borderWidth: 0.7,
               }}
             ></View>
         </View>
@@ -461,6 +461,8 @@ export default function Calculator() {
                 borderColor: "#D9D9D9",
                 width: "97%",
                 borderWidth: 0.7,
+                marginBottom:-10
+               
               }}
             ></View>
             {/** HR */}
