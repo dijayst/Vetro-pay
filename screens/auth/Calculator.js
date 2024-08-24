@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TextInput,
   Alert,
+  ScrollView,
 } from "react-native";
 import React, { Fragment, useEffect, useState } from "react";
 import Octicons from "@expo/vector-icons/Octicons";
@@ -62,7 +63,7 @@ export default function Calculator() {
             timestamp: item.timestamp,
           }));
           console.log('Fetched history:', rows._array); // Check what rows._array contains
-          setHistory(fetchedHistory);
+         // setHistory(fetchedHistory);
           setHistory(rows._array);
         },
         (tx, error) => {
@@ -96,7 +97,7 @@ export default function Calculator() {
       );
     });
 };
-saveHistory("5 + 5", "10", moment().subtract(2, 'days').format('YYYY-MM-DD HH:mm:ss'));
+//saveHistory("5 + 5", "10", moment().subtract(2, 'days').format('YYYY-MM-DD HH:mm:ss'));
 
   
   useEffect(() => {
@@ -110,7 +111,7 @@ saveHistory("5 + 5", "10", moment().subtract(2, 'days').format('YYYY-MM-DD HH:mm
     if (value === "=") {
       let result = calculateResult();
       if (result != null) {
-        setSessionAns(result);
+       //1 setSessionAns(result);
         saveHistory(input, result); // Save history when result is calculated
     
       }
@@ -304,24 +305,32 @@ saveHistory("5 + 5", "10", moment().subtract(2, 'days').format('YYYY-MM-DD HH:mm
 
 
   
-
   const renderHistory = () => {
     const groupedHistory = groupHistoryByDate(history);
   
     return Object.keys(groupedHistory).map((date, index) => (
       <View key={index}>
-        <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
-        <View style={{marginTop:-10,fontWeight:"500",fontSize:24,color:"black"}}><Text>- - - - - - - - - -</Text></View>
+        <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center",marginTop:5,gap:5
+        }}>
+        <View style={{
+                borderColor: "#D9D9D9",
+                width: "30%",
+                borderWidth: 0.7,marginTop:-10
+              }}></View>
  <AppText 
         bold 
-         styles={{ fontSize: 16, marginBottom: 8,fontWeight:"300"}}
+         styles={{ fontSize: 16, marginBottom: 8}}
         >
           {date}
         </AppText>
 
             <View
-              style={{marginTop:-10,fontWeight:"500",fontSize:24,color:"black"}}
-            ><Text>- - - - - - - - - -</Text></View>
+              style={{
+                borderColor: "#D9D9D9",
+                width: "30%",
+                borderWidth: 0.7,marginTop:-10
+              }}
+            ></View>
         </View>
        
         {groupedHistory[date].map((item, idx) => (
@@ -336,12 +345,13 @@ saveHistory("5 + 5", "10", moment().subtract(2, 'days').format('YYYY-MM-DD HH:mm
           >
              
              {item.expression} = {item.result}
-       
+            
           </AppText>
         ))}
       </View>
     ));
   };
+  
   
 
   const groupHistoryByDate = (historyArray) => {
@@ -401,11 +411,14 @@ saveHistory("5 + 5", "10", moment().subtract(2, 'days').format('YYYY-MM-DD HH:mm
           style={{
             marginTop: 16,
             borderWidth: 1,
+            flex:1,
             borderColor: "#D9D9D9",
             borderRadius: 5,
             padding: 15,
           }}
         >
+         
+
           <View
             style={{
               flexDirection: "row",
@@ -421,8 +434,12 @@ saveHistory("5 + 5", "10", moment().subtract(2, 'days').format('YYYY-MM-DD HH:mm
             </TouchableOpacity>
           </View>
           
-
+<ScrollView style={{flex:1}}>
 {renderHistory()}
+</ScrollView>
+
+
+          
         </View>
       ) : (
         <View style={{ flex: 1 }}>
