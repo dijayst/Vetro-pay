@@ -522,7 +522,8 @@ export default function Register({ navigation }) {
       ref={scrollViewRef}
       >
       
-      
+     
+
       <View style={[styles.slide, { width }]}>
     {/*   <Picker
                     style={{ height: 45 }}
@@ -654,7 +655,7 @@ export default function Register({ navigation }) {
              
               <View style={{ marginTop: 25 }}>
           <AppText
-            bold="true"
+            medium
             styles={{
               ...styles.loginIntro,
               marginBottom: 10,
@@ -1044,7 +1045,26 @@ export default function Register({ navigation }) {
 
       </View>
      
-      
+      <View style={{ marginTop: 25 }}>
+          <AppText
+            medium
+            styles={{
+              ...styles.loginIntro,
+              marginBottom: 10,
+              textAlign: "center",
+              color: "#414141",
+              fontSize: 16,
+            }}
+          >
+          Already Have An Account?{" "}
+          <Text
+            style={{ color: "#266ddc" }}
+            onPress={() => navigation.navigate("Login")}
+          >
+          Log in
+          </Text>
+        </AppText>
+    </View>
       
       </View>
       
@@ -1064,7 +1084,7 @@ export default function Register({ navigation }) {
       <AppText medium styles={{ fontSize: 25,marginTop:11 }}>
       Enter OTP
               </AppText>
-              <AppText regular styles={{ ...styles.loginIntro1, marginTop: 8 }}>
+              <AppText regular styles={{ ...styles.loginIntro1, marginTop: 8,color:"#414141" }}>
               Enter 6 digit code sent to your phone number
              </AppText>
       
@@ -1081,7 +1101,7 @@ export default function Register({ navigation }) {
       
         <View style={{ marginTop: 16 }}>
          <AppText
-             medium
+            regular
               styles={{
                 ...styles.loginIntro,
                 marginBottom: 30,
@@ -1116,6 +1136,7 @@ export default function Register({ navigation }) {
       
       </View>
       
+     
       <View style={[styles.slide,{ width }]}>
       
       <View style={{marginTop:24,}}>
@@ -1129,11 +1150,11 @@ export default function Register({ navigation }) {
       <AppText medium styles={{ fontSize: 25,marginTop:11 }}>
       Create Transaction Pin  🔑
               </AppText>
-              <AppText regular styles={{ ...styles.loginIntro1, marginTop: 8 }}>
+              <AppText regular styles={{ ...styles.loginIntro1, marginTop: 8,color:"#414141"}}>
               Create a 4 digit code for your transactions
                 </AppText>
       
-      
+     
       
       
               <View style={{flexDirection:"column",marginTop:40,gap:24 }}>
@@ -1204,6 +1225,7 @@ export default function Register({ navigation }) {
             </AppText>
         </View>
       </View>
+
       <View style={[styles.slide,{ width }]}>
       <View>
       
