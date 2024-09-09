@@ -1,148 +1,26 @@
-import React, { useState, useEffect, useRef ,Fragment,useMemo,useCallback} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Dimensions, Modal, View, Text, StyleSheet, Image, TextInput, ScrollView, TouchableOpacity,Platform,FlatList } from "react-native";
+import { Dimensions, Modal, View, Text, StyleSheet, Image, TextInput, ScrollView, TouchableOpacity } from "react-native";
 import AppText from "../../resources/AppText";
 import { AppButton, PrimaryButton } from "../../resources/AppButton";
 import { AntDesign, MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
-import logo_mark from "../../assets/logo_mark.png";
+
 import { Spinner, useToast, Box, Text as NativeBaseText } from "native-base";
 import { postPreReg, postRegAuth, registerUser } from "../../containers/regvalidate/action";
 import { toastColorObject } from "../../resources/rStyledComponent";
 import { Picker as RNPicker } from "@react-native-picker/picker";
 import { Select } from "native-base";
-import GLO from "../../assets/GLO.png";
-import MTN from "../../assets/MTN.png";
-import chip_extraction from "../../assets/chip_extraction.png";
-import sim_card from "../../assets/sim_card.png";
-import {
-  normalizeFontSize
-} from "../../resources/utils";
-import Fontisto from '@expo/vector-icons/Fontisto';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import BottomSheet, {
-  BottomSheetModalProvider,
-  BottomSheetBackdrop,
-} from "@gorhom/bottom-sheet";
 
 const DoneIcon = require("../../assets/done.png");
 
 export default function Register({ navigation }) {
-  
-  const scrollViewRef = useRef(null);
-  const [currentSlide, setCurrentSlide] = useState(0); // Track the current slide
-
-  const { width } = Dimensions.get('window');
-
-  const goToNextSlide = () => {
- if (currentSlide < 4) {
-  scrollViewRef.current.scrollTo({ x: (currentSlide + 1) * width, animated: true });
-  setCurrentSlide(currentSlide + 1);
-}
-  };
-
-  const goToPreviousSlide = () => {
-   if (currentSlide > 0) {
-    scrollViewRef.current.scrollTo({ x: (currentSlide - 1) * width, animated: true });
-    setCurrentSlide(currentSlide - 1);
-  }
-  };
-
-
-  const [selectedLanguage, setSelectedLanguage] = useState('');
-
-  const languages = [
-    { label: 'English', value: 'EN',image: require('../../assets/english.png')  },
-    { label: 'Français', value: 'FR',image: require('../../assets/french.png')  },
-    { label: 'Chiness', value: 'FN',image: require('../../assets/chinese.png')  },
-  ];
-
-
-  const [openCountryModal, setOpenCountryModal] = useState(true);
- 
-  const handleOpenCountryModal = () => {
-    openCountryModalRef.current?.expand();
-    setOpenCountryModal(true);
-  };
-
-  const bottomSheetModalSnapPointsforcountry = useMemo(() => ["1%", "50%", "70%", "75%"], []);
- 
-  const openCountryModalRef = useRef(null);
-
-
-  const selectCountry = (country) => {
-    setLoginData((prevState) => ({
-      ...prevState,
-      payload: {
-        ...prevState.payload,
-        country,
-      },
-    }));
-    //bottomSheetRef.current?.close(); // Close the bottom sheet after selection
-  };
-  const renderBackdrop = (props) => (
-    <BottomSheetBackdrop {...props} opacity={0.5} />
-  );
-
-  
-  const handleSheetChanges = useCallback((index) => {}, []);
-
-  
-   const handleCountrySelect = (value) => {
-  setRegisterData(prevData => ({
-    ...prevData,
-    payload: {
-      ...prevData.payload,
-      selectedCountry: value
-    }
-  }));
-  setOpenCountryModal(false); // Close modal
-};
-
-
-  const [date, setDate] = useState(new Date());
-  const [showPicker, setShowPicker] = useState(false);
-
-  const onChange = (event, selectedDate) => {
-    setShowPicker(Platform.OS === 'ios');
-    if (selectedDate) {
-      setDate(selectedDate);
-    }
-  };
-
-  const showDatePicker = () => {
-    setShowPicker(true);
-  };
-  
-  
-  const [selectedValue, setSelectedValue] = useState('');
-  const [isPickerVisible, setIsPickerVisible] = useState(false);
-
-  const togglePicker = () => {
-    setIsPickerVisible(!isPickerVisible);
-  };
-
-  const onageChange = (itemValue) => {
-    setSelectedValue(itemValue);
-    setIsPickerVisible(false); 
-  };
-
-  
-
   const toast = useToast();
   const Picker = Platform.OS == "android" ? RNPicker : Select;
   const [stage, setStage] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
   const [registerData, setRegisterData] = useState({
     payload: {
-      country:  [
-
-        { label: '🇳🇬 Nigeria', value: 'NIGERIA' },
-        { label: '🇰🇪 Kenya', value: 'KENYA' },
-        { label: '🇬🇧 UK', value: 'UK' },
-        { label: '🇨🇲 Cameroon', value: 'CAMEROON' },
-        { label: '🇨🇳 China', value: 'CHINA' },
-      ],
-      selectedCountry: "",
+      country: "NIGERIA",
       firstName: "",
       lastName: "",
       phoneNumber: "",
@@ -234,30 +112,12 @@ export default function Register({ navigation }) {
 
     /** END REGISTER USER */
   });
-  const goTotransactionpin = async () => {
-    if (registerData.payload.phoneNumber.length >= 7 && 12 > registerData.payload.phoneNumber.length) {
-      toast.show({
-        render: () => (
-          <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
-            <NativeBaseText style={{ color: "#FFFFFF" }}>Invalid Phone number</NativeBaseText>
-          </Box>
-        ),
-      });
-    } else {
-      setDisplaySpinner(true);
-  
-      // Dispatch the action and await its result
-    }
-    setDisplaySpinner(false);
-    goToNextSlide()
-  };
-  
-
 
   const goToAuthCode = () => {
     if (
       registerData.payload.firstName.length < 2 ||
       registerData.payload.lastName.length < 2 ||
+      !(registerData.payload.phoneNumber.length >= 7 && 12 > registerData.payload.phoneNumber.length) ||
       registerData.payload.password.length < 8 ||
       registerData.payload.password !== registerData.payload.confirmPassword
     ) {
@@ -277,7 +137,15 @@ export default function Register({ navigation }) {
             </Box>
           ),
         });
-      }  else if (registerData.payload.password.length < 8) {
+      } else if (!(registerData.payload.phoneNumber.length >= 7 && 12 > registerData.payload.phoneNumber.length)) {
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Invalid Phone number</NativeBaseText>
+            </Box>
+          ),
+        });
+      } else if (registerData.payload.password.length < 8) {
         toast.show({
           render: () => (
             <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
@@ -297,12 +165,10 @@ export default function Register({ navigation }) {
     } else {
       setDisplaySpinner(true);
       dispatch(postPreReg(registerData.payload.country, registerData.payload.phoneNumber, `${registerData.payload.firstName} ${registerData.payload.lastName}`));
-      goToNextSlide();
-      
     }
   };
 
-  const goToSecurityPin = async() => {
+  const goToSecurityPin = () => {
     if (Number(registerData.payload.authCode) == NaN || registerData.payload.authCode == "") {
       toast.show({
         render: () => (
@@ -311,30 +177,39 @@ export default function Register({ navigation }) {
           </Box>
         ),
       });
-    } else { setDisplaySpinner(true);
-      try {
-        await dispatch(postRegAuth(registerData.payload.country, registerData.payload.phoneNumber, registerData.payload.authCode));
-       
-        goToNextSlide();
-      } catch (error) {
-        console.error("Error during registration:", error);
-      
-      } finally {
-        setDisplaySpinner(false); 
-      }
+    } else {
+      setDisplaySpinner(true);
+      dispatch(postRegAuth(registerData.payload.country, registerData.payload.phoneNumber, registerData.payload.authCode));
     }
   };
 
-
-  
   const completeRegistration = () => {
     if (
-       registerData.payload.transactionPin.length < 6 ||
+      registerData.payload.securityQuestion == "" ||
+      registerData.payload.securityAnswer == "" ||
+      registerData.payload.securityAnswer.replace(/\s\s+/g, " ") == " " ||
+      registerData.payload.transactionPin.length < 6 ||
       registerData.payload.transactionPin.length > 6 ||
       Number(registerData.payload.transactionPin) == NaN ||
       registerData.payload.transactionPin !== registerData.payload.confirmTransactionPin
     ) {
-        if (registerData.payload.transactionPin.length < 6 || Number(registerData.payload.transactionPin) == NaN || registerData.payload.transactionPin.length > 6) {
+      if (registerData.payload.securityQuestion == "") {
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Select security question</NativeBaseText>
+            </Box>
+          ),
+        });
+      } else if (registerData.payload.securityAnswer == "" || registerData.payload.securityAnswer.replace(/\s\s+/g, " ") == " ") {
+        toast.show({
+          render: () => (
+            <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
+              <NativeBaseText style={{ color: "#FFFFFF" }}>Input Security Answer</NativeBaseText>
+            </Box>
+          ),
+        });
+      } else if (registerData.payload.transactionPin.length < 6 || Number(registerData.payload.transactionPin) == NaN || registerData.payload.transactionPin.length > 6) {
         toast.show({
           render: () => (
             <Box bg={toastColorObject["danger"]} px="2" py="2" rounded="sm" mb={5}>
@@ -364,7 +239,6 @@ export default function Register({ navigation }) {
           registerData.payload.transactionPin
         )
       );
-      navigation.navigate("Login")
     }
   };
 
@@ -444,87 +318,31 @@ export default function Register({ navigation }) {
     }
   };
 
-  const pickcountry = () => {
-    return (
-
-<View  style={styles.bottomsheetContainer1}>
- <View
-           style={{
-            flex:1
-           }}
-         >
-
-
-    <View style={{alignItems:"flex-end"}}>
-<AppButton onPress={() => handleOpenCountryModal()} 
- styles={{
-             marginTop: 15,
-             borderRadius: 4,
-             height: 37,
-             width:85,
-             justifyContent:"center",
-             alignItems:"center",
-             backgroundColor:"#F4F4F4",
-           }}>
-       
-       
-
-        <AppText style={styles.buttonText}>
-        {registerData.payload.selectedCountry
-            ? registerData.payload.country.find(c => c.value === registerData.payload.selectedCountry)?.label
-            : '🇳🇬 '}
-        </AppText>
-     </AppButton>
-
-     
-</View>
-
-         </View>
-         </View>
-     
-    );};
-  
   const registrationProcess = () => {
-    return (
-      <ScrollView style={styles.container}>
-      <Image
-        source={logo_mark}
-        style={{
-          marginTop: 40, 
-          height: 53,    
-          width: 41,    
-          resizeMode: "contain",
-          marginHorizontal:20
-        }}
-      />
-          
-       
-  
-      <View style={styles.viewContainer1}>
+    switch (stage) {
+      case 1:
+        return (
+          <ScrollView>
+            <View style={{ marginTop: 100 }}></View>
+            <View style={styles.viewContainer}>
+              {/** Welcome Text */}
+              <AppText bold="true" styles={styles.loginBold}>
+                Hey 👋🏿,
+              </AppText>
+              <AppText bold="true" styles={styles.loginIntro}>
+                Sign up here to continue
+              </AppText>
 
-      <View style={styles.dotsContainer}>
-        {[0, 1, 2,3,4].map((_, index) => (
-          <View
-            key={index}
-            style={[
-              styles.dot,
-              { opacity: currentSlide >= index ? 1 : 0.3 }, // Change opacity for current and previous dots
-            ]}
-          />
-        ))}
-      </View>
-            
-      <ScrollView
-         horizontal
-      pagingEnabled
-      showsHorizontalScrollIndicator={false}
-      scrollEnabled={false} 
-      ref={scrollViewRef}
-      >
-      
-      
-      <View style={[styles.slide, { width }]}>
-    {/*   <Picker
+              <View>
+                <View
+                  style={{
+                    marginTop: 20,
+                    borderWidth: 0.5,
+                    borderColor: "#266ddc",
+                    borderRadius: 15,
+                  }}
+                >
+                  <Picker
                     style={{ height: 45 }}
                     onValueChange={(itemValue, itemIndex) => {
                       setRegisterData((prevState) => ({
@@ -540,795 +358,249 @@ export default function Register({ navigation }) {
                   >
                     <Picker.Item label="🇳🇬  Nigeria" value="NIGERIA" />
                     <Picker.Item label="🇰🇪  Kenya" value="KENYA" />
-                  </Picker>*/}
-      {pickcountry()}
-      
-              <AppText medium styles={{ fontSize: 25,color:"#000000" }}>
-              Create Your Account
-              </AppText>
-              <AppText regular styles={{ ...styles.loginIntro1, marginTop: 8 }}>
-              Enter Your Details To Create Account
-              </AppText>
-      
-      
-              <View style={{flexDirection:"column",marginTop:40,gap:24 }}>
-             
-                <View >
-      
-                <AppText medium style={{ ...styles.Lable,fontSize:16}}>First Name</AppText>
-               <TextInput
-                    style={{ ...styles.textInput,}}
-                    placeholder="First Name"
-                    placeholderTextColor="#A0A0A0"
-                    value={registerData.payload.firstName}
-                    onChangeText={(text) => onValueChange("firstName", text)}
-                   
-                    />
+                  </Picker>
                 </View>
-                <View>
-                  <AppText medium style={{ ...styles.Lable,fontSize:16}}>Last Name</AppText>
-                  <TextInput
-                 style={{ ...styles.textInput,}}
-                  placeholder="Last Name"
-                  placeholderTextColor="#A0A0A0" 
+                <TextInput
+                  style={{ ...styles.textInput, marginTop: 20 }}
+                  value={registerData.payload.firstName}
+                  onChangeText={(text) => onValueChange("firstName", text)}
+                  placeholder="First Name"
+                  placeholderTextColor="gray"
+                />
+
+                <TextInput
+                  style={{ ...styles.textInput }}
                   value={registerData.payload.lastName}
                   onChangeText={(text) => onValueChange("lastName", text)}
-                 />
-                </View>
-               
-               <View>
-               <AppText medium style={{ ...styles.Lable,fontSize:16}}>Password</AppText>
-               <View
-                  style={{
-                    ...styles.textInput,
-                    
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                 
+                  placeholder="Surname / Last Name"
+                  placeholderTextColor="gray"
+                />
+
+                <TextInput
+                  style={{ ...styles.textInput, marginTop: 10 }}
+                  textContentType="telephoneNumber"
+                  placeholder="Phone Number"
+                  keyboardType="numeric"
+                  placeholderTextColor="gray"
+                  onChangeText={(text) => onValueChange("phoneNumber", text)}
+                />
+
+                <View style={{ ...styles.textInput, marginTop: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                   <TextInput
                     style={{ flexBasis: "80%" }}
-                    placeholder="create password"
-                    placeholderTextColor="#A0A0A0"
+                    placeholder="Password"
+                    placeholderTextColor="gray"
                     textContentType="password"
-                    autoComplete="off"
                     secureTextEntry={!showPassword}
                     onChangeText={(text) => onValueChange("password", text)}
-               
-                />
-                 {registerData.payload.password.length > 0 && (
-                    <TouchableOpacity onPress={() => setShowPassword((prevState) => !prevState)}>
-                      <FontAwesome5 name={showPassword ? "eye-slash" : "eye"} size={15} color="gray" />
-                    </TouchableOpacity>
-                  )}
-                </View>
-               </View>
-      <View>
-      <AppText medium style={{ ...styles.Lable,fontSize:16}}>Confirm Password</AppText>
-      <View
-                  style={{
-                    ...styles.textInput,
-                   
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  
-                  <TextInput
-                    style={{ flexBasis: "80%" }}
-                    placeholder="re-enter password"
-                    placeholderTextColor="#A0A0A0"
-                    textContentType="password"
-                    autoComplete="off"
-                    secureTextEntry={!showPassword}
-                    onChangeText={(text) => onValueChange("confirmPassword", text)}
-                 
                   />
-                       {registerData.payload.password.length > 0 && (
+                  {registerData.payload.password.length > 0 && (
                     <TouchableOpacity onPress={() => setShowPassword((prevState) => !prevState)}>
                       <FontAwesome5 name={showPassword ? "eye-slash" : "eye"} size={15} color="gray" />
                     </TouchableOpacity>
                   )}
-                </View>
-      
-      </View>
-               
-      
-      
-              </View>
+                  </View>
 
-      <View >
-      <AppButton styles={{ ...styles.signupButton, display: `${!displaySpinner ? "flex" : "none"}` }} onPress={() => goToAuthCode()}>
-                  <AppText bold="true" styles={{ color: "#FFFFFF", fontSize: 16 }}>
-                   Proceed
+                  <View style={{ ...styles.textInput, marginTop: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                    <TextInput
+                      style={{ flexBasis: "80%" }}
+                      placeholder="Confirm Password"
+                      placeholderTextColor="gray"
+                      textContentType="password"
+                      secureTextEntry={!showPassword}
+                      onChangeText={(text) => onValueChange("confirmPassword", text)}
+                    />
+                    {registerData.payload.confirmPassword.length > 0 && (
+                        <TouchableOpacity onPress={() => setShowPassword((prevState) => !prevState)}>
+                          <FontAwesome5 name={showPassword ? "eye-slash" : "eye"} size={15} color="gray" />
+                        </TouchableOpacity>
+                      )}
+                  </View>
+
+                <AppButton styles={{ ...styles.signupButton, display: `${!displaySpinner ? "flex" : "none"}` }} onPress={() => goToAuthCode()}>
+                  <AppText bold="true" styles={{ color: "#FFFFFF", fontSize: 18 }}>
+                    Sign Up
                   </AppText>
                 </AppButton>
                 <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
                   <Spinner color="blue.700" size="lg" />
                 </View>
 
-      </View>
-             
-              <View style={{ marginTop: 25 }}>
-          <AppText
-            bold="true"
-            styles={{
-              ...styles.loginIntro,
-              marginBottom: 10,
-              textAlign: "center",
-              color: "#414141",
-              fontSize: 16,
-            }}
-          >
-          Already Have An Account?{" "}
-          <Text
-            style={{ color: "#266ddc" }}
-            onPress={() => navigation.navigate("Login")}
-          >
-          Log in
-          </Text>
-        </AppText>
-    </View>
-      
-      </View>
-      
-      
-      <View style={[styles.slide, { width }]}>
-        <TouchableOpacity style={{marginTop:24}} onPress={goToPreviousSlide}>
-      <MaterialIcons name="keyboard-backspace" size={24} color="#1C1B1F" />
-      </TouchableOpacity>
-      
-      <AppText medium styles={{ fontSize: 25,marginTop:11 }}>
-      Phone Number
-              </AppText>
-              <AppText regular styles={{ ...styles.loginIntro1, marginTop: 8 }}>
-              Confirm Your Phone Number
-              </AppText>
-      
-      
-      
-      
-      
-      <View style={{flexDirection:"column",marginTop:40}}>
-       {/** TELCO ELEMENT CONTAINER */}
-       <View
-                      style={{
-                        flexDirection: "column",
-                        gap: 8,
-                        height: 150,
-                        backgroundColor: "#F4F4F4",
-                        marginTop: 8,
-                        padding: 20,
-                        gap: 6,
-                        borderRadius: 8,
-                      }}
-                    >
-                      {/** UPPER ROW INFORMATION */}
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        {/** MOBILE INFO */}
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            gap: 8,
-                            alignItems: "center",
-                          }}
-                        >
-                          {/** MOBILE OPERATOR LOGO */}
-                          <Image
-                            source={MTN}
-                            style={{
-                              height: 40,
-                              width: 40,
-                              resizeMode: "contain",
-                            }}
-                          />
-                          {/** END MOBILE OPERATOR LOGO */}
-      
-                          {/** MOBILE PHONE NUMBER */}
-                          <AppText
-                            medium
-                            style={{
-                              fontSize: 14,
-                              color: "#000000",
-                            }}
-                          >
-                           MTN-NG
-                          </AppText>
-                          {/** END MOBILE PHONE NUMBER */}
-                        </View>
-                        {/** END MOBILE INFO */}
-      
-                        {/** SIM ICON */}
-                        <View style={{ flexDirection: "row", gap: 4 }}>
-                          <Image
-                            source={sim_card}
-                            style={{
-                              height: 22,
-                              width: 22,
-                              resizeMode: "contain",
-                            }}
-                          />
-                          <Text
-                            style={{
-                              fontSize: 14,
-                              marginTop: 3,
-                              color: "#266DDC",
-                              fontWeight: "500",
-                            }}
-                          >
-                            SIM 1
-                          </Text>
-                        </View>
-                        {/** END SIM ICON */}
-                      </View>
-                      {/** END UPPER ROW INFORMATION */}
-      
-                      <View
-                        style={{
-                          marginTop: 12,
-                          flexDirection: "row",
-                          gap: 8,
-                          alignItems: "center",
-                          justifyContent: "space-around",
-                        }}
-                      >
-                        {/** CHECK AIRTIME BALANCE */}
-                        <TouchableOpacity
-                          style={{
-                            backgroundColor: "#266DDC",
-                            height: 40,
-                            width: "45%",
-                            borderRadius: 4,
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                          onPress={() => {
-                            /**
-                             * LEAVE DOCUMENTATION HERE TO HIGHLIGHT "react-native-phone-call" VS "react-native-immediate-phone-call"
-                             * 
-                            const args = {
-                              number: "*310#".replace("*", "%2a").replace("#", "%23"), // String value with the number to call
-                              prompt: false, // Optional boolean property. Determines if the user should be prompted prior to the call
-                              skipCanOpen: true, // Skip the canOpenURL check
-                            };
-                            call(args).catch(console.error)
-                             */
-      
-                            let number = "*310#";
-                            RNImmediatePhoneCall.immediatePhoneCall(number);
-                          }}
-                        >
-                          <AppText
-                            bold
-                            styles={{
-                              fontSize: 12,
-                              color: "#FFFFFF",
-                            }}
-                            numberOfLines={1}
-                          >
-                            Check Airtime Balance
-                          </AppText>
-                        </TouchableOpacity>
-                        {/** END CHECK AIRTIME BALANCE */}
-      
-                        {/** CHECK DATA BALANCE */}
-                        <TouchableOpacity
-                          style={{
-                            backgroundColor: "#F4F4F4",
-                            height: 40,
-                            width: "45%",
-                            borderRadius: 4,
-                            alignItems: "center",
-                            justifyContent: "center",
-                            borderColor: "#266DDC",
-                            borderWidth: 1.5,
-                            borderRadius: 4,
-                          }}
-                          onPress={() => {
-                            let number = "*312#";
-                            RNImmediatePhoneCall.immediatePhoneCall(number);
-                          }}
-                        >
-                          <AppText
-                            bold
-                            styles={{
-                              fontSize: 12,
-                              color: "#266DDC",
-                            }}
-                            numberOfLines={1}
-                          >
-                            Check Data Balance
-                          </AppText>
-                        </TouchableOpacity>
-                        {/** CHECK DATA BALANCE */}
-                      </View>
-                    </View>
-                    {/** END TELCO ELEMENT CONTAINER */}
-      
-      
-      
-      
-                    <View
-                      style={{
-                        flexDirection: "column",
-                        gap: 8,
-                        height: 150,
-                        backgroundColor: "#F4F4F4",
-                        marginTop: 8,
-                        padding: 20,
-                        gap: 6,
-                        borderRadius: 8,
-                      }}
-                    >
-                      {/** UPPER ROW INFORMATION */}
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        {/** MOBILE INFO */}
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            gap: 8,
-                            alignItems: "center",
-                          }}
-                        >
-                          {/** MOBILE OPERATOR LOGO */}
-                          <Image
-                            source={GLO}
-                            style={{
-                              height: 40,
-                              width: 40,
-                              resizeMode: "contain",
-                            }}
-                          />
-                          {/** END MOBILE OPERATOR LOGO */}
-      
-                          {/** MOBILE PHONE NUMBER */}
-                          <AppText
-                           medium
-                            style={{
-                              fontSize: 14,
-                              color: "#000000",
-                            }}
-                          >
-                            GLO-NG
-                          </AppText>
-                          {/** END MOBILE PHONE NUMBER */}
-                        </View>
-                        {/** END MOBILE INFO */}
-      
-                        {/** SIM ICON */}
-                        <View style={{ flexDirection: "row", gap: 4 }}>
-                          <Image
-                            source={sim_card}
-                            style={{
-                              height: 22,
-                              width: 22,
-                              resizeMode: "contain",
-                            }}
-                          />
-                          <Text
-                            style={{
-                              fontSize: 14,
-                              marginTop: 3,
-                              color: "#266DDC",
-                              fontWeight: "500",
-                            }}
-                          >
-                            SIM 2
-                          </Text>
-                        </View>
-                        {/** END SIM ICON */}
-                      </View>
-                      {/** END UPPER ROW INFORMATION */}
-      
-                      <View
-                        style={{
-                          marginTop: 12,
-                          flexDirection: "row",
-                          gap: 8,
-                          alignItems: "center",
-                          justifyContent: "space-around",
-                        }}
-                      >
-                        {/** CHECK AIRTIME BALANCE */}
-                        <TouchableOpacity
-                          style={{
-                            backgroundColor: "#266DDC",
-                            height: 40,
-                            width: "45%",
-                            borderRadius: 4,
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                          onPress={() => {
-                            /**
-                             * LEAVE DOCUMENTATION HERE TO HIGHLIGHT "react-native-phone-call" VS "react-native-immediate-phone-call"
-                             * 
-                            const args = {
-                              number: "*310#".replace("*", "%2a").replace("#", "%23"), // String value with the number to call
-                              prompt: false, // Optional boolean property. Determines if the user should be prompted prior to the call
-                              skipCanOpen: true, // Skip the canOpenURL check
-                            };
-                            call(args).catch(console.error)
-                             */
-      
-                            let number = "*310#";
-                            RNImmediatePhoneCall.immediatePhoneCall(number);
-                          }}
-                        >
-                          <AppText
-                            bold
-                            styles={{
-                              fontSize: 12,
-                              color: "#FFFFFF",
-                            }}
-                            numberOfLines={1}
-                          >
-                            Check Airtime Balance
-                          </AppText>
-                        </TouchableOpacity>
-                        {/** END CHECK AIRTIME BALANCE */}
-      
-                        {/** CHECK DATA BALANCE */}
-                        <TouchableOpacity
-                          style={{
-                            backgroundColor: "#F4F4F4",
-                            height: 40,
-                            width: "45%",
-                            borderRadius: 4,
-                            alignItems: "center",
-                            justifyContent: "center",
-                            borderColor: "#266DDC",
-                            borderWidth: 1.5,
-                            borderRadius: 4,
-                          }}
-                          onPress={() => {
-                            let number = "*312#";
-                            RNImmediatePhoneCall.immediatePhoneCall(number);
-                          }}
-                        >
-                          <AppText
-                            bold
-                            styles={{
-                              fontSize: 12,
-                              color: "#266DDC",
-                            }}
-                            numberOfLines={1}
-                          >
-                            Check Data Balance
-                          </AppText>
-                        </TouchableOpacity>
-                        {/** CHECK DATA BALANCE */}
-                      </View>
-                    </View>
-      
-      </View>
-      
-      <View >
-        <AppText medium styles={{ fontSize: 14,marginTop:24,color:"#121212" }}>Or Enter Phone Number</AppText>
-        <TextInput
-                    style={{ ...styles.textInput,}}
-                    placeholder="Enter Phone Number"
-                    placeholderTextColor="#A0A0A0"
-                    textContentType="telephoneNumber"
-                    keyboardType="numeric"
-                    onChangeText={(text) => onValueChange("phoneNumber", text)}
-                      />
-                
-      </View>
-      
-      <View >
-      <AppButton styles={{ ...styles.signupButton, display: `${!displaySpinner ? "flex" : "none"}` }} onPress={() => goTotransactionpin()}>
-                  <AppText bold="true" styles={{ color: "#FFFFFF", fontSize: 16 }}>
-                   Proceed
-                  </AppText>
-                </AppButton>
-                <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-                <Spinner color="blue.700" size="lg" />
-              </View>
-             
+                <AppText styles={{ marginTop: 10 }}>
+                  By proceeding you agree to our{" "}
+                  <Text style={{ color: "#266ddc", fontWeight: "700" }} onPress={() => setModalOpen(true)}>
+                    Privacy Policy and Terms of Service
+                  </Text>
+                </AppText>
 
-      </View>
-     
-      
-      
-      </View>
-      
-      
-     
-      
-      
-      <View style={[styles.slide,{ width }]}>
-      
-      <View style={{marginTop:24,}}>
-      
-      <TouchableOpacity  onPress={goToPreviousSlide}>
-      <MaterialIcons name="keyboard-backspace" size={24} color="#1C1B1F" />
-      </TouchableOpacity>
-      </View>
-      
-      <AppText medium styles={{ fontSize: 25,marginTop:11 }}>
-      Enter OTP
-              </AppText>
-              <AppText regular styles={{ ...styles.loginIntro1, marginTop: 8 }}>
-              Enter 6 digit code sent to your phone number
-             </AppText>
-      
-      
-             <View style={{display:"flex",flexDirection:"row",gap:12,marginTop:24,justifyContent:"center",alignItems:"center"}}>
-             <TextInput
-                style={{ ...styles.textInput,}}
+                <AppText styles={{ marginTop: 30, marginBottom: 50, fontSize: 16, textAlign: "center" }}>
+                  <Text style={{ fontWeight: "500" }}>
+                    Already a user?{" "}
+                    <Text onPress={() => navigation.navigate("Login")} style={{ color: "#266DDC", fontWeight: "bold" }}>
+                      Log In
+                    </Text>
+                  </Text>
+                </AppText>
+              </View>
+            </View>
+          </ScrollView>
+        );
+
+      case 2:
+        return (
+          <View style={styles.viewContainer}>
+            {/** Welcome Text */}
+            <AppText bold="true" styles={styles.loginBold}>
+              Authentication 📨,
+            </AppText>
+            <AppText bold="true" styles={styles.loginIntro}>
+              Enter authentication code sent to your Phone
+            </AppText>
+
+            <View>
+              <TextInput
+                style={styles.textInput}
                 placeholder="Authentication Code"
                 placeholderTextColor="gray"
                 keyboardType="visible-password"
                 onChangeText={(text) => onValueChange("authCode", text)}
               />
-        </View>
-      
-        <View style={{ marginTop: 16 }}>
-         <AppText
-             medium
-              styles={{
-                ...styles.loginIntro,
-                marginBottom: 30,
-                textAlign: "center",
-                fontSize: 16,
-                color:"#000000"
-              }}
-            >
-              Didn’t get the code?{" "}
-              <Text
-                style={{ color: "#266ddc" }}
-                onPress={() => navigation.navigate("Login")}
-              >
-             Resend it
-              </Text>
-            </AppText>
-        </View>
-      
-      
-        <View >
-      <AppButton styles={{ ...styles.signupButton, display: `${!displaySpinner ? "flex" : "none"}` }} onPress={() => goToSecurityPin()}>
-                  <AppText bold="true" styles={{ color: "#FFFFFF", fontSize: 16 }}>
-                   Proceed
-                  </AppText>
-                </AppButton>
-                <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-                  <Spinner color="blue.700" size="lg" />
+
+              <AppButton styles={{ ...styles.signupButton, display: `${!displaySpinner ? "flex" : "none"}` }} onPress={() => goToSecurityPin()}>
+                <AppText bold="true" styles={{ color: "#FFFFFF", fontSize: 18 }}>
+                  Continue
+                </AppText>{" "}
+                <AntDesign color="#FFFFFF" name="arrowright" size={16} />
+              </AppButton>
+              <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
+                <Spinner color="blue.700" size="lg" />
+              </View>
+            </View>
+          </View>
+        );
+
+      case 3:
+        return (
+          <ScrollView>
+            <View style={{ marginTop: 100 }}></View>
+            <View style={styles.viewContainer}>
+              {/** Welcome Text */}
+              <AppText bold="true" styles={styles.loginBold}>
+                Transaction Pin 🔑
+              </AppText>
+              <AppText bold="true" styles={styles.loginIntro}>
+                Set your transaction pin
+              </AppText>
+
+              <View>
+                <View
+                  style={{
+                    marginTop: 20,
+                    borderWidth: 0.5,
+                    borderColor: "#266ddc",
+                    borderRadius: 15,
+                  }}
+                >
+                  <Picker
+                    style={{ height: 40, flex: 1, flexWrap: "wrap" }}
+                    onValueChange={(itemValue, itemIndex) => {
+                      setRegisterData((prevState) => ({
+                        ...prevState,
+                        payload: {
+                          ...prevState.payload,
+                          securityQuestion: itemValue,
+                        },
+                      }));
+                    }}
+                    selectedValue={registerData.payload.securityQuestion}
+                    borderColor={"transparent"}
+                  >
+                    <Picker.Item label="--- Select Security Question ---" value="" />
+                    <Picker.Item label="Your oldest sibling's middle name?" value="1" />
+                    <Picker.Item label="Your Mom & Dad met in which city? " value="2" />
+                    <Picker.Item label="Your first car?" value="3" />
+                    <Picker.Item label="The first name of your best friend in High School?" value="4" />
+                    <Picker.Item label="The name of your first pet?" value="5" />
+                    <Picker.Item label="The name of the street where you grew up?" value="6" />
+                  </Picker>
                 </View>
 
-      </View>
-      
-      
-      </View>
-      
-      <View style={[styles.slide,{ width }]}>
-      
-      <View style={{marginTop:24,}}>
-      
-      <TouchableOpacity  onPress={goToPreviousSlide}>
-      <MaterialIcons name="keyboard-backspace" size={24} color="#1C1B1F" />
-      </TouchableOpacity>
-      
-      </View>
-      
-      <AppText medium styles={{ fontSize: 25,marginTop:11 }}>
-      Create Transaction Pin  🔑
-              </AppText>
-              <AppText regular styles={{ ...styles.loginIntro1, marginTop: 8 }}>
-              Create a 4 digit code for your transactions
-                </AppText>
-      
-      
-      
-      
-              <View style={{flexDirection:"column",marginTop:40,gap:24 }}>
-             
-                <View >
-      
-                <AppText medium styles={{ ...styles.Lable,fontSize:16}}>Transaction Pin</AppText>
-               <TextInput
-                    style={{ ...styles.textInput,}}
-                    placeholder="Create Transaction Pin"
-                    placeholderTextColor="#A0A0A0"
-                    maxLength={6}
-                    textContentType="password"
-                    secureTextEntry
-                    onChangeText={(text) => onValueChange("transactionPin", text)}
-                 />
-                </View>
-      
-                <View>
-                  <AppText medium styles={{ ...styles.Lable,fontSize:16}}>Confirm Pin</AppText>
-                  <TextInput
-                 style={{ ...styles.textInput,}}
-                  placeholder="Re-Enter Transaction Pin"
-                  placeholderTextColor="#A0A0A0"
+                <TextInput
+                  style={{ ...styles.textInput, marginTop: 20 }}
+                  placeholder="Enter Security Answer"
+                  placeholderTextColor="gray"
+                  onChangeText={(text) => onValueChange("securityAnswer", text)}
+                />
+                <TextInput
+                  style={{ ...styles.textInput, marginTop: 10 }}
+                  placeholder="Set Transaction Pin"
+                  placeholderTextColor="gray"
+                  maxLength={6}
+                  textContentType="password"
+                  secureTextEntry
+                  onChangeText={(text) => onValueChange("transactionPin", text)}
+                />
+                <TextInput
+                  style={{ ...styles.textInput, marginTop: 10 }}
+                  placeholder="Confirm Transaction Pin"
+                  placeholderTextColor="gray"
                   maxLength={6}
                   textContentType="password"
                   secureTextEntry
                   onChangeText={(text) => onValueChange("confirmTransactionPin", text)}
-            
-                   />
-                </View>
-           </View>
-      
-           <View >
-      <AppButton styles={{ ...styles.signupButton, display: `${!displaySpinner ? "flex" : "none"}` }} onPress={() => completeRegistration()}>
-                  <AppText bold="true" styles={{ color: "#FFFFFF", fontSize: 16 }}>
-                   Proceed
+                />
+
+                <AppButton styles={{ ...styles.signupButton, display: `${!displaySpinner ? "flex" : "none"}` }} onPress={() => completeRegistration()}>
+                  <AppText bold="true" styles={{ color: "#FFFFFF", fontSize: 18 }}>
+                    Complete
                   </AppText>
                 </AppButton>
                 <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
                   <Spinner color="blue.700" size="lg" />
                 </View>
 
-      </View>
-       
-              
-              <View style={{ marginTop:8}}>
-         <AppText
-             medium
-              styles={{
-                ...styles.loginIntro,
-                textAlign: "center",
-                fontSize: 14,
-                color:"#000000"
-              }}
-            
-            >
-            By creating account, you acknowledge and accept our <Text
-                style={{ color: "#266ddc" }}
-                onPress={() => navigation.navigate("Login")}
-              > Terms of Service</Text> <Text>and</Text>{" "}
-              <Text
-                style={{ color: "#266ddc" }}
-                onPress={() => navigation.navigate("Login")}
-              >
-               Privacy Policy
-              </Text>
-            </AppText>
-        </View>
-      </View>
-      <View style={[styles.slide,{ width }]}>
-      <View>
-      
-            {/* Modal to show the Picker */}
-           
-          </View>
-      <View style={{flexDirection:"row",justifyContent:"space-between",marginTop:24,}}>
-      
-      <TouchableOpacity  onPress={goToPreviousSlide}>
-      <MaterialIcons name="keyboard-backspace" size={24} color="#1C1B1F" />
-      </TouchableOpacity>
-      <TouchableOpacity >
-                <AppText
-                  bolder
-                  styles={{
-                    fontSize: normalizeFontSize(16),
-                    color: "#266ddc",
-                  }}
-                >
-                  Skip
+                <AppText styles={{ marginTop: 30, marginBottom: 10, fontSize: 16, textAlign: "center" }}>
+                  <Text style={{ fontWeight: "700", color: "#266DDC" }}>What is transaction pin?</Text> Your transaction pin will serve as your authentication Token for every
+                  transaction. How this differs from your account password? Please click{" "}
+                  <Text style={{ color: "#266ddc", fontWeight: "700" }} onPress={() => setModalOpen(true)}>
+                    HERE
+                  </Text>{" "}
+                  to refer to our Terms of Service.
                 </AppText>
-              </TouchableOpacity>
-      </View>
-      
-      <AppText medium styles={{ fontSize: 25,marginTop:11 }}>
-      Enter Your Birthday
-              </AppText>
-              <AppText regular styles={{ ...styles.loginIntro1, marginTop: 8 }}>
-              Get a surprise and a  handwritten Card from our CEO on your next birthday 
-              </AppText>
-      
-              <View style={{flexDirection:"column",marginTop:40,gap:24 }}>
-            
-              <View>
-      
-                <AppText medium styles={{ ...styles.Lable,fontSize:16}}>Age Bracket</AppText>
-                <View  style={{ ...styles.textInput, flexDirection: "row",justifyContent: "space-between", alignItems: "center",}}>
-             <TextInput
-                     style={{ flexBasis: "80%" }}
-                    placeholder="Select age bracket(optional)"
-                    placeholderTextColor="#A0A0A0"
-                    value={selectedValue}
-                         /> 
-                  <TouchableOpacity >
-                    <MaterialIcons name="keyboard-arrow-down" size={24} color="black" />
-                  </TouchableOpacity> 
-                   {/**
-                   *  {isPickerVisible && (
-              <Modal transparent={true} animationType="slide">
-                <View  style={{ ...styles.textInput,backgroundColor:"red"}}>
-                  <View >
-                    <Picker
-                      selectedValue={selectedValue}
-                      onageChange={(itemValue) => onageChange(itemValue)}
-                    >
-                      <Picker.Item label="18-24" value="18-24" />
-                      <Picker.Item label="25-34" value="25-34" />
-                      <Picker.Item label="35-44" value="35-44" />
-                      <Picker.Item label="45-54" value="45-54" />
-                      <Picker.Item label="55+" value="55+" />
-                    </Picker>
-                  </View>
-                </View>
-              </Modal>
-            )}
-                   */}
-                 
-                  </View>
-                 
-                </View>
-      
-                <View >
-                  <AppText medium styles={{ ...styles.Lable,fontSize:16}}>Enter Birthdate</AppText>
-                  <View  style={{
-                    ...styles.textInput,
-                   
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",}}>
-              
-                  <TextInput
-                 style={{ flexBasis: "80%" }}
-                  placeholder="24th march"
-                  placeholderTextColor="#A0A0A0"
-                  value={date.toLocaleDateString()}
-                  autoComplete="off"
-                 />
-                 <TouchableOpacity onPress={showDatePicker}>
-                    <Fontisto style={{ justifyContent: "center" }} name="date" size={24} color="#266DDC"  />
-                  </TouchableOpacity>
-                  {showPicker && (
-              <DateTimePicker
-                value={date}
-                mode="date"
-                display="default"
-                onChange={onChange}
-              />
-            )}
-                </View>
-                </View>
-           </View>
-      
-           <View >
-      <AppButton styles={{ ...styles.signupButton, display: `${!displaySpinner ? "flex" : "none"}` }} onPress={() => goToNextSlide()}>
-                  <AppText bold="true" styles={{ color: "#FFFFFF", fontSize: 16 }}>
-                   Proceed
-                  </AppText>
-                </AppButton>
-                <View style={{ justifyContent: "center", display: `${displaySpinner ? "flex" : "none"}` }}>
-                  <Spinner color="blue.700" size="lg" />
-                </View>
+              </View>
+            </View>
+          </ScrollView>
+        );
 
-      </View>
-       
-      </View>
+      case 4:
+        return (
+          <View style={styles.viewContainer}>
+            {/** Welcome Text */}
+            <AppText bold="true" styles={styles.loginBold}>
+              Account Created
+            </AppText>
+            <AppText bold="true" styles={styles.loginIntro}>
+              Your account has been created
+            </AppText>
 
-      
-      
-      </ScrollView>
-      
-      
-      
-      </View>
-      </ScrollView>
-          );
+            <View>
+              <Image source={DoneIcon} style={{ marginTop: 40, justifyContent: "center", alignSelf: "center" }} />
+
+              <AppText bold="true" styles={{ fontSize: 16, color: "rgba(0, 0, 0, 0.8)", marginTop: 40, textAlign: "center" }}>
+                Congratulations!
+              </AppText>
+              <AppText styles={{ fontSize: 14, color: "rgba(0, 0, 0, 0.8)", marginTop: 16, textAlign: "center" }}>
+                <Text style={{ fontWeight: "700" }}>Congratulations your account has been created and your transaction pin has been successfully set.</Text>
+              </AppText>
+              <AppButton styles={styles.signupButton} onPress={() => navigation.navigate("Login")}>
+                <AppText bold="true" styles={{ color: "#FFFFFF", fontSize: 18 }}>
+                  Go to Login
+                </AppText>
+              </AppButton>
+            </View>
+          </View>
+        );
+    }
   };
 
   return (
@@ -1758,100 +1030,6 @@ export default function Register({ navigation }) {
       </Modal>
       {/** End T&C Modal */}
       {registrationProcess()}
-      <Fragment>
-      <BottomSheet
-         ref={openCountryModalRef}
-         snapPoints={bottomSheetModalSnapPointsforcountry}
-         backdropComponent={renderBackdrop}
-         onChange={handleSheetChanges}
-         index={0}
-         onClose={() => setOpenCountryModal(false)}
-         enablePanDownToClose
-         handleIndicatorStyle={{ backgroundColor: "#C0C0C0", marginTop: 16 }}
-     >
-  
-  
-  <View style={styles.sheetContent}>
-
-    <View>
-          
-    <AppText medium styles={{...styles.label,fontSize:20,marginTop:40}}>Select Your Country:</AppText>
-          
-          <FlatList
-            data={registerData.payload.country}
-            keyExtractor={(item) => item.value}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-              style={[
-                styles.countryItem,
-                registerData.payload ?.payload?.country === item.value && styles.selectedCountry,
-              ]}
-                onPress={() => handleCountrySelect(item.value)}
-              >
-                <AppText styles={styles.countryText}>{item.label}</AppText>
-              </TouchableOpacity>
-            )}
-          />
-  
-  
-  <AppText medium styles={{ fontSize: 20, marginTop: 32, }}>Language:</AppText>
-          <View style={styles.pickerContainer}>
-  
-            {languages.map((language) => (
-              <TouchableOpacity
-                key={language.value}
-                style={[
-                  styles.languageOption,
-                  selectedLanguage === language.value && styles.selectedLanguage,
-                ]}
-                onPress={() => {
-                  setSelectedLanguage(language.value);
-                }}
-              >
-                <Image 
-              source={language.image} 
-              style={{ width: 80, height: 76,marginTop:8  }} 
-            />
-             <AppText medium styles={styles.languageText}>{language.label}</AppText>
-              
-              </TouchableOpacity>
-            ))}
-          </View>
-         
-          </View>
-       
-       
-          
-         
-        
-         
-          <View
-            style={{
-              alignItems: "center",
-              flexDirection: "row",
-              justifyContent: "space-around",
-            }}
-          >
-            <AppButton
-              style={{
-                ...styles.loginButton,
-                width: "100%",marginTop:31,
-                display: `${!displaySpinner ? "flex" : "none"}`,
-              }}
-              onPress={() => loginUserFunction()}
-            >
-              <AppText bold styles={styles.buttonText}>
-              Done
-              </AppText>
-            </AppButton>
-        
-          </View>
-  
-  </View> 
-  
-           </BottomSheet>
-  
-      </Fragment>
     </View>
   );
 }
@@ -1875,7 +1053,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#f2f2f2",
     flex: 1,
-   // justifyContent: "center",
+    justifyContent: "center",
   },
   viewContainer: {
     paddingHorizontal: 20,
@@ -1889,14 +1067,14 @@ const styles = StyleSheet.create({
     color: "gray",
   },
   textInput: {
-    height: 56,
+    height: 45,
     marginTop: 10,
     marginBottom: 10,
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderWidth: 0.5,
     borderColor: "#266ddc",
-    borderRadius: 8,
+    borderRadius: 15,
     borderBottomColor: "#266DDC",
   },
   signupButton: {
@@ -1906,85 +1084,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 10,
     elevation: 3,
-    borderRadius: 8,
-    height:56
+    borderRadius: 25,
   },
-
-countryItem:{
-padding:10
-},
-  bottomsheetContainer1: {
-    marginBottom: 16,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-   
-  },
-  slide: {
-    paddingHorizontal:20
-  },
-  dotsContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: 20,
-    marginTop:16
-  },
-  dot: {
-    width: 85,
-    height: 4,
-    borderRadius: 5,
-    backgroundColor: '#266DDC',
-    marginHorizontal: 5,
-  },
-  Lable:{
-    color:"#121212",
-  }, 
-  input: {
-    paddingHorizontal: 20,
-    fontSize:20,
-    paddingVertical: 6,
-    width:56,
-    height:56,
-    color:"#000000",
-    borderRadius:8,
-    backgroundColor:"#F4F4F4"
-  },
-
-  pickerContainer: {
-    marginTop: 8,
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap:10
-  
-  },
-  languageOption: {
-  
-  },
-  languageText: {
-    marginTop:8,
-    fontSize: 14,
-    color:"#000000",
-    
-    
-  },
-  
-  buttonText: {
-    color: "white",
-    fontWeight: "500",
-    fontSize: 16,
-  },
-  buttonText1: {
-    color: '#FFFFFF',
-    fontSize: 16,
-  },
-  selectedCountry: {
-    backgroundColor: '#e0e0e0',
-  },
-  countryText: {
-    fontSize: 24, // Adjust font size to fit flag icons
-    color:"#000000",
-  },
-  sheetContent:{
-    flex: 1, paddingHorizontal: 20
-  }
 });
