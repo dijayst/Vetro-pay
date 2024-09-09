@@ -723,13 +723,13 @@ export default function Login({ navigation, route }) {
             }}
           />
           <OfflineNotice variant={netInfo.isConnected} />
-          {/* {storedFirstName !== null && serveWithSavedData()}
-        {storedFirstName == null && serveasNew()} */}
+          {storedFirstName !== null && serveWithSavedData()}
+        {storedFirstName == null && serveasNew()}
 
-          {serveWithSavedData()}
+         
 
-          {/* {storedFirstName == null &&
-          forgotPasswordSignUpComponent({ newUser: true })} */}
+          {storedFirstName == null &&
+          forgotPasswordSignUpComponent({ newUser: true })}
         </View>
 
         {/** BOTTOM SHEET MODAL */}
