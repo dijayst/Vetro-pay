@@ -311,17 +311,10 @@ export default function Register({ navigation }) {
           </Box>
         ),
       });
-    } else { setDisplaySpinner(true);
-      try {
-        await dispatch(postRegAuth(registerData.payload.country, registerData.payload.phoneNumber, registerData.payload.authCode));
-       
-        goToNextSlide();
-      } catch (error) {
-        console.error("Error during registration:", error);
-      
-      } finally {
-        setDisplaySpinner(false); 
-      }
+    }  else {
+      setDisplaySpinner(true);
+      dispatch(postRegAuth(registerData.payload.country, registerData.payload.phoneNumber, registerData.payload.authCode));
+   goToNextSlide()
     }
   };
 
@@ -642,7 +635,7 @@ export default function Register({ navigation }) {
               </View>
 
       <View >
-      <AppButton styles={{ ...styles.signupButton, display: `${!displaySpinner ? "flex" : "none"}` }} onPress={() => goToAuthCode()}>
+      <AppButton styles={{ ...styles.signupButton, display: `${!displaySpinner ? "flex" : "none"}` }} onPress={() => goToNextSlide()}>
                   <AppText bold="true" styles={{ color: "#FFFFFF", fontSize: 16 }}>
                    Proceed
                   </AppText>
